@@ -45,6 +45,7 @@ const copy = {
   guideReview: ["A field condition or the 3-day rain needs a local check.", "田况或三日降雨需要当地复核。"],
   guideConflict: ["The crop runs into the next rice date.", "作物与下一季水稻农时发生冲突。"],
   guideNote: ["Unknown drainage or soil adds a review flag. Set both to refine the result.", "排水或土壤选择“待确认”会增加复核项；两项都设置后判断更明确。"],
+  recommendation: ["Recommended", "推荐"],
   shiftTitle: ["Find a safer window", "换一个更稳的农时窗口"],
   shiftNote: ["Search nearby rice dates for a window that clears the crop calendar and the three-day rain in all three seasons. Field conditions stay as you set them.", "在附近的收割/插秧日期中，寻找一个三个历史季节都能通过农时与三日降雨的窗口。田况保持不变。"],
   findShift: ["Find a safer window", "寻找更稳窗口"], applyShift: ["Apply this window", "应用这个窗口"],
@@ -404,15 +405,16 @@ function updateSummary(preferred, priority) {
   const { id, status, slack, reasons } = preferred;
   let title = t(id);
   let detail;
+  const label = text => { $("summary-label").textContent = `${t("recommendation")} · ${text}`; };
   if (priority === "rice") {
-    $("summary-label").textContent = t("keepRice");
+    label(t("keepRice"));
     detail = t("riceFirst");
   } else if (status === "conflict") {
-    $("summary-label").textContent = t("keepBaseline");
+    label(t("keepBaseline"));
     title = t("fallow");
     detail = t("conflictSummary");
   } else {
-    $("summary-label").textContent = t(status === "fits" ? "matched" : "reviewFirst");
+    label(t(status === "fits" ? "matched" : "reviewFirst"));
     detail = status === "review" ? t(reasons[0]) : either(
       `${slack} extra days before the next rice planting, after the preparation buffer.`,
       `扣除整地缓冲后，距下一季水稻种植还有 ${slack} 天。`,
@@ -705,13 +707,13 @@ function findSaferWindow() {
   const rainText = row => row && row.rain !== null ? `${row.rain.toFixed(2)} mm` : "—";
   $("shift-now-date").textContent = dateLabel(currentDates.harvest);
   $("shift-now-rain").textContent = either(
-    `${rainText(currentRows[seasonIndex])} · rice ${dateLabel(currentDates.rice)}`,
-    `${rainText(currentRows[seasonIndex])} · 插秧 ${dateLabel(currentDates.rice)}`,
+    `3d ${rainText(currentRows[seasonIndex])} · rice ${dateLabel(currentDates.rice)}`,
+    `三日 ${rainText(currentRows[seasonIndex])} · 插秧 ${dateLabel(currentDates.rice)}`,
   );
   $("shift-new-date").textContent = dateLabel(dates.harvest);
   $("shift-new-rain").textContent = either(
-    `${rainText(suggestedRows[seasonIndex])} · rice ${dateLabel(dates.rice)}`,
-    `${rainText(suggestedRows[seasonIndex])} · 插秧 ${dateLabel(dates.rice)}`,
+    `3d ${rainText(suggestedRows[seasonIndex])} · rice ${dateLabel(dates.rice)}`,
+    `三日 ${rainText(suggestedRows[seasonIndex])} · 插秧 ${dateLabel(dates.rice)}`,
   );
   $("shift-compare").hidden = false;
   shiftSuggestion = suggestion;
@@ -796,3 +798,29 @@ form.addEventListener("reset", () => {
 const initialScenario = scenarioFromURL();
 if (initialScenario) applyScenario(initialScenario);
 else loadSite(site);
+
+const navLinks = [...document.querySelectorAll('nav a[href^="#"]')];
+const navSections = navLinks.map(link => document.getElementById(link.hash.slice(1))).filter(Boolean);
+let navFrame = 0;
+function syncNav() {
+  navFrame = 0;
+  const anchor = scrollY + Math.min(innerHeight * .35, 320);
+  const atBottom = scrollY + innerHeight >= document.documentElement.scrollHeight - 2;
+  let active = atBottom ? navSections[navSections.length - 1] : navSections[0];
+  if (!atBottom) {
+    for (const section of navSections) {
+      if (section.getBoundingClientRect().top + scrollY <= anchor) active = section;
+    }
+  }
+  for (const link of navLinks) {
+    if (link.hash === `#${active.id}`) link.setAttribute("aria-current", "location");
+    else link.removeAttribute("aria-current");
+  }
+}
+function requestNavSync() {
+  if (!navFrame) navFrame = requestAnimationFrame(syncNav);
+}
+addEventListener("scroll", requestNavSync, { passive: true });
+addEventListener("resize", requestNavSync);
+addEventListener("hashchange", requestNavSync);
+syncNav();

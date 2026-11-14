@@ -12,7 +12,7 @@
   --mono: "IBM Plex Mono", "SF Mono", ui-monospace, monospace;
 }
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-padding-block-start: 1rem; scroll-behavior: smooth; }
+html { scroll-padding-block-start: 5.5rem; scroll-behavior: smooth; }
 ::selection { background: #d7e78d; color: var(--ink); }
 body { margin: 0; background: var(--paper); color: var(--ink); font: 1rem/1.5 var(--sans); }
 button, select, input { font: inherit; }
@@ -29,7 +29,7 @@ img { display: block; width: 100%; height: auto; }
 .shell { width: min(calc(100% - clamp(2rem, 4vw, 5rem)), 128rem); margin-inline: auto; }
 .skip, .visually-hidden { position: absolute; inline-size: 1px; block-size: 1px; clip-path: inset(50%); overflow: hidden; white-space: nowrap; }
 .skip:focus { inset: .5rem auto auto .5rem; z-index: 5; inline-size: auto; block-size: auto; clip-path: none; background: white; padding: .6rem; }
-.top { border-bottom: 1px solid var(--line); }
+.top { position: sticky; top: 0; z-index: 4; border-bottom: 1px solid var(--line); background: rgb(243 243 233 / 92%); backdrop-filter: blur(12px); }
 .top-inner, nav, .brand { display: flex; align-items: center; }
 .top-inner { min-height: 4.5rem; justify-content: space-between; gap: .75rem; }
 .brand { gap: .65rem; text-decoration: none; font-size: 1.125rem; font-weight: 800; white-space: nowrap; }
@@ -37,7 +37,8 @@ img { display: block; width: 100%; height: auto; }
 .brand-mark::after { content: ""; position: absolute; inset: .72rem .28rem auto; height: 1px; background: var(--leaf); rotate: -40deg; }
 nav { gap: clamp(.55rem, 2.8vw, 2.35rem); font-size: .875rem; font-weight: 650; }
 nav a { text-decoration: none; }
-nav a:hover { text-decoration: underline; }
+nav a:hover, nav a[aria-current="location"] { text-decoration: underline; text-underline-offset: .28em; }
+nav a[aria-current="location"] { color: var(--ink); }
 #language, .quiet { color: var(--pine); background: transparent; border: 1px solid var(--line); border-radius: .35rem; padding: .43rem .66rem; }
 #language:hover, .quiet:hover { background: #e9eddd; }
 
