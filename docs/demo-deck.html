@@ -149,6 +149,7 @@
     .flow-box strong { display: block; font-size: 11.5px; }
     .flow-box small { display: block; margin-top: 3px; color: var(--muted); font: 500 7.5px/1.35 var(--mono); }
     .flow-box.status { border-color: #a9bd83; background: #e8edda; }
+    .flow-box.action { border-color: #8fa66b; background: #edf1dd; }
     .flow-col .arrow { color: #83957c; font: 700 13px/1 var(--mono); text-align: center; }
     .how-bottom { display: grid; grid-template-columns: 1fr .9fr; gap: 26px; align-items: start; margin-top: 14px; }
     .how-note { padding-top: 10px; border-top: 1px solid var(--line); }
@@ -324,10 +325,12 @@
           <div class="flow-box"><strong>Calendar + field inputs</strong><small>rice dates · preparation buffer · drainage · soil</small></div>
           <div class="arrow">↓</div>
           <div class="flow-box status"><strong>Fits / Review / Conflict</strong><small>then repeat across 2021/22 · 2023/24 · 2024/25</small></div>
+          <div class="arrow">↓</div>
+          <div class="flow-box action"><strong>Find a safer window</strong><small>search nearby rice dates; keep the crop</small></div>
         </div>
         <div class="how-note">
           <strong>Why three seasons?</strong>
-          <p>The same calendar meets different rainfall. The three-season check makes that difference visible instead of hiding it behind a single “yes”. The 30 mm threshold is illustrative; the field conditions are the user’s.</p>
+          <p>The same calendar meets different rainfall. The three-season check makes that difference visible instead of hiding it behind a single “yes”. The field-shift search uses the same test to find the nearest rice-date window that clears all three. The 30 mm threshold is illustrative; the field conditions are the user’s.</p>
           <div class="planner-shot"><img src="planner.png" alt="Planner with summary, comparison table and three-season check"></div>
         </div>
       </div>
@@ -345,7 +348,7 @@
       <div>
         <p class="kicker">Demo · wet harvest</p>
         <h2>The weather<br>changes the answer.</h2>
-        <p class="lede">The field jumps to the harvest date. The same planned operation is safe in one season and wet in another.</p>
+        <p class="lede">The field jumps to the harvest date. The same planned operation is safe in one season and wet in another. Find a safer window moves the rice dates, not just the crop.</p>
         <div class="compare">
           <div><span>2023/24</span><strong>39.34 mm</strong><small>wet window</small></div>
           <div><span>2024/25</span><strong>0.59 mm</strong><small>fits</small></div>
@@ -388,7 +391,7 @@
         <h2>A 30-second check<br>before a season-long commitment.</h2>
         <div class="impact">
           <div><span>01 · Extension</span><p>A shared, testable rotation scenario for conversations with farmers.</p></div>
-          <div><span>02 · Farm</span><p>Avoid a winter crop that collides with the next rice window — or plant with evidence.</p></div>
+          <div><span>02 · Farm</span><p>Avoid a winter crop that collides with the next rice window — or use Find a safer window to move the rice dates.</p></div>
           <div><span>03 · Planning</span><p>Separate a lucky year from a robust rotation across historical rainfall.</p></div>
         </div>
         <div class="next"><strong>Next:</strong> local variety and maturity data, soil moisture, and farmer validation in the four regions.</div>

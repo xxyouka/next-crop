@@ -6,7 +6,7 @@ Explore rice rotations in **Kaiping, Nueva Ecija, Rajshahi and the Sacramento Va
 
 Between rice harvest and the next transplant, a farmer has one narrow window. A winter crop can add income or protect the soil, but only if its calendar and the weather at its operation date do not put the next rice season at risk.
 
-Next Crop turns that decision into a field-level check across four rice landscapes. It combines local crop calendars with NASA POWER daily rainfall across three historical seasons and reports calendar fit, field-condition flags and the three-day rain around the operation. The field replay shows what the crop looks like on the selected date; the three-season check separates a lucky year from a robust rotation.
+Next Crop turns that decision into a field-level check across four rice landscapes. It combines local crop calendars with NASA POWER daily rainfall across three historical seasons and reports calendar fit, field-condition flags and the three-day rain around the operation. The field replay shows what the crop looks like on the selected date; the three-season check separates a lucky year from a robust rotation. A field-shift search then proposes the nearest rice-date window that clears both checks in all three seasons.
 
 - **4** rice regions · **7** winter crops · **3** NASA POWER seasons · **3,760** daily weather records.
 - Designed for a short judge demo and for local extension conversations; every recommendation carries its assumptions.
@@ -19,7 +19,8 @@ Next Crop turns that decision into a field-level check across four rice landscap
 1. Choose **Kaiping → winter potato**.
 2. Select **Try a wet harvest**. The field jumps to 11 March 2024 and the three-day total reads **39.34 mm**.
 3. Switch the season to **2024/25** with the same inputs: the corresponding 12 March 2025 operation falls to **0.59 mm**.
-4. Open the **three-season check** and click 2023/24 to see the wet window. Then move late-rice harvest to the latest date: both winter crops show calendar conflicts.
+4. Open **Find a safer window**: the nearest robust window moves the harvest one day earlier, clearing 39.34 → 22.89 mm in 2023/24 and all three seasons.
+5. Open the **three-season check** and click 2023/24 to see the wet window. Then move late-rice harvest to the latest date: both winter crops show calendar conflicts.
 
 ## NASA data at a glance
 
@@ -39,6 +40,7 @@ Double-click `index.html` or run `python3 -m http.server 8766 --bind 127.0.0.1` 
 4. In Kaiping, select **Try a wet harvest**. The field jumps to 11 March 2024, shows the wet harvest and reports 39.34 mm in the three days ending that date. Switch to 2024/25 with the other inputs held constant to see the rain fall to 0.59 mm at the corresponding 12 March 2025 harvest.
 5. In Kaiping, move late-rice harvest to the latest date and early-rice transplant to the earliest. Both winter crops show calendar conflicts. Replay the potato scenario to see the field stay occupied at the planned rice date.
 6. Use **Copy scenario link** in the planner to share the region, crop, season, dates, field conditions and observation day. Opening the copied URL restores the same state, including the field date.
+7. After a wet result, use **Find a safer window** in the left column. It searches nearby harvest and transplant dates, requires calendar fit and sub-30 mm three-day rain in all three seasons, and offers the nearest window to apply.
 
 ## Data and methods
 

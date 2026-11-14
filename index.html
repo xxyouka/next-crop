@@ -111,7 +111,7 @@
       <div class="section-heading">
         <div>
           <h2 id="planner-title" data-t="workspace">Winter rotation planner</h2>
-          <p class="section-lede" data-t="plannerLede">Set rice dates and field conditions. The table checks calendar fit, field conditions and rain at each operation; the three-season check repeats the same plan across 2024/25, 2023/24 and 2021/22.</p>
+          <p class="section-lede" data-t="plannerLede">Set rice dates and field conditions. The table checks calendar fit, field conditions and rain at each operation; the three-season check repeats the same plan, and Find a safer window searches for the nearest dates that clear both checks in all three seasons.</p>
         </div>
         <div class="heading-actions">
           <button class="quiet" type="button" id="copy-link" data-t="copyLink">Copy scenario link</button>
@@ -144,6 +144,15 @@
               <div><dt><span class="status" data-state="conflict" data-t="conflictShort">Conflict</span></dt><dd data-t="guideConflict">The crop runs into the next rice date.</dd></div>
             </dl>
             <p data-t="guideNote">Unknown drainage or soil adds a review flag. Set both to refine the result.</p>
+          </aside>
+          <aside class="field-shift" aria-labelledby="shift-title">
+            <h3 id="shift-title" data-t="shiftTitle">Find a safer window</h3>
+            <p data-t="shiftNote">Search nearby rice dates for a window that clears the crop calendar and the three-day rain in all three seasons. Field conditions stay as you set them.</p>
+            <div class="shift-actions">
+              <button class="quiet" type="button" id="find-shift" data-t="findShift">Find a safer window</button>
+              <button class="quiet" type="button" id="apply-shift" data-t="applyShift" hidden>Apply this window</button>
+            </div>
+            <p id="shift-status" class="shift-status" role="status" aria-live="polite"></p>
           </aside>
         </div>
 
@@ -220,7 +229,7 @@
       </div>
       <div class="brief-grid">
         <section><h3 data-t="briefProblemTitle">The problem</h3><p data-t="briefProblem">A late rice harvest, a wet operation day or an unknown field can turn a good rotation into a missed rice season.</p></section>
-        <section><h3 data-t="briefApproachTitle">What we built</h3><p data-t="briefApproach">Pick one of four rice landscapes, replay the crop, compare rotations, then test the same plan against three NASA POWER seasons.</p></section>
+        <section><h3 data-t="briefApproachTitle">What we built</h3><p data-t="briefApproach">Pick one of four rice landscapes, replay the crop, compare rotations, then test the same plan against three NASA POWER seasons. A field-shift search finds the nearest rice-date window that clears both checks in all three seasons.</p></section>
         <section><h3 data-t="briefDataTitle">NASA data</h3><p data-t="briefData">NASA POWER daily corrected precipitation and minimum temperature; NASA Blue Marble imagery; a Copernicus Sentinel-2 context image.</p></section>
       </div>
       <section class="brief-method"><h3 data-t="briefMethodTitle">Method and limits</h3><p data-t="briefMethod">Local crop calendars come from cited extension and research sources. The planner uses a three-day rain window around each operation, an illustrative 30 mm review threshold, and fixed crop durations and stages. Weather is a regional grid estimate, not a field sensor; check locally before planting.</p></section>
@@ -229,6 +238,7 @@
         <li data-t="briefDemo2">Select Try a wet harvest: the plan switches to 2023/24, the field jumps to 11 March 2024, and the three-day total is 39.34 mm.</li>
         <li data-t="briefDemo3">Switch the season to 2024/25: the corresponding operation falls to 0.59 mm.</li>
         <li data-t="briefDemo4">Open the three-season check and click 2023/24 to see the wet window.</li>
+        <li data-t="briefDemo5">After the wet result, open Find a safer window: the nearest robust window moves the harvest one day earlier and clears all three seasons.</li>
       </ol></section>
       <div class="brief-actions">
         <button type="button" class="primary" id="brief-demo-start" data-t="briefStart">Run the wet-harvest demo</button>

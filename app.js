@@ -39,12 +39,19 @@ const copy = {
   occupiedStageNote: ["The rice planting date has arrived while the previous crop still occupies the field.", "已到计划的水稻种植日，上一茬作物仍占着田。"],
   viewImage: ["Kaiping satellite image", "开平卫星影像"],
   workspace: ["Winter rotation planner", "冬季轮作工具"],
-  plannerLede: ["Set rice dates and field conditions. The table checks calendar fit, field conditions and rain at each operation; the three-season check repeats the same plan across 2024/25, 2023/24 and 2021/22.", "设定水稻农时与田况。下表检查农时、田况与作业日降雨；季节对照用 2024/25、2023/24、2021/22 三个 NASA POWER 历史年份重跑同一方案。"],
+  plannerLede: ["Set rice dates and field conditions. The table checks calendar fit, field conditions and rain at each operation; the three-season check repeats the same plan, and Find a safer window searches for the nearest dates that clear both checks in all three seasons.", "设定水稻农时与田况。下表检查农时、田况与作业日降雨；季节对照重跑同一方案；“寻找更稳窗口”会在三个历史季节中寻找最近的、能同时通过农时与降雨的日期。"],
   readingGuide: ["Reading the result", "怎么看结果"],
   guideFits: ["Calendar and rain leave room before the next rice date.", "农时和降雨都为下一季水稻留出了余量。"],
   guideReview: ["A field condition or the 3-day rain needs a local check.", "田况或三日降雨需要当地复核。"],
   guideConflict: ["The crop runs into the next rice date.", "作物与下一季水稻农时发生冲突。"],
   guideNote: ["Unknown drainage or soil adds a review flag. Set both to refine the result.", "排水或土壤选择“待确认”会增加复核项；两项都设置后判断更明确。"],
+  shiftTitle: ["Find a safer window", "换一个更稳的农时窗口"],
+  shiftNote: ["Search nearby rice dates for a window that clears the crop calendar and the three-day rain in all three seasons. Field conditions stay as you set them.", "在附近的收割/插秧日期中，寻找一个三个历史季节都能通过农时与三日降雨的窗口。田况保持不变。"],
+  findShift: ["Find a safer window", "寻找更稳窗口"], applyShift: ["Apply this window", "应用这个窗口"],
+  shiftNone: ["No rice-date window within the sliders clears the calendar for the selected crop.", "在当前滑杆范围内，没有能让所选作物通过农时检查的窗口。"],
+  shiftAlready: ["The current window already clears the calendar and three-day rain in all three seasons.", "当前窗口在三个历史季节中都已通过农时与三日降雨检查。"],
+  shiftApplied: ["Applied. Calendar and rain clear all three seasons at this window.", "已应用。这个窗口在三个历史季节中均通过农时与降雨检查。"],
+  shiftAppliedPartial: ["Applied. The calendar clears, but {n} of 3 seasons still have a wet or missing rain window.", "已应用。农时通过，但三个季节中仍有 {n} 个存在偏大或缺测的降雨窗口。"],
   seasonCheck: ["Three-season check", "三个历史季节对照"],
   seasonCheckContext: ["Calendar and rain only", "仅看农时与降雨"],
   seasonCaption: ["Same plan in each historical season", "同一方案在三个历史季节中的表现"],
@@ -79,7 +86,7 @@ const copy = {
   briefProblemTitle: ["The problem", "问题"],
   briefProblem: ["A late rice harvest, a wet operation day or an unknown field can turn a good rotation into a missed rice season.", "晚稻推迟、作业日遇到降雨，或田况不明，都可能让一个看似合理的轮作耽误下一季水稻。"],
   briefApproachTitle: ["What we built", "我们做了什么"],
-  briefApproach: ["Pick one of four rice landscapes, replay the crop, compare rotations, then test the same plan against three NASA POWER seasons.", "选择四个稻作地区之一，回放作物生长，比较轮作方案，再用三个 NASA POWER 历史季节检验同一方案。"],
+  briefApproach: ["Pick one of four rice landscapes, replay the crop, compare rotations, then test the same plan against three NASA POWER seasons. A field-shift search finds the nearest rice-date window that clears both checks in all three seasons.", "选择四个稻作地区之一，回放作物生长，比较轮作方案，再用三个 NASA POWER 历史季节检验同一方案；还可以搜索最近的、三个季节都能通过农时与降雨的水稻日期窗口。"],
   briefDataTitle: ["NASA data", "NASA 数据"],
   briefData: ["NASA POWER daily corrected precipitation and minimum temperature; NASA Blue Marble imagery; a Copernicus Sentinel-2 context image.", "NASA POWER 逐日修正降水与最低温；NASA Blue Marble 影像；以及一张 Copernicus Sentinel-2 田块影像。"],
   briefMethodTitle: ["Method and limits", "方法与边界"],
@@ -89,6 +96,7 @@ const copy = {
   briefDemo2: ["Select Try a wet harvest: the plan switches to 2023/24, the field jumps to 11 March 2024, and the three-day total is 39.34 mm.", "点“试算雨后采收”：方案切到 2023/24，田块跳到 2024 年 3 月 11 日，三日累计 39.34 毫米。"],
   briefDemo3: ["Switch the season to 2024/25: the corresponding operation falls to 0.59 mm.", "把历史季节切到 2024/25：对应作业日的三日累计降到 0.59 毫米。"],
   briefDemo4: ["Open the three-season check and click 2023/24 to see the wet window.", "打开三个历史季节对照，点 2023/24 查看这次偏大的降雨。"],
+  briefDemo5: ["After the wet result, open Find a safer window: the nearest robust window moves the harvest one day earlier and clears all three seasons.", "出现雨后结果后，点“寻找更稳窗口”：最近的稳定窗口把收割提前一天，并在三个历史季节中全部通过。"],
   briefStart: ["Run the wet-harvest demo", "运行雨后采收演示"],
   briefDeck: ["7-slide demo (PDF)", "7 页演示（PDF）"],
   briefPdf: ["One-page brief (PDF)", "一页简介（PDF）"],
@@ -137,6 +145,7 @@ const seasonBody = $("season-body");
 const brief = $("brief");
 const copyButton = $("copy-link");
 let copyTimer = 0;
+let shiftSuggestion = null;
 const colors = {
   fallow: "#7d775e", potato: "#8e6439", vetch: "#775297", maize: "#91702d",
   mung: "#587c4a", mustard: "#a8781e", rye: "#627743", hairy: "#725c97",
@@ -238,6 +247,7 @@ function loadSite(point) {
     option.disabled = option.hidden;
   }
   $("wet-demo").hidden = site.id !== "kaiping";
+  clearShift();
   updateSiteLabels();
   buildTable();
   buildSeasonGrid();
@@ -523,6 +533,7 @@ $("language").addEventListener("click", event => {
   document.title = either("Next Crop · What grows after rice?", "下一茬 · 水稻收完，种什么？");
   event.currentTarget.lang = chinese ? "en" : "zh-Hans";
   event.currentTarget.textContent = either("中文", "English");
+  clearShift();
   for (const node of document.querySelectorAll("[data-t]")) node.textContent = t(node.dataset.t);
   updateSiteLabels();
   render();
@@ -615,7 +626,95 @@ async function copyScenario() {
   }, 2200);
 }
 
+function clearShift() {
+  shiftSuggestion = null;
+  $("apply-shift").hidden = true;
+  $("shift-status").textContent = "";
+  $("shift-status").dataset.state = "";
+}
+
+function findSaferWindow() {
+  if (selected === "fallow") {
+    $("shift-status").textContent = either("Choose a winter crop first.", "先选择一个冬季作物。");
+    $("shift-status").dataset.state = "review";
+    $("apply-shift").hidden = true;
+    shiftSuggestion = null;
+    return;
+  }
+  const cropId = selected;
+  const currentHarvest = $("harvest").valueAsNumber;
+  const currentTransplant = $("transplant").valueAsNumber;
+  const drainage = $("drainage").value;
+  const soil = $("soil").value;
+  const rowsFor = (harvest, transplant) => NextCrop.scenarios.map(year =>
+    NextCrop.evaluate({ year, harvest, transplant, drainage, soil, site }, readRain).find(row => row.id === cropId));
+  let robust = null;
+  let calendarOnly = null;
+  for (let harvest = 0; harvest <= site.harvestMax; harvest++) {
+    for (let transplant = 0; transplant <= site.riceMax; transplant++) {
+      const rows = rowsFor(harvest, transplant);
+      if (!rows.every(Boolean)) continue;
+      const calendarOk = rows.every(row => !row.reasons.includes("overlap") && !row.reasons.includes("lateSowing"));
+      if (!calendarOk) continue;
+      const wet = rows.filter(row => row.rain === null || row.rain >= 30).length;
+      const score = Math.abs(harvest - currentHarvest) + Math.abs(transplant - currentTransplant);
+      const rain = wet === 0 ? rows.reduce((sum, row) => sum + row.rain, 0) : Infinity;
+      if (wet === 0 && (!robust || score < robust.score || (score === robust.score && rain < robust.rain))) {
+        robust = { harvest, transplant, wet, score, rain };
+      }
+      if (!calendarOnly || score < calendarOnly.score || (score === calendarOnly.score && wet < calendarOnly.wet)) {
+        calendarOnly = { harvest, transplant, wet, score };
+      }
+    }
+  }
+  const suggestion = robust ?? calendarOnly;
+  if (!suggestion) {
+    $("shift-status").textContent = t("shiftNone");
+    $("shift-status").dataset.state = "review";
+    $("apply-shift").hidden = true;
+    shiftSuggestion = null;
+    return;
+  }
+  const dates = NextCrop.calendar(Number($("season").value), suggestion.harvest, suggestion.transplant, site);
+  const harvestDelta = suggestion.harvest - currentHarvest;
+  const transplantDelta = suggestion.transplant - currentTransplant;
+  const delta = `${harvestDelta >= 0 ? "+" : ""}${harvestDelta} / ${transplantDelta >= 0 ? "+" : ""}${transplantDelta}`;
+  $("shift-status").dataset.state = suggestion.wet === 0 ? "fits" : "review";
+  if (suggestion.score === 0) {
+    shiftSuggestion = null;
+    $("apply-shift").hidden = true;
+    $("shift-status").textContent = suggestion.wet === 0 ? t("shiftAlready") : either(
+      `The current window is calendar-safe, but ${suggestion.wet} of 3 seasons still have a wet or missing rain window.`,
+      `当前窗口农时通过，但三个季节中仍有 ${suggestion.wet} 个存在偏大或缺测的降雨窗口。`,
+    );
+    return;
+  }
+  shiftSuggestion = suggestion;
+  $("apply-shift").hidden = false;
+  $("shift-status").textContent = suggestion.wet === 0 ? either(
+    `Nearest robust window: harvest ${dateLabel(dates.harvest)}, transplant ${dateLabel(dates.rice)}. Calendar and three-day rain clear all three seasons (${delta} days).`,
+    `最近的更稳窗口：收割 ${dateLabel(dates.harvest)}，插秧 ${dateLabel(dates.rice)}。三个历史季节的农时与三日降雨均通过（${delta} 天）。`,
+  ) : either(
+    `No window clears all three. Nearest calendar-safe: harvest ${dateLabel(dates.harvest)}, transplant ${dateLabel(dates.rice)} — wet in ${suggestion.wet} of 3 seasons (${delta} days).`,
+    `没有三个季节全部通过的窗口。最近的农时安全方案：收割 ${dateLabel(dates.harvest)}，插秧 ${dateLabel(dates.rice)}；其中 ${suggestion.wet} 个季节降雨偏大或缺失（${delta} 天）。`,
+  );
+}
+
+function applyShift() {
+  if (!shiftSuggestion) return;
+  const { harvest, transplant, wet } = shiftSuggestion;
+  shiftSuggestion = null;
+  $("harvest").value = harvest;
+  $("transplant").value = transplant;
+  $("apply-shift").hidden = true;
+  render();
+  field.jumpToOperation();
+  $("shift-status").dataset.state = wet === 0 ? "fits" : "review";
+  $("shift-status").textContent = wet === 0 ? t("shiftApplied") : t("shiftAppliedPartial").replace("{n}", wet);
+}
+
 function runWetDemo() {
+  clearShift();
   $("harvest").value = 12;
   $("transplant").value = 15;
   $("season").value = 2023;
@@ -643,6 +742,8 @@ function closeBrief() {
 }
 
 $("wet-demo").addEventListener("click", runWetDemo);
+$("find-shift").addEventListener("click", findSaferWindow);
+$("apply-shift").addEventListener("click", applyShift);
 copyButton.addEventListener("click", copyScenario);
 $("brief-open").addEventListener("click", openBrief);
 $("brief-close").addEventListener("click", closeBrief);
@@ -660,6 +761,7 @@ $("brief-demo-start").addEventListener("click", () => {
   $("field").scrollIntoView();
 });
 form.addEventListener("input", render);
+form.addEventListener("input", () => { if (shiftSuggestion || $("shift-status").textContent) clearShift(); });
 form.addEventListener("submit", event => event.preventDefault());
 form.addEventListener("reset", () => {
   selected = site.crops[0].id;
