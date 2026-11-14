@@ -285,7 +285,7 @@ function cancelAnimatedScroll() {
   }
 }
 
-function animateScrollTo(target, { focus = false, onDone } = {}) {
+function animateScrollTo(target, { focus = false, onDone, duration: durationOverride } = {}) {
   if (!target) return;
   cancelAnimatedScroll();
   const root = document.documentElement;
@@ -312,7 +312,7 @@ function animateScrollTo(target, { focus = false, onDone } = {}) {
   }
   activeScrollBehavior = root.style.scrollBehavior;
   root.style.scrollBehavior = "auto";
-  const duration = Math.min(900, Math.max(420, Math.abs(distance) * .5));
+  const duration = durationOverride ?? Math.min(900, Math.max(420, Math.abs(distance) * .5));
   const started = performance.now();
   const step = now => {
     const t = Math.min(1, (now - started) / duration);
@@ -332,20 +332,27 @@ function markArrived(target) {
 
 function enterSite(point) {
   const changed = site !== point;
-  if (changed) loadSite(point);
-  globe.focus(point);
-  $("field-title").focus({ preventScroll: true });
-  animateScrollTo($("field"), {
-    onDone: () => {
-      const field = $("field");
-      markArrived(field);
-      if (!changed) return;
+  const field = $("field");
+  const apply = () => {
+    if (changed) {
+      loadSite(point);
       field.classList.remove("site-change");
       requestAnimationFrame(() => field.classList.add("site-change"));
       clearTimeout(siteChangeTimer);
       siteChangeTimer = setTimeout(() => field.classList.remove("site-change"), 700);
-    },
-  });
+    }
+    globe.focus(point);
+    $("field-title").focus({ preventScroll: true });
+    markArrived(field);
+  };
+  if (changed) animateScrollTo(field, { duration: 720, onDone: apply });
+  else {
+    globe.focus(point);
+    animateScrollTo(field, { duration: 560, onDone: () => {
+      $("field-title").focus({ preventScroll: true });
+      markArrived(field);
+    } });
+  }
   if (location.hash !== "#field") history.pushState(null, "", `${location.pathname}${location.search}#field`);
 }
 
