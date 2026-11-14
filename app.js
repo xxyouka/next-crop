@@ -40,6 +40,11 @@ const copy = {
   viewImage: ["Kaiping satellite image", "开平卫星影像"],
   workspace: ["Winter rotation planner", "冬季轮作工具"],
   plannerLede: ["Set rice dates and field conditions. The table checks calendar fit, field conditions and rain at each operation; the three-season check repeats the same plan across 2024/25, 2023/24 and 2021/22.", "设定水稻农时与田况。下表检查农时、田况与作业日降雨；季节对照用 2024/25、2023/24、2021/22 三个 NASA POWER 历史年份重跑同一方案。"],
+  readingGuide: ["Reading the result", "怎么看结果"],
+  guideFits: ["Calendar and rain leave room before the next rice date.", "农时和降雨都为下一季水稻留出了余量。"],
+  guideReview: ["A field condition or the 3-day rain needs a local check.", "田况或三日降雨需要当地复核。"],
+  guideConflict: ["The crop runs into the next rice date.", "作物与下一季水稻农时发生冲突。"],
+  guideNote: ["Unknown drainage or soil adds a review flag. Set both to refine the result.", "排水或土壤选择“待确认”会增加复核项；两项都设置后判断更明确。"],
   seasonCheck: ["Three-season check", "三个历史季节对照"],
   seasonCheckContext: ["Calendar and rain only", "仅看农时与降雨"],
   seasonCaption: ["Same plan in each historical season", "同一方案在三个历史季节中的表现"],
@@ -61,6 +66,7 @@ const copy = {
   window: ["Winter window", "冬季农时"], rainHead: ["3-day rain", "三日降雨"], status: ["Status", "状态"],
   rainNote: ["Rain includes the operation day and the two days before it. Choose a strategy to see its evidence.", "降雨累计包含作业当日与前两天。点选方案可查看依据。"],
   behind: ["Behind the comparison", "判断依据"],
+  evidenceLede: ["Three evidence layers: NASA POWER weather, local crop calendars and a Sentinel-2 field image.", "三层依据：NASA POWER 天气、当地作物日历，以及一张 Sentinel-2 田块影像。"],
   sourceWeather: ["NASA POWER", "NASA POWER"],
   powerLink: ["Daily API documentation ↗", "逐日数据接口说明 ↗"],
   sourceLocal: ["Local crop practices", "本地轮作实践"],
@@ -141,14 +147,16 @@ const places = NextCrop.sites.map(point => {
   const labels = document.createElement("span");
   const title = document.createElement("strong");
   const area = document.createElement("small");
+  const system = document.createElement("small");
   const arrow = document.createElement("span");
+  system.className = "place-system";
   arrow.setAttribute("aria-hidden", "true");
   arrow.textContent = "↘";
-  labels.append(title, area);
+  labels.append(title, area, system);
   button.append(labels, arrow);
   button.addEventListener("click", () => enterSite(point));
   $("site-list").append(button);
-  return { button, title, area, site: point };
+  return { button, title, area, system, site: point };
 });
 
 function coordinates(point) {
@@ -165,11 +173,13 @@ function updateSiteLabels() {
   for (const place of places) {
     place.title.textContent = local(place.site.name);
     place.area.textContent = local(place.site.area);
+    place.system.textContent = local(place.site.system);
     place.button.dataset.active = String(place.site === site);
     place.button.setAttribute("aria-current", String(place.site === site));
   }
   $("field-location").textContent = local(site.area);
   $("field-title").textContent = local(site.name);
+  $("field-system").textContent = local(site.system);
   $("field-coordinates").textContent = coordinates(site);
   $("harvest-label").textContent = local(site.previous);
   $("transplant-label").textContent = local(site.next);

@@ -7,7 +7,7 @@ Explore rice rotations in **Kaiping, Nueva Ecija, Rajshahi and the Sacramento Va
 Double-click `index.html` or run `python3 -m http.server 8766 --bind 127.0.0.1` in this directory. The globe, field replay, planner and bundled data work offline. Use **中文** for Chinese.
 
 1. Rotate the globe and choose a pin, or select a place from the region list.
-2. Choose a rotation. Drag the observation date, click a growth stage, or play the season. Each region uses its own crops, seasonal calendar and historical weather. The field is an illustration and the growth stages are assumptions.
+2. Choose a rotation. Drag the observation date, click a growth stage, or play the season. The sidebar close-up follows the same crop and stage. Each region uses its own crops, seasonal calendar and historical weather. The field is an illustration and the growth stages are assumptions.
 3. In the planner, set field conditions and compare strategies. **Three-season check** runs the same plan through 2024/25, 2023/24 and 2021/22; click a cell to switch season and strategy.
 4. In Kaiping, select **Try a wet harvest**. The field jumps to 11 March 2024, shows the wet harvest and reports 39.34 mm in the three days ending that date. Switch to 2024/25 with the other inputs held constant to see the rain fall to 0.59 mm at the corresponding 12 March 2025 harvest.
 5. In Kaiping, move late-rice harvest to the latest date and early-rice transplant to the earliest. Both winter crops show calendar conflicts. Replay the potato scenario to see the field stay occupied at the planned rice date.

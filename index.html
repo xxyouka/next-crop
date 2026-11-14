@@ -49,7 +49,7 @@
       </div>
       <figure class="globe-figure">
         <div class="globe-stage">
-          <canvas id="globe" width="530" height="530" aria-hidden="true"></canvas>
+          <canvas id="globe" width="600" height="600" aria-hidden="true"></canvas>
           <div id="globe-pins"></div>
         </div>
         <figcaption><span data-t="drag">Drag to rotate</span><a href="https://science.nasa.gov/earth/earth-observatory/the-blue-marble-true-color-global-imagery-at-1km-resolution/" target="_blank" rel="noopener">NASA Blue Marble ↗</a></figcaption>
@@ -59,7 +59,7 @@
 
     <section id="field" class="field" aria-labelledby="field-title">
       <div class="section-heading field-heading">
-        <div><p class="eyebrow" id="field-location"></p><h2 id="field-title" tabindex="-1"></h2></div>
+        <div><p class="eyebrow" id="field-location"></p><h2 id="field-title" tabindex="-1"></h2><p class="field-system" id="field-system"></p></div>
         <a class="field-back" href="#atlas" data-t="backToAtlas">Change region ↑</a>
       </div>
       <div class="field-layout">
@@ -88,7 +88,7 @@
             <h3 data-t="chooseCrop">Choose a rotation</h3>
             <div id="field-crops" class="field-crops"></div>
             <figure class="crop-closeup">
-              <canvas id="crop-art" width="320" height="108" aria-hidden="true"></canvas>
+              <canvas id="crop-art" width="320" height="180" aria-hidden="true"></canvas>
               <figcaption data-t="closeup">Crop close-up</figcaption>
             </figure>
           </div>
@@ -116,21 +116,32 @@
         <button class="quiet demo" type="button" id="wet-demo" data-t="wetDemo">Try a wet harvest ↗</button>
       </div>
       <div class="planner-grid">
-        <form id="field-settings" class="settings">
-          <div class="settings-head"><h3 data-t="inputs">Your field</h3><button class="quiet" type="reset" data-t="reset">Reset</button></div>
-          <label for="harvest" class="range-label"><span id="harvest-label">Late rice harvest</span><output id="harvest-value" for="harvest"></output></label>
-          <input type="range" id="harvest" min="0" max="35" value="11">
-          <label for="transplant" class="range-label"><span id="transplant-label">Early rice transplant</span><output id="transplant-value" for="transplant"></output></label>
-          <input type="range" id="transplant" min="0" max="30" value="15">
-          <label for="season" data-t="season">Historical season</label>
-          <select id="season"><option value="2024">2024/25</option><option value="2023">2023/24</option><option value="2021">2021/22</option></select>
-          <label for="drainage" data-t="drainage">Field drainage</label>
-          <select id="drainage"><option value="unknown" data-t="unknown">Unknown</option><option value="good" data-t="good">Drains well</option><option value="poor" data-t="poor">Water tends to pool</option></select>
-          <label for="soil" data-t="soil">Field soil texture</label>
-          <select id="soil"><option value="unknown" data-t="unknown">Unknown</option><option value="loam" data-t="loam">Loamy</option><option value="sand" data-t="sand">Sandy</option><option value="clay" data-t="clay">Heavy clay</option></select>
-          <label for="priority" data-t="priority">Farm priority</label>
-          <select id="priority"><option value="rice" data-t="keepRice">Keep rice on schedule</option><option value="income" data-t="income">Explore winter income</option><option value="cover" data-t="cover">Keep soil covered</option></select>
-        </form>
+        <div class="settings-column">
+          <form id="field-settings" class="settings">
+            <div class="settings-head"><h3 data-t="inputs">Your field</h3><button class="quiet" type="reset" data-t="reset">Reset</button></div>
+            <label for="harvest" class="range-label"><span id="harvest-label">Late rice harvest</span><output id="harvest-value" for="harvest"></output></label>
+            <input type="range" id="harvest" min="0" max="35" value="11">
+            <label for="transplant" class="range-label"><span id="transplant-label">Early rice transplant</span><output id="transplant-value" for="transplant"></output></label>
+            <input type="range" id="transplant" min="0" max="30" value="15">
+            <label for="season" data-t="season">Historical season</label>
+            <select id="season"><option value="2024">2024/25</option><option value="2023">2023/24</option><option value="2021">2021/22</option></select>
+            <label for="drainage" data-t="drainage">Field drainage</label>
+            <select id="drainage"><option value="unknown" data-t="unknown">Unknown</option><option value="good" data-t="good">Drains well</option><option value="poor" data-t="poor">Water tends to pool</option></select>
+            <label for="soil" data-t="soil">Field soil texture</label>
+            <select id="soil"><option value="unknown" data-t="unknown">Unknown</option><option value="loam" data-t="loam">Loamy</option><option value="sand" data-t="sand">Sandy</option><option value="clay" data-t="clay">Heavy clay</option></select>
+            <label for="priority" data-t="priority">Farm priority</label>
+            <select id="priority"><option value="rice" data-t="keepRice">Keep rice on schedule</option><option value="income" data-t="income">Explore winter income</option><option value="cover" data-t="cover">Keep soil covered</option></select>
+          </form>
+          <aside class="reading-guide" aria-labelledby="reading-guide-title">
+            <h3 id="reading-guide-title" data-t="readingGuide">Reading the result</h3>
+            <dl>
+              <div><dt><span class="status" data-state="fits" data-t="fitsShort">Fits</span></dt><dd data-t="guideFits">Calendar and rain leave room before the next rice date.</dd></div>
+              <div><dt><span class="status" data-state="review" data-t="review">Needs review</span></dt><dd data-t="guideReview">A field condition or the 3-day rain needs a local check.</dd></div>
+              <div><dt><span class="status" data-state="conflict" data-t="conflictShort">Conflict</span></dt><dd data-t="guideConflict">The crop runs into the next rice date.</dd></div>
+            </dl>
+            <p data-t="guideNote">Unknown drainage or soil adds a review flag. Set both to refine the result.</p>
+          </aside>
+        </div>
 
         <div class="results">
           <div class="summary" aria-live="polite" aria-atomic="true">
@@ -177,6 +188,7 @@
 
     <section class="sources" id="evidence" aria-labelledby="evidence-title">
       <h2 id="evidence-title" data-t="behind">Behind the comparison</h2>
+      <p class="section-lede" data-t="evidenceLede">Three evidence layers: NASA POWER weather, local crop calendars and a Sentinel-2 field image.</p>
       <div class="source-grid">
         <div><h3 data-t="sourceWeather">NASA POWER</h3><p id="source-weather"></p><a href="https://power.larc.nasa.gov/docs/services/api/temporal/daily/" target="_blank" rel="noopener" data-t="powerLink">Daily API documentation ↗</a></div>
         <div><h3 data-t="sourceLocal">Local crop practices</h3><p id="source-local"></p><a id="source-link" target="_blank" rel="noopener" data-t="localLink">Local source ↗</a></div>
