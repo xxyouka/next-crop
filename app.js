@@ -48,6 +48,7 @@ const copy = {
   shiftTitle: ["Find a safer window", "换一个更稳的农时窗口"],
   shiftNote: ["Search nearby rice dates for a window that clears the crop calendar and the three-day rain in all three seasons. Field conditions stay as you set them.", "在附近的收割/插秧日期中，寻找一个三个历史季节都能通过农时与三日降雨的窗口。田况保持不变。"],
   findShift: ["Find a safer window", "寻找更稳窗口"], applyShift: ["Apply this window", "应用这个窗口"],
+  shiftNow: ["Now · harvest", "现在 · 收割"], shiftSafer: ["Safer · harvest", "更稳 · 收割"],
   shiftNone: ["No rice-date window within the sliders clears the calendar for the selected crop.", "在当前滑杆范围内，没有能让所选作物通过农时检查的窗口。"],
   shiftAlready: ["The current window already clears the calendar and three-day rain in all three seasons.", "当前窗口在三个历史季节中都已通过农时与三日降雨检查。"],
   shiftApplied: ["Applied. Calendar and rain clear all three seasons at this window.", "已应用。这个窗口在三个历史季节中均通过农时与降雨检查。"],
@@ -629,6 +630,11 @@ async function copyScenario() {
 function clearShift() {
   shiftSuggestion = null;
   $("apply-shift").hidden = true;
+  $("shift-compare").hidden = true;
+  $("shift-now-date").textContent = "";
+  $("shift-now-rain").textContent = "";
+  $("shift-new-date").textContent = "";
+  $("shift-new-rain").textContent = "";
   $("shift-status").textContent = "";
   $("shift-status").dataset.state = "";
 }
@@ -638,6 +644,7 @@ function findSaferWindow() {
     $("shift-status").textContent = either("Choose a winter crop first.", "先选择一个冬季作物。");
     $("shift-status").dataset.state = "review";
     $("apply-shift").hidden = true;
+    $("shift-compare").hidden = true;
     shiftSuggestion = null;
     return;
   }
@@ -672,6 +679,7 @@ function findSaferWindow() {
     $("shift-status").textContent = t("shiftNone");
     $("shift-status").dataset.state = "review";
     $("apply-shift").hidden = true;
+    $("shift-compare").hidden = true;
     shiftSuggestion = null;
     return;
   }
@@ -683,20 +691,37 @@ function findSaferWindow() {
   if (suggestion.score === 0) {
     shiftSuggestion = null;
     $("apply-shift").hidden = true;
+    $("shift-compare").hidden = true;
     $("shift-status").textContent = suggestion.wet === 0 ? t("shiftAlready") : either(
       `The current window is calendar-safe, but ${suggestion.wet} of 3 seasons still have a wet or missing rain window.`,
       `当前窗口农时通过，但三个季节中仍有 ${suggestion.wet} 个存在偏大或缺测的降雨窗口。`,
     );
     return;
   }
+  const seasonIndex = NextCrop.scenarios.indexOf(Number($("season").value));
+  const currentRows = rowsFor(currentHarvest, currentTransplant);
+  const suggestedRows = rowsFor(suggestion.harvest, suggestion.transplant);
+  const currentDates = NextCrop.calendar(Number($("season").value), currentHarvest, currentTransplant, site);
+  const rainText = row => row && row.rain !== null ? `${row.rain.toFixed(2)} mm` : "—";
+  $("shift-now-date").textContent = dateLabel(currentDates.harvest);
+  $("shift-now-rain").textContent = either(
+    `${rainText(currentRows[seasonIndex])} · rice ${dateLabel(currentDates.rice)}`,
+    `${rainText(currentRows[seasonIndex])} · 插秧 ${dateLabel(currentDates.rice)}`,
+  );
+  $("shift-new-date").textContent = dateLabel(dates.harvest);
+  $("shift-new-rain").textContent = either(
+    `${rainText(suggestedRows[seasonIndex])} · rice ${dateLabel(dates.rice)}`,
+    `${rainText(suggestedRows[seasonIndex])} · 插秧 ${dateLabel(dates.rice)}`,
+  );
+  $("shift-compare").hidden = false;
   shiftSuggestion = suggestion;
   $("apply-shift").hidden = false;
   $("shift-status").textContent = suggestion.wet === 0 ? either(
-    `Nearest robust window: harvest ${dateLabel(dates.harvest)}, transplant ${dateLabel(dates.rice)}. Calendar and three-day rain clear all three seasons (${delta} days).`,
-    `最近的更稳窗口：收割 ${dateLabel(dates.harvest)}，插秧 ${dateLabel(dates.rice)}。三个历史季节的农时与三日降雨均通过（${delta} 天）。`,
+    `All three seasons clear. Nearest shift: ${delta} days.`,
+    `三个季节均通过。最近调整：${delta} 天。`,
   ) : either(
-    `No window clears all three. Nearest calendar-safe: harvest ${dateLabel(dates.harvest)}, transplant ${dateLabel(dates.rice)} — wet in ${suggestion.wet} of 3 seasons (${delta} days).`,
-    `没有三个季节全部通过的窗口。最近的农时安全方案：收割 ${dateLabel(dates.harvest)}，插秧 ${dateLabel(dates.rice)}；其中 ${suggestion.wet} 个季节降雨偏大或缺失（${delta} 天）。`,
+    `No window clears all three. Nearest calendar-safe option: ${suggestion.wet} of 3 seasons are wet or missing (${delta} days).`,
+    `没有三个季节全部通过的窗口。最近的农时安全方案中，${suggestion.wet} 个季节降雨偏大或缺失（${delta} 天）。`,
   );
 }
 
@@ -707,6 +732,7 @@ function applyShift() {
   $("harvest").value = harvest;
   $("transplant").value = transplant;
   $("apply-shift").hidden = true;
+  $("shift-compare").hidden = true;
   render();
   field.jumpToOperation();
   $("shift-status").dataset.state = wet === 0 ? "fits" : "review";

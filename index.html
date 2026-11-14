@@ -152,6 +152,19 @@
               <button class="quiet" type="button" id="find-shift" data-t="findShift">Find a safer window</button>
               <button class="quiet" type="button" id="apply-shift" data-t="applyShift" hidden>Apply this window</button>
             </div>
+            <div id="shift-compare" class="shift-compare" hidden>
+              <div>
+                <span data-t="shiftNow">Now · harvest</span>
+                <strong id="shift-now-date"></strong>
+                <small id="shift-now-rain"></small>
+              </div>
+              <span class="shift-arrow" aria-hidden="true">→</span>
+              <div class="shift-next">
+                <span data-t="shiftSafer">Safer · harvest</span>
+                <strong id="shift-new-date"></strong>
+                <small id="shift-new-rain"></small>
+              </div>
+            </div>
             <p id="shift-status" class="shift-status" role="status" aria-live="polite"></p>
           </aside>
         </div>
