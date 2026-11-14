@@ -17,8 +17,8 @@
       --dark: #142a22;
       --leaf: #d7e78d;
       --amber: #8a5a1f;
-      --sans: "Avenir Next", "Helvetica Neue", system-ui, sans-serif;
-      --serif: Georgia, "Iowan Old Style", serif;
+      --sans: "Instrument Sans", "Avenir Next", "Helvetica Neue", system-ui, sans-serif;
+      --serif: "Instrument Serif", Georgia, "Iowan Old Style", serif;
       --mono: "SFMono-Regular", "IBM Plex Mono", ui-monospace, monospace;
     }
     * { box-sizing: border-box; }
@@ -156,7 +156,8 @@
     .how-note { padding-top: 10px; border-top: 1px solid var(--line); }
     .how-note strong { font-size: 11px; }
     .how-note p { margin-top: 4px; font-size: 9.5px; line-height: 1.45; }
-    .planner-shot { max-height: 366px; overflow: hidden; border: 1px solid var(--line); border-radius: 4px; }
+    .planner-shot { position: relative; max-height: 366px; overflow: hidden; border: 1px solid var(--line); border-radius: 4px; }
+    .planner-shot::after { content: ""; position: absolute; inset: auto 0 0; height: 74px; background: linear-gradient(to bottom, transparent, var(--paper)); pointer-events: none; }
     .planner-shot img { width: 100%; height: 366px; object-fit: cover; object-position: top; border: 0; border-radius: 0; }
     .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0 12px; }
     .compare > div { padding: 12px 14px; border: 1px solid #3d5749; border-radius: 4px; background: #1a3328; }

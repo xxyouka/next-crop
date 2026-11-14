@@ -54,6 +54,7 @@ Double-click `index.html` or run `python3 -m http.server 8766 --bind 127.0.0.1` 
 - The [Kaiping Sentinel-2A image](https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_49QFE_20250103_0_L2A) is included under Evidence. Crop and resampling are reproduced by `scripts/fetch-image.py` with Rasterio and Pillow. Contains modified Copernicus Sentinel data 2025.
 - Plant illustrations use morphology described by [Flora of China for Chinese milk vetch](https://www.worldfloraonline.org/taxon/wfo-0000185133), [KPU Plant Database for potato](https://dplantdatabase.kpu.ca/Plant/sotu), [NSW Flora Online for mung bean](https://plantnet.rbgsyd.nsw.gov.au/cgi-bin/NSWfl.pl?lvl=sp&name=Vigna~radiata&page=nswfl), [NC State Extension for mustard](https://plants.ces.ncsu.edu/plants/brassica-juncea/) and [University of Minnesota for maize](https://ipmworld.umn.edu/maize-insect-pests-maize-growth-development).
 - Codex assisted with implementation, illustration code, test creation and documentation. Python, Node.js, Git and Microsoft Edge were used for data preparation, version history and verification.
+- Typefaces: Instrument Sans and Instrument Serif, self-hosted under the SIL Open Font License 1.1. License texts are in `assets/fonts/`.
 
 ## What is illustrative
 

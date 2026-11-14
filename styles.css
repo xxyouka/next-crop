@@ -1,3 +1,17 @@
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("assets/fonts/instrument-sans.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("assets/fonts/instrument-serif.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 :root {
   color-scheme: light;
   --paper: #f3f3e9;
