@@ -51,8 +51,8 @@ function makeFieldArt(canvas, closeupCanvas) {
   }
 
   const place = (u, v) => [
-    154 + 526 * u + 139 * v - 20 * u * v,
-    201 - 56 * u + 205 * v + 21 * u * v,
+    480 + (2 * u - 1) * (230 + 120 * v),
+    182 + 234 * v,
   ];
   const rim = (u1, v1, u2, v2) => [place(u1, v1), place(u2, v1), place(u2, v2), place(u1, v2)];
   const drop = ([x, y], amount) => [x, y + amount];
@@ -209,11 +209,12 @@ function makeFieldArt(canvas, closeupCanvas) {
   return function paint({ terrain: placeType, crop, progress, phase, growthPhase, wet }) {
     landscape(placeType, wet);
     const [a, b, c, d] = rim(0, 0, 1, 1);
-    polygon([drop(a, 19), drop(b, 21), drop(c, 34), drop(d, 32)], "#26382ca0");
-    polygon([a, d, drop(d, 23), drop(a, 17)], "#5d4939");
-    polygon([d, c, drop(c, 25), drop(d, 23)], "#564333");
-    polygon([a, b, c, d], "#a99b69");
-    polygon(rim(.025, .045, .977, .948), "#52734f");
+    polygon([drop(a, 15), drop(b, 15), drop(c, 24), drop(d, 24)], "#26382ca0");
+    polygon([a, d, drop(d, 18), drop(a, 12)], "#5d4939");
+    polygon([b, c, drop(c, 18), drop(b, 12)], "#4f3d2e");
+    polygon([d, c, drop(c, 18), drop(d, 18)], "#564333");
+    polygon([a, b, c, d], "#5f7a50");
+    polygon(rim(.025, .045, .977, .948), "#4d6a46");
 
     const flooded = phase === "riceStage";
     const worked = phase === "harvestStage" || phase === "incorporationStage" || phase === "prepStage" || phase === "delayedStage";
@@ -225,11 +226,14 @@ function makeFieldArt(canvas, closeupCanvas) {
 
     const rows = 13;
     const cols = 16;
+    const rowValues = Array.from({ length: rows }, (_, row) => .09 + .78 * (row / (rows - 1)) ** 1.22);
+    const rowStep = row => row < rows - 1 ? rowValues[row + 1] - rowValues[row] : rowValues[row] - rowValues[row - 1];
     for (let row = 0; row < rows; row++) {
-      const v = .09 + row * .062;
+      const v = rowValues[row];
+      const step = rowStep(row);
       if (!flooded) {
-        polygon(rim(.05, v, .95, v + .018), worked ? "#c2a5815a" : "#d7ad7a67");
-        polygon(rim(.05, v + .019, .95, v + .026), "#47382c50");
+        polygon(rim(.05, v, .95, v + step * .29), worked ? "#c2a5815a" : "#d7ad7a67");
+        polygon(rim(.05, v + step * .31, .95, v + step * .42), "#47382c50");
       } else {
         path([place(.055, v), place(.94, v)], "#c1dfc866", 1.2);
       }
@@ -251,7 +255,7 @@ function makeFieldArt(canvas, closeupCanvas) {
     for (let row = 0; row < rows; row++) {
       for (let col = cols - 1; col >= 0; col--) {
         const seed = row * cols + col;
-        const v = .102 + row * .062 + (random(seed + 31) - .5) * .019;
+        const v = rowValues[row] + rowStep(row) * .19 + (random(seed + 31) - .5) * .019;
         const u = .079 + col * .056 + (random(seed + 7) - .5) * .026;
         const [x, y] = place(u, v);
         if (worked || fallow) {
@@ -277,9 +281,6 @@ function makeFieldArt(canvas, closeupCanvas) {
       const scale = 2 + v * 5;
       path([[x - scale, y], [x, y - scale], [x + scale * .4, y]], i % 3 ? "#7c965a" : "#a9ae6c");
     }
-    path([drop(d, 8), drop(c, 9)], "#bc9a6a79", 1.4);
-    path([drop(d, 18), drop(c, 20)], "#362d288c", 1.6);
-
     if (wet) {
       for (let i = 0; i < 108; i++) {
         const x = random(i + 500) * width;
