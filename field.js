@@ -26,7 +26,7 @@ function mountField({ t, dateLabel, selectCrop, cropColor }) {
   function stageAt(day) {
     const { replay } = current;
     const stage = replay.stages.findLast(entry => entry.day <= day);
-    if (replay.delayed && day >= replay.rice && day < replay.operation) return { ...stage, key: "occupiedStage" };
+    if (replay.delayed && day >= replay.rice && day < replay.operation) return { ...stage, key: "occupiedStage", growthPhase: stage.key };
     if (day > replay.operation && day < replay.days) return { ...stage, key: "prepStage" };
     return stage;
   }
@@ -35,7 +35,7 @@ function mountField({ t, dateLabel, selectCrop, cropColor }) {
     if (!current) return;
     const day = timeline.valueAsNumber;
     const { site, result, replay } = current;
-    const { key } = stageAt(day);
+    const { key, growthPhase = key } = stageAt(day);
     const date = new Date(Date.parse(replay.start) + dayMs * day).toISOString().slice(0, 10);
     const [rain, minimum] = weather[site.id][date] ?? [];
     const activeCrop = key === "riceStage" ? "rice" : result.id;
@@ -55,7 +55,7 @@ function mountField({ t, dateLabel, selectCrop, cropColor }) {
     canvas.dataset.wet = String(rain >= 10);
     const activeStage = replay.stages.findLastIndex(entry => entry.day <= day);
     stageButtons.forEach((button, i) => button.setAttribute("aria-pressed", String(i === activeStage)));
-    paint({ terrain: site.terrain, crop: activeCrop, progress, phase: key, wet: rain >= 10 });
+    paint({ terrain: site.terrain, crop: activeCrop, progress, phase: key, growthPhase, wet: rain >= 10 });
   }
 
   timeline.addEventListener("input", () => {

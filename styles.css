@@ -265,3 +265,12 @@ tbody tr[data-active="true"] { background: #edf1dd; }
 .crop-closeup { margin-top: .72rem; border: 1px solid var(--line); border-radius: .3rem; overflow: clip; }
 .crop-closeup canvas { display: block; width: 100%; height: auto; }
 .crop-closeup figcaption { padding: .28rem .45rem; font-size: .68rem; }
+
+
+@media (max-width: 43rem) {
+  .field-options { grid-column: 1 / -1; }
+  .field-crops { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .field-crop { padding-inline: .45rem; line-height: 1.25; }
+  .field-observation { grid-column: 1 / -1; }
+  .field-observation dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
