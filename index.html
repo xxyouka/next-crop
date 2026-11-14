@@ -44,7 +44,7 @@
           <p class="eyebrow atlas-kicker">NASA Space Apps 2026 · Field Shift</p>
           <h1 id="page-title" data-t="headline">What grows after rice?</h1>
           <p class="intro" data-t="intro">Choose a region to watch its crops grow, then test a winter rotation against NASA POWER rainfall from three historical years.</p>
-          <p class="atlas-source" data-t="builtWith">Built with NASA POWER daily rainfall and Blue Marble imagery.</p>
+          <p class="atlas-source"><span data-t="builtWith">Built with NASA POWER daily rainfall and Blue Marble imagery.</span><button type="button" class="text-link" id="brief-open" data-t="briefLink">Project brief</button></p>
         </div>
       </div>
       <figure class="globe-figure">
@@ -200,5 +200,37 @@
     </section>
   </main>
   <footer class="shell footer"><span data-t="footer">Next Crop · NASA Space Apps Challenge 2026</span><span>Contains modified Copernicus Sentinel data 2025</span></footer>
+  <dialog id="brief" class="brief" aria-labelledby="brief-title">
+    <div class="brief-inner">
+      <div class="brief-head">
+        <p class="eyebrow" data-t="briefKicker">NASA Space Apps 2026 · Field Shift</p>
+        <button type="button" class="brief-close" id="brief-close"><span aria-hidden="true">×</span><span class="visually-hidden" data-t="briefClose">Close</span></button>
+      </div>
+      <h2 id="brief-title" data-t="briefTitle">Plan the weeks after rice</h2>
+      <p class="brief-lede" data-t="briefLede">Rice farmers have a narrow window between harvest and the next transplant. Next Crop tests whether a winter crop fits — and whether the weather at its operation date cooperates.</p>
+      <div class="brief-stats">
+        <div class="brief-stat"><strong data-t="briefStatRegions">4</strong><span data-t="briefRegions">rice regions</span></div>
+        <div class="brief-stat"><strong data-t="briefStatCrops">7</strong><span data-t="briefCrops">winter crops</span></div>
+        <div class="brief-stat"><strong data-t="briefStatSeasons">3</strong><span data-t="briefSeasons">NASA POWER seasons</span></div>
+        <div class="brief-stat"><strong data-t="briefStatDays">3,760</strong><span data-t="briefDays">daily weather records</span></div>
+      </div>
+      <div class="brief-grid">
+        <section><h3 data-t="briefProblemTitle">The problem</h3><p data-t="briefProblem">A late rice harvest, a wet operation day or an unknown field can turn a good rotation into a missed rice season.</p></section>
+        <section><h3 data-t="briefApproachTitle">What we built</h3><p data-t="briefApproach">Pick one of four rice landscapes, replay the crop, compare rotations, then test the same plan against three NASA POWER seasons.</p></section>
+        <section><h3 data-t="briefDataTitle">NASA data</h3><p data-t="briefData">NASA POWER daily corrected precipitation and minimum temperature; NASA Blue Marble imagery; a Copernicus Sentinel-2 context image.</p></section>
+      </div>
+      <section class="brief-method"><h3 data-t="briefMethodTitle">Method and limits</h3><p data-t="briefMethod">Local crop calendars come from cited extension and research sources. The planner uses a three-day rain window around each operation, an illustrative 30 mm review threshold, and fixed crop durations and stages. Weather is a regional grid estimate, not a field sensor; check locally before planting.</p></section>
+      <section class="brief-demo"><h3 data-t="briefDemoTitle">Try it in 30 seconds</h3><ol>
+        <li data-t="briefDemo1">Start with Kaiping and winter potato in 2024/25.</li>
+        <li data-t="briefDemo2">Select Try a wet harvest: the plan switches to 2023/24, the field jumps to 11 March 2024, and the three-day total is 39.34 mm.</li>
+        <li data-t="briefDemo3">Switch the season to 2024/25: the corresponding operation falls to 0.59 mm.</li>
+        <li data-t="briefDemo4">Open the three-season check and click 2023/24 to see the wet window.</li>
+      </ol></section>
+      <div class="brief-actions">
+        <button type="button" class="primary" id="brief-demo-start" data-t="briefStart">Run the wet-harvest demo</button>
+        <button type="button" class="quiet" id="brief-close-2" data-t="briefClose">Close</button>
+      </div>
+    </div>
+  </dialog>
 </body>
 </html>

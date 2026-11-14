@@ -67,6 +67,29 @@ const copy = {
   rainNote: ["Rain includes the operation day and the two days before it. Choose a strategy to see its evidence.", "降雨累计包含作业当日与前两天。点选方案可查看依据。"],
   behind: ["Behind the comparison", "判断依据"],
   evidenceLede: ["Three evidence layers: NASA POWER weather, local crop calendars and a Sentinel-2 field image.", "三层依据：NASA POWER 天气、当地作物日历，以及一张 Sentinel-2 田块影像。"],
+  briefLink: ["Project brief", "项目简介"],
+  briefKicker: ["NASA Space Apps 2026 · Field Shift", "NASA Space Apps 2026 · Field Shift"],
+  briefTitle: ["Plan the weeks after rice", "水稻后的几周怎么排"],
+  briefLede: ["Rice farmers have a narrow window between harvest and the next transplant. Next Crop tests whether a winter crop fits — and whether the weather at its operation date cooperates.", "水稻收割到下一季插秧之间，留给冬作的窗口很短。下一茬要回答的是：这茬作物排得进去吗？作业当天的天气配合吗？"],
+  briefStatRegions: ["4", "4"], briefRegions: ["rice regions", "水稻地区"],
+  briefStatCrops: ["7", "7"], briefCrops: ["winter crops", "冬季作物"],
+  briefStatSeasons: ["3", "3"], briefSeasons: ["NASA POWER seasons", "NASA POWER 历史季节"],
+  briefStatDays: ["3,760", "3,760"], briefDays: ["daily weather records", "逐日天气记录"],
+  briefProblemTitle: ["The problem", "问题"],
+  briefProblem: ["A late rice harvest, a wet operation day or an unknown field can turn a good rotation into a missed rice season.", "晚稻推迟、作业日遇到降雨，或田况不明，都可能让一个看似合理的轮作耽误下一季水稻。"],
+  briefApproachTitle: ["What we built", "我们做了什么"],
+  briefApproach: ["Pick one of four rice landscapes, replay the crop, compare rotations, then test the same plan against three NASA POWER seasons.", "选择四个稻作地区之一，回放作物生长，比较轮作方案，再用三个 NASA POWER 历史季节检验同一方案。"],
+  briefDataTitle: ["NASA data", "NASA 数据"],
+  briefData: ["NASA POWER daily corrected precipitation and minimum temperature; NASA Blue Marble imagery; a Copernicus Sentinel-2 context image.", "NASA POWER 逐日修正降水与最低温；NASA Blue Marble 影像；以及一张 Copernicus Sentinel-2 田块影像。"],
+  briefMethodTitle: ["Method and limits", "方法与边界"],
+  briefMethod: ["Local crop calendars come from cited extension and research sources. The planner uses a three-day rain window around each operation, an illustrative 30 mm review threshold, and fixed crop durations and stages. Weather is a regional grid estimate, not a field sensor; check locally before planting.", "作物日历来自公开的推广与研究资料。工具使用作业日前后三天的降雨窗口、演示用 30 毫米复核阈值，以及固定的生育期与阶段。天气是区域格点估计，不是田块传感器；种植前请在当地核实。"],
+  briefDemoTitle: ["Try it in 30 seconds", "30 秒试用"],
+  briefDemo1: ["Start with Kaiping and winter potato in 2024/25.", "从开平、冬马铃薯、2024/25 开始。"],
+  briefDemo2: ["Select Try a wet harvest: the plan switches to 2023/24, the field jumps to 11 March 2024, and the three-day total is 39.34 mm.", "点“试算雨后采收”：方案切到 2023/24，田块跳到 2024 年 3 月 11 日，三日累计 39.34 毫米。"],
+  briefDemo3: ["Switch the season to 2024/25: the corresponding operation falls to 0.59 mm.", "把历史季节切到 2024/25：对应作业日的三日累计降到 0.59 毫米。"],
+  briefDemo4: ["Open the three-season check and click 2023/24 to see the wet window.", "打开三个历史季节对照，点 2023/24 查看这次偏大的降雨。"],
+  briefStart: ["Run the wet-harvest demo", "运行雨后采收演示"],
+  briefClose: ["Close", "关闭"],
   sourceWeather: ["NASA POWER", "NASA POWER"],
   powerLink: ["Daily API documentation ↗", "逐日数据接口说明 ↗"],
   sourceLocal: ["Local crop practices", "本地轮作实践"],
@@ -108,6 +131,7 @@ const form = $("field-settings");
 const comparison = $("comparison");
 const seasonHead = $("season-head");
 const seasonBody = $("season-body");
+const brief = $("brief");
 const colors = {
   fallow: "#7d775e", potato: "#8e6439", vetch: "#775297", maize: "#91702d",
   mung: "#587c4a", mustard: "#a8781e", rye: "#627743", hairy: "#725c97",
@@ -498,7 +522,7 @@ $("language").addEventListener("click", event => {
   updateSiteLabels();
   render();
 });
-$("wet-demo").addEventListener("click", () => {
+function runWetDemo() {
   $("harvest").value = 12;
   $("transplant").value = 15;
   $("season").value = 2023;
@@ -508,6 +532,38 @@ $("wet-demo").addEventListener("click", () => {
   selected = "potato";
   render();
   field.jumpToOperation();
+}
+
+function openBrief() {
+  if (!brief.open) {
+    if (typeof brief.showModal === "function") brief.showModal();
+    else brief.setAttribute("open", "");
+  }
+  document.body.classList.add("dialog-open");
+  $("brief-close").focus();
+}
+
+function closeBrief() {
+  if (typeof brief.close === "function" && brief.open) brief.close();
+  else brief.removeAttribute("open");
+  document.body.classList.remove("dialog-open");
+}
+
+$("wet-demo").addEventListener("click", runWetDemo);
+$("brief-open").addEventListener("click", openBrief);
+$("brief-close").addEventListener("click", closeBrief);
+$("brief-close-2").addEventListener("click", closeBrief);
+brief.addEventListener("click", event => { if (event.target === brief) closeBrief(); });
+brief.addEventListener("close", () => document.body.classList.remove("dialog-open"));
+$("brief-demo-start").addEventListener("click", () => {
+  closeBrief();
+  if (site.id !== "kaiping") {
+    loadSite(NextCrop.sites[0]);
+    globe.focus(NextCrop.sites[0]);
+  }
+  runWetDemo();
+  $("field-title").focus({ preventScroll: true });
+  $("field").scrollIntoView();
 });
 form.addEventListener("input", render);
 form.addEventListener("submit", event => event.preventDefault());
