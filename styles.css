@@ -186,7 +186,15 @@ tbody tr[data-active="true"] { background: #edf1dd; }
 .source-grid p, .source-grid a { font-size: .85rem; }
 .source-grid p { margin-block: .3rem .55rem; color: var(--muted); }
 .source-grid a { font-weight: 700; color: #365b36; }
-.footer { border-top: 1px solid var(--line); color: var(--muted); font-size: .75rem; padding-block: .9rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: .3rem 1rem; }
+.footer { border-top: 1px solid var(--line); color: var(--muted); font-size: .75rem; padding-block: .9rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .45rem 1rem; }
+.motion-toggle { border: 1px solid var(--line); border-radius: .28rem; background: transparent; color: var(--muted); padding: .28rem .5rem; font: 600 .63rem/1.2 var(--mono); letter-spacing: .03em; }
+.motion-toggle:hover { color: var(--ink); background: #e8edda; }
+.motion-toggle[aria-pressed="true"] { color: var(--ink); border-color: #9bad85; background: #edf1dd; }
+@media (prefers-reduced-motion: reduce) {
+  html.force-motion .nav-marker { transition: translate .26s cubic-bezier(.2,.75,.2,1), inline-size .26s cubic-bezier(.2,.75,.2,1) !important; }
+  html.force-motion .field.site-change .field-main, html.force-motion .field.site-change .field-sidebar { animation: field-change .5s cubic-bezier(.2,.75,.2,1) both !important; }
+  html.force-motion .field.arrived .field-heading, html.force-motion .workspace.arrived > .section-heading, html.force-motion .sources.arrived > h2 { animation: section-arrive .5s cubic-bezier(.2,.75,.2,1) both !important; }
+}
 body.dialog-open { overflow: hidden; }
 .brief {
   width: min(54rem, calc(100% - 2rem));

@@ -151,11 +151,27 @@ const brief = $("brief");
 const copyButton = $("copy-link");
 let copyTimer = 0;
 let shiftSuggestion = null;
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+const motionToggle = $("motion-toggle");
+let scrollMotion;
+try {
+  const savedMotion = localStorage.getItem("next-crop-scroll-motion");
+  scrollMotion = savedMotion ? savedMotion === "on" : !reducedMotion.matches;
+} catch {
+  scrollMotion = !reducedMotion.matches;
+}
 let scrollRaf = 0;
 let activeScrollBehavior = null;
 let siteChangeTimer = 0;
 let arrivalTimer = 0;
-const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+function syncMotionToggle() {
+  if (!motionToggle) return;
+  motionToggle.textContent = chinese
+    ? (scrollMotion ? "平滑滚动：开" : "平滑滚动：关")
+    : (scrollMotion ? "Smooth scroll: on" : "Smooth scroll: off");
+  motionToggle.setAttribute("aria-pressed", String(scrollMotion));
+  document.documentElement.classList.toggle("force-motion", scrollMotion && reducedMotion.matches);
+}
 function withMotionTransition(update) {
   if (!document.startViewTransition || reducedMotion.matches) { update(); return; }
   try { document.startViewTransition(update); }
@@ -303,7 +319,7 @@ function animateScrollTo(target, { focus = false, onDone, duration: durationOver
     }
     onDone?.();
   };
-  if (reducedMotion.matches || Math.abs(distance) < 2) {
+  if (!scrollMotion || Math.abs(distance) < 2) {
     activeScrollBehavior = root.style.scrollBehavior;
     root.style.scrollBehavior = "auto";
     scrollTo(0, endY);
@@ -651,6 +667,7 @@ $("language").addEventListener("click", event => {
     for (const node of document.querySelectorAll("[data-t]")) node.textContent = t(node.dataset.t);
     updateSiteLabels();
     render();
+    syncMotionToggle();
     const restore = () => {
       if (!activeSection || activeTop === undefined) return;
       const target = activeSection.getBoundingClientRect().top + scrollY - activeTop;
@@ -996,8 +1013,14 @@ document.addEventListener("click", event => {
   if (location.hash !== link.hash) history.pushState(null, "", link.hash);
   animateScrollTo(target, { focus: true, onDone: () => markArrived(target) });
 });
+motionToggle?.addEventListener("click", () => {
+  scrollMotion = !scrollMotion;
+  try { localStorage.setItem("next-crop-scroll-motion", scrollMotion ? "on" : "off"); } catch {}
+  syncMotionToggle();
+});
 addEventListener("wheel", cancelAnimatedScroll, { passive: true });
 addEventListener("touchstart", cancelAnimatedScroll, { passive: true });
 addEventListener("keydown", event => {
   if (["PageUp", "PageDown", "Home", "End", "ArrowUp", "ArrowDown", " "].includes(event.key)) cancelAnimatedScroll();
 });
+syncMotionToggle();
