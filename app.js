@@ -352,7 +352,8 @@ function enterSite(point) {
       markArrived(field);
     } });
   }
-  if (location.hash !== "#field") history.pushState(null, "", `${location.pathname}${location.search}#field`);
+  const shareURL = `${location.pathname}?site=${encodeURIComponent(point.id)}#field`;
+  if (`${location.pathname}${location.search}${location.hash}` !== shareURL) history.pushState(null, "", shareURL);
 }
 
 function dateLabel(date) {
