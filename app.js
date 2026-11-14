@@ -4,14 +4,16 @@ const copy = {
   skip: ["Skip to the regions", "跳到地区选择"], brand: ["Next Crop", "下一茬"],
   atlas: ["Regions", "地区"], fieldNav: ["Field replay", "田块回放"],
   planner: ["Planner", "轮作工具"], evidence: ["Evidence", "数据依据"],
-  headline: ["What grows after rice?", "水稻收完，下一茬种什么？"],
-  intro: ["Choose a region to watch its crops grow and compare what can fit between rice seasons.", "选择一个地区，看作物从幼苗长到成熟，再比较两季水稻之间能安排哪些作物。"],
+  headline: ["What grows after rice?", "水稻收完，\n下一茬种什么？"],
+  intro: ["Choose a region to watch its crops grow, then test a winter rotation against NASA POWER rainfall from three historical years.", "选择一个地区，看作物从幼苗长到成熟，再用 NASA POWER 三个历史年份的降雨，检验冬季轮作能否接上下一季水稻。"],
+  builtWith: ["Built with NASA POWER daily rainfall and Blue Marble imagery.", "基于 NASA POWER 逐日降雨与 Blue Marble 影像。"],
   start: ["Compare rotations", "比较轮作方案"], drag: ["Drag to rotate", "拖动地球旋转"],
   backToAtlas: ["Change region ↑", "切换地区 ↑"], illustration: ["Illustrated field", "田块示意"],
   closeup: ["Crop close-up", "作物近景"],
   observe: ["Observation date", "观察日期"], chooseCrop: ["Choose a rotation", "选择轮作方案"],
   observation: ["Regional weather", "区域历史天气"],
   observedRain: ["Daily rainfall", "当天降水"], observedTemp: ["Daily minimum", "当天最低温"],
+  operationRain: ["3-day rain at operation", "作业日三日累计"],
   weatherScale: ["NASA POWER historical grid estimates.", "NASA POWER 历史格点估计。"],
   play: ["▶ Play season", "▶ 播放全季"], pause: ["Ⅱ Pause", "Ⅱ 暂停"],
   stageList: ["Growth stages", "生长阶段"],
@@ -37,6 +39,13 @@ const copy = {
   occupiedStageNote: ["The rice planting date has arrived while the previous crop still occupies the field.", "已到计划的水稻种植日，上一茬作物仍占着田。"],
   viewImage: ["Kaiping satellite image", "开平卫星影像"],
   workspace: ["Winter rotation planner", "冬季轮作工具"],
+  plannerLede: ["Set rice dates and field conditions. The table checks calendar fit, field conditions and rain at each operation; the three-season check repeats the same plan across 2024/25, 2023/24 and 2021/22.", "设定水稻农时与田况。下表检查农时、田况与作业日降雨；季节对照用 2024/25、2023/24、2021/22 三个 NASA POWER 历史年份重跑同一方案。"],
+  seasonCheck: ["Three-season check", "三个历史季节对照"],
+  seasonCheckContext: ["Calendar and rain only", "仅看农时与降雨"],
+  seasonCaption: ["Same plan in each historical season", "同一方案在三个历史季节中的表现"],
+  seasonCheckNote: ["Same inputs and 30 mm rain threshold, run through each historical season. Field-condition flags are left out; select a cell to inspect its full result in the table above.", "使用相同输入和 30 毫米降雨阈值，在三个历史季节中各跑一遍。此处不计排水与土壤复核项；点选格子可回到上方表格查看完整判断。"],
+  fitsShort: ["Fits", "排得进去"], conflictShort: ["Conflict", "农时冲突"],
+  wetWindow: ["Wet window", "雨量偏大"], noData: ["No data", "无数据"],
   inputs: ["Your field", "你的田况"], reset: ["Reset", "重置"],
   season: ["Historical season", "历史季节"], drainage: ["Field drainage", "田块排水"],
   soil: ["Field soil texture", "土壤质地"], priority: ["Farm priority", "经营优先项"],
@@ -91,6 +100,8 @@ const copy = {
 const $ = id => document.getElementById(id);
 const form = $("field-settings");
 const comparison = $("comparison");
+const seasonHead = $("season-head");
+const seasonBody = $("season-body");
 const colors = {
   fallow: "#7d775e", potato: "#8e6439", vetch: "#775297", maize: "#91702d",
   mung: "#587c4a", mustard: "#a8781e", rye: "#627743", hairy: "#725c97",
@@ -102,7 +113,11 @@ const t = key => copy[key][Number(chinese)];
 const local = pair => pair[Number(chinese)];
 const either = (english, chineseText) => chinese ? chineseText : english;
 const readRain = date => weather[site.id][date]?.[0] ?? null;
+const seasonLabel = year => `${year}/${String(year + 1).slice(-2)}`;
 let tableRows;
+let seasonRows;
+let seasonHeadCells;
+let seasonCorner;
 
 function selectCrop(id) {
   selected = id;
@@ -158,7 +173,6 @@ function updateSiteLabels() {
   $("field-coordinates").textContent = coordinates(site);
   $("harvest-label").textContent = local(site.previous);
   $("transplant-label").textContent = local(site.next);
-  $("rotation-context").textContent = local(site.system);
   $("source-weather").textContent = either(
     `Daily corrected rainfall and minimum temperature at ${coordinates(site)} in local solar time. These values are regional estimates.`,
     `查询点 ${coordinates(site)}。降雨与最低温采用当地太阳时的历史格点估计。`,
@@ -187,6 +201,7 @@ function loadSite(point) {
   $("wet-demo").hidden = site.id !== "kaiping";
   updateSiteLabels();
   buildTable();
+  buildSeasonGrid();
   render();
 }
 
@@ -231,6 +246,108 @@ function buildTable() {
     row.insertCell().append(status);
     return [id, { row, button, label, windowCell, rainCell, status }];
   }));
+}
+
+function buildSeasonGrid() {
+  const header = document.createElement("tr");
+  seasonCorner = document.createElement("th");
+  seasonCorner.scope = "col";
+  header.append(seasonCorner);
+  seasonHeadCells = NextCrop.scenarios.map(year => {
+    const cell = document.createElement("th");
+    cell.scope = "col";
+    cell.textContent = seasonLabel(year);
+    header.append(cell);
+    return cell;
+  });
+  seasonHead.replaceChildren(header);
+
+  seasonRows = {};
+  seasonBody.replaceChildren();
+  for (const id of ["fallow", ...site.crops.map(crop => crop.id)]) {
+    const row = document.createElement("tr");
+    const name = document.createElement("th");
+    name.scope = "row";
+    const label = document.createElement("span");
+    label.className = "season-name";
+    const swatch = document.createElement("span");
+    swatch.className = "swatch";
+    swatch.style.setProperty("--swatch", colors[id]);
+    swatch.setAttribute("aria-hidden", "true");
+    const text = document.createElement("span");
+    label.append(swatch, text);
+    name.append(label);
+    row.append(name);
+    const cells = NextCrop.scenarios.map(year => {
+      const cell = document.createElement("td");
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "season-cell";
+      const status = document.createElement("span");
+      status.className = "status";
+      const rain = document.createElement("span");
+      rain.className = "season-rain";
+      button.append(status, rain);
+      button.addEventListener("click", () => {
+        $("season").value = String(year);
+        selected = id;
+        render();
+      });
+      cell.append(button);
+      row.append(cell);
+      return { button, status, rain };
+    });
+    seasonBody.append(row);
+    seasonRows[id] = { row, text, cells };
+  }
+}
+
+function seasonState(result) {
+  if (result.id === "fallow") return "baseline";
+  if (result.reasons.includes("overlap") || result.reasons.includes("lateSowing")) return "conflict";
+  if (result.reasons.includes("missingWeather")) return "nodata";
+  if (result.reasons.includes("rain")) return "wet";
+  return "fits";
+}
+
+function seasonStatusText(state) {
+  if (state === "wet") return t("wetWindow");
+  if (state === "nodata") return t("noData");
+  if (state === "fits") return t("fitsShort");
+  if (state === "conflict") return t("conflictShort");
+  return t(state);
+}
+
+function updateSeasonGrid() {
+  if (!seasonRows) return;
+  const year = Number($("season").value);
+  const harvest = $("harvest").valueAsNumber;
+  const transplant = $("transplant").valueAsNumber;
+  const drainage = $("drainage").value;
+  const soil = $("soil").value;
+  seasonCorner.textContent = t("strategy");
+  NextCrop.scenarios.forEach((scenarioYear, index) => {
+    const results = NextCrop.evaluate({ year: scenarioYear, harvest, transplant, drainage, soil, site }, readRain);
+    seasonHeadCells[index].dataset.active = String(scenarioYear === year);
+    for (const result of results) {
+      const entry = seasonRows[result.id];
+      if (!entry) continue;
+      const cell = entry.cells[index];
+      const state = seasonState(result);
+      const label = seasonStatusText(state);
+      cell.status.dataset.state = state;
+      cell.status.textContent = label;
+      cell.rain.textContent = result.rain === null ? "—" : `${result.rain.toFixed(2)} mm`;
+      const active = result.id === selected && scenarioYear === year;
+      cell.button.dataset.active = String(active);
+      cell.button.setAttribute("aria-pressed", String(active));
+      cell.button.setAttribute("aria-label", `${t(result.id)} · ${seasonLabel(scenarioYear)} · ${label} · ${cell.rain.textContent}`);
+    }
+  });
+  for (const [id, entry] of Object.entries(seasonRows)) {
+    entry.text.textContent = t(id);
+    entry.row.dataset.active = String(id === selected);
+  }
 }
 
 function updateSummary(preferred, priority) {
@@ -290,7 +407,7 @@ function updateTimeline(results, riceDate, year) {
   timeline.style.setProperty("--rice", `${percent(riceDate)}%`);
   const axis = document.createElement("div");
   axis.className = "timeline-axis";
-  for (let month = site.harvestStart[0]; Date.UTC(year, month, 1) < last - 6 * 86_400_000; month++) {
+  for (let month = site.harvestStart[0] - 1; Date.UTC(year, month, 1) < last - 6 * 86_400_000; month++) {
     const tick = document.createElement("span");
     const date = new Date(Date.UTC(year, month, 1)).toISOString();
     tick.textContent = new Intl.DateTimeFormat(chinese ? "zh-CN" : "en-GB", {
@@ -352,6 +469,8 @@ function render() {
     cells.status.textContent = t(status);
   }
   updateTimeline(results, dates.rice, year);
+  $("rotation-context").textContent = `${seasonLabel(year)} · ${local(site.system)}`;
+  updateSeasonGrid();
   const preferred = site.priorities[priority] ?? "fallow";
   updateSummary(results.find(result => result.id === preferred), priority);
   const active = results.find(result => result.id === selected);
@@ -362,7 +481,7 @@ function render() {
 $("language").addEventListener("click", event => {
   chinese = !chinese;
   document.documentElement.lang = chinese ? "zh-Hans" : "en";
-  document.title = either("Next Crop · Global rotation explorer", "下一茬 · 全球轮作探索");
+  document.title = either("Next Crop · What grows after rice?", "下一茬 · 水稻收完，种什么？");
   event.currentTarget.lang = chinese ? "en" : "zh-Hans";
   event.currentTarget.textContent = either("中文", "English");
   for (const node of document.querySelectorAll("[data-t]")) node.textContent = t(node.dataset.t);
@@ -378,6 +497,7 @@ $("wet-demo").addEventListener("click", () => {
   $("priority").value = "income";
   selected = "potato";
   render();
+  field.jumpToOperation();
 });
 form.addEventListener("input", render);
 form.addEventListener("submit", event => event.preventDefault());

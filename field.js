@@ -83,6 +83,13 @@ function mountField({ t, dateLabel, selectCrop, cropColor }) {
     observer.observe($("field"));
   }
 
+  function jumpToOperation() {
+    if (!current) return;
+    stop();
+    timeline.value = Math.min(Number(timeline.max), current.replay.operation);
+    draw();
+  }
+
   function update(site, result, results, dates) {
     const replay = NextCrop.fieldReplay(result, dates);
     const previous = current;
@@ -90,6 +97,9 @@ function mountField({ t, dateLabel, selectCrop, cropColor }) {
       || previous.replay.start !== replay.start || previous.replay.operation !== replay.operation
       || previous.replay.rice !== replay.rice;
     current = { site, result, replay };
+    const windowRain = $("field-window-rain");
+    windowRain.textContent = result.rain === null ? "—" : `${result.rain.toFixed(2)} mm · ${dateLabel(result.operation)}`;
+    windowRain.dataset.state = result.rain === null ? "na" : result.rain >= 30 ? "wet" : "ok";
     timeline.max = replay.days;
     if (changed) {
       stop();
@@ -135,5 +145,5 @@ function mountField({ t, dateLabel, selectCrop, cropColor }) {
     draw();
   }
 
-  return { update };
+  return { update, jumpToOperation };
 }

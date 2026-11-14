@@ -3,9 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Explore four rice-growing regions and replay crop rotations using NASA POWER historical rainfall.">
+  <meta name="description" content="Explore four rice regions, replay crop growth and test winter rotations against three NASA POWER historical seasons.">
   <meta name="theme-color" content="#f3f3e9">
-  <title>Next Crop · Global rotation explorer</title>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Next Crop">
+  <meta property="og:title" content="Next Crop · What grows after rice?">
+  <meta property="og:description" content="Test winter rotations between rice seasons with NASA POWER rainfall across four rice-growing regions.">
+  <meta name="twitter:card" content="summary">
+  <title>Next Crop · What grows after rice?</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
   <script defer src="assets/weather.js"></script>
   <script defer src="assets/earth.js"></script>
@@ -35,8 +41,10 @@
     <section id="atlas" class="atlas" aria-labelledby="page-title">
       <div class="atlas-intro">
         <div>
+          <p class="eyebrow atlas-kicker">NASA Space Apps 2026 · Field Shift</p>
           <h1 id="page-title" data-t="headline">What grows after rice?</h1>
-          <p class="intro" data-t="intro">Choose a region to watch its crops grow and compare what can fit between rice seasons.</p>
+          <p class="intro" data-t="intro">Choose a region to watch its crops grow, then test a winter rotation against NASA POWER rainfall from three historical years.</p>
+          <p class="atlas-source" data-t="builtWith">Built with NASA POWER daily rainfall and Blue Marble imagery.</p>
         </div>
       </div>
       <figure class="globe-figure">
@@ -44,7 +52,7 @@
           <canvas id="globe" width="530" height="530" aria-hidden="true"></canvas>
           <div id="globe-pins"></div>
         </div>
-        <figcaption><span data-t="drag">Drag to rotate</span><a href="https://science.nasa.gov/earth/earth-observatory/the-blue-marble-true-color-global-imagery-at-1km-resolution/">NASA Blue Marble ↗</a></figcaption>
+        <figcaption><span data-t="drag">Drag to rotate</span><a href="https://science.nasa.gov/earth/earth-observatory/the-blue-marble-true-color-global-imagery-at-1km-resolution/" target="_blank" rel="noopener">NASA Blue Marble ↗</a></figcaption>
       </figure>
       <div class="atlas-places" id="site-list"></div>
     </section>
@@ -89,6 +97,7 @@
             <dl>
               <div><dt data-t="observedRain">Daily rainfall</dt><dd id="field-rain"></dd></div>
               <div><dt data-t="observedTemp">Daily minimum</dt><dd id="field-temp"></dd></div>
+              <div class="window-row"><dt data-t="operationRain">3-day rain at operation</dt><dd id="field-window-rain"></dd></div>
             </dl>
             <p id="field-coordinates"></p>
             <p data-t="weatherScale">NASA POWER historical grid estimates.</p>
@@ -100,7 +109,10 @@
 
     <section id="planner" class="workspace" aria-labelledby="planner-title">
       <div class="section-heading">
-        <h2 id="planner-title" data-t="workspace">Winter rotation planner</h2>
+        <div>
+          <h2 id="planner-title" data-t="workspace">Winter rotation planner</h2>
+          <p class="section-lede" data-t="plannerLede">Set rice dates and field conditions. The table checks calendar fit, field conditions and rain at each operation; the three-season check repeats the same plan across 2024/25, 2023/24 and 2021/22.</p>
+        </div>
         <button class="quiet demo" type="button" id="wet-demo" data-t="wetDemo">Try a wet harvest ↗</button>
       </div>
       <div class="planner-grid">
@@ -137,6 +149,17 @@
             </table>
           </div>
           <p class="table-note" data-t="rainNote">Rain includes the operation day and the two days before it. Choose a strategy to see its evidence.</p>
+          <section class="season-check">
+            <div class="detail-head"><h3 id="season-check-title" data-t="seasonCheck">Three-season check</h3><span class="section-context" data-t="seasonCheckContext">Calendar and rain only</span></div>
+            <div class="table-scroll season-scroll" tabindex="0" role="region" aria-labelledby="season-check-title">
+              <table class="season-table">
+                <caption class="visually-hidden" data-t="seasonCaption">Same plan in each historical season</caption>
+                <thead id="season-head"></thead>
+                <tbody id="season-body"></tbody>
+              </table>
+            </div>
+            <p class="season-note" data-t="seasonCheckNote">Same inputs and 30 mm rain threshold, run through each historical season. Field-condition flags are left out; select a cell to inspect its full result in the table above.</p>
+          </section>
           <section class="timeline" aria-labelledby="timeline-title">
             <div class="detail-head"><h3 id="timeline-title" data-t="timeline">Season timeline</h3><span id="rotation-context" class="section-context"></span></div>
             <div class="timeline-rows" id="timeline-rows" aria-hidden="true"></div>
@@ -155,11 +178,11 @@
     <section class="sources" id="evidence" aria-labelledby="evidence-title">
       <h2 id="evidence-title" data-t="behind">Behind the comparison</h2>
       <div class="source-grid">
-        <div><h3 data-t="sourceWeather">NASA POWER</h3><p id="source-weather"></p><a href="https://power.larc.nasa.gov/docs/services/api/temporal/daily/" data-t="powerLink">Daily API documentation ↗</a></div>
-        <div><h3 data-t="sourceLocal">Local crop practices</h3><p id="source-local"></p><a id="source-link" data-t="localLink">Local source ↗</a></div>
+        <div><h3 data-t="sourceWeather">NASA POWER</h3><p id="source-weather"></p><a href="https://power.larc.nasa.gov/docs/services/api/temporal/daily/" target="_blank" rel="noopener" data-t="powerLink">Daily API documentation ↗</a></div>
+        <div><h3 data-t="sourceLocal">Local crop practices</h3><p id="source-local"></p><a id="source-link" target="_blank" rel="noopener" data-t="localLink">Local source ↗</a></div>
         <div><h3 data-t="sourceRules">Planning assumptions</h3><p data-t="sourceRulesDesc">Illustrative crop stages, crop durations, rice preparation buffers and a 30 mm rain alert. Drainage and soil texture come from your inputs.</p><details id="kaiping-image"><summary data-t="viewImage">Kaiping satellite image</summary>
-          <img src="assets/kaiping.webp" width="1080" height="850" alt="" loading="lazy">
-          <a href="https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_49QFE_20250103_0_L2A" data-t="imageLink">Sentinel-2A image record ↗</a>
+          <img src="assets/kaiping.webp" width="1080" height="850" alt="Sentinel-2A true-colour image of agricultural fields near Kaiping, January 2025." loading="lazy">
+          <a href="https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_49QFE_20250103_0_L2A" target="_blank" rel="noopener" data-t="imageLink">Sentinel-2A image record ↗</a>
         </details></div>
       </div>
     </section>

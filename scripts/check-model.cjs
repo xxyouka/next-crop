@@ -37,6 +37,9 @@ assert.equal(Object.keys(data).length, 940);
 assert(Array.isArray(data["2024-02-29"]));
 assert.equal(options({}, date => data[date]?.[0]).potato.rain, 0.15);
 assert.equal(options({ year: 2023, harvest: 12 }, date => data[date]?.[0]).potato.rain, 39.34);
+const followUp = options({ year: 2024, harvest: 12 }, date => data[date]?.[0]).potato;
+assert.equal(followUp.operation, "2025-03-12");
+assert.equal(followUp.rain, 0.59);
 console.log("Bundled NASA POWER examples passed");
 
 const { sites, fieldReplay } = require("../model.js");
@@ -45,6 +48,12 @@ for (const site of sites) {
   const input = { ...base, harvest: site.harvestDefault, transplant: site.riceDefault, site };
   assert.equal(Object.keys(regionalWeather[site.id]).length, 940);
   assert(Object.values(regionalWeather[site.id]).every(([rain, minimum]) => Number.isFinite(rain) && Number.isFinite(minimum)));
+  for (const year of scenarios) {
+    for (let time = Date.UTC(year, 8, 1); time <= Date.UTC(year + 1, 6, 10); time += 86_400_000) {
+      const key = new Date(time).toISOString().slice(0, 10);
+      assert(key in regionalWeather[site.id], `${site.id} is missing weather for ${key}`);
+    }
+  }
   const local = evaluate(input, date => regionalWeather[site.id][date]?.[0]);
   assert.deepEqual(local.map(row => row.id), ["fallow", ...site.crops.map(crop => crop.id)]);
   for (const row of local) {
