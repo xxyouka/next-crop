@@ -57,31 +57,33 @@ button, a, input, select, [tabindex]:focus-visible { outline-offset: 4px; }
 .place-button, .globe-pin, .field-crop, .field-stages button, .strategy-button, .season-cell, .quiet, .play, .primary, #language {
   transition: background-color .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease;
 }
-@media (prefers-reduced-motion: no-preference) {
-  @keyframes settle { from { translate: 0 12px; } to { translate: 0 0; } }
-  @keyframes globe-settle { from { translate: 0 10px; scale: .988; } to { translate: 0 0; scale: 1; } }
-  .atlas-kicker, .atlas h1, .atlas-lede, .atlas-source, .atlas-intro .primary { animation: settle .6s cubic-bezier(.2,.75,.2,1) both; }
-  .atlas h1 { animation-delay: .04s; }
-  .atlas-lede { animation-delay: .08s; }
-  .atlas-source { animation-delay: .12s; }
-  .atlas-intro .primary { animation-delay: .16s; }
-  .atlas-places .place-button { animation: settle .55s cubic-bezier(.2,.75,.2,1) both; }
-  .atlas-places .place-button:nth-child(2) { animation-delay: .06s; }
-  .atlas-places .place-button:nth-child(3) { animation-delay: .12s; }
-  .atlas-places .place-button:nth-child(4) { animation-delay: .18s; }
-  .globe-stage { animation: globe-settle .7s cubic-bezier(.2,.75,.2,1) both; }
-}
-.reveal { opacity: 0; translate: 0 12px; }
-@media (prefers-reduced-motion: no-preference) {
-  .reveal { transition: opacity .5s ease, translate .5s cubic-bezier(.2,.75,.2,1); }
-  .field.site-change .field-main, .field.site-change .field-sidebar { animation: field-change .5s cubic-bezier(.2,.75,.2,1) both; }
-  .field.arrived .field-heading, .workspace.arrived > .section-heading, .sources.arrived > h2 { animation: section-arrive .5s cubic-bezier(.2,.75,.2,1) both; }
-}
+@keyframes settle { from { translate: 0 12px; } to { translate: 0 0; } }
+@keyframes globe-settle { from { translate: 0 10px; scale: .988; } to { translate: 0 0; scale: 1; } }
+@keyframes halo-breathe { 0%, 100% { opacity: .82; scale: 1; } 50% { opacity: 1; scale: 1.012; } }
+@keyframes hero-glow { from { translate: 0 0; scale: 1; } to { translate: -8% 6%; scale: 1.08; } }
+.atlas-kicker, .atlas h1, .atlas-lede, .atlas-source, .atlas-intro .primary { animation: settle .6s cubic-bezier(.2,.75,.2,1) both; }
+.atlas h1 { animation-delay: .04s; }
+.atlas-lede { animation-delay: .08s; }
+.atlas-source { animation-delay: .12s; }
+.atlas-intro .primary { animation-delay: .16s; }
+.atlas-places .place-button { animation: settle .55s cubic-bezier(.2,.75,.2,1) both; }
+.atlas-places .place-button:nth-child(2) { animation-delay: .06s; }
+.atlas-places .place-button:nth-child(3) { animation-delay: .12s; }
+.atlas-places .place-button:nth-child(4) { animation-delay: .18s; }
+.globe-stage { animation: globe-settle .7s cubic-bezier(.2,.75,.2,1) both; }
+.globe-stage::before { animation: halo-breathe 7s ease-in-out infinite; }
+.reveal { opacity: 0; translate: 0 12px; transition: opacity .55s ease, translate .55s cubic-bezier(.2,.75,.2,1); }
 .reveal.is-revealed { opacity: 1; translate: 0 0; }
-@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; translate: 0; } }
+.field-main.reveal, .settings.reveal { transition-delay: .04s; }
+.field-sidebar.reveal, .results.reveal { transition-delay: .12s; }
+.source-grid.reveal { transition-delay: .08s; }
+.field.site-change .field-main, .field.site-change .field-sidebar { animation: field-change .5s cubic-bezier(.2,.75,.2,1) both; }
+.field.arrived .field-heading, .workspace.arrived > .section-heading, .sources.arrived > h2 { animation: section-arrive .5s cubic-bezier(.2,.75,.2,1) both; }
+.shift-compare:not([hidden]) > div { animation: compare-in .45s cubic-bezier(.2,.75,.2,1) both; }
+.shift-compare:not([hidden]) .shift-next { animation-delay: .07s; }
+@keyframes compare-in { from { opacity: 0; translate: 0 6px; } to { opacity: 1; translate: 0 0; } }
 @keyframes field-change { from { opacity: .3; translate: 0 12px; } to { opacity: 1; translate: 0 0; } }
 @keyframes section-arrive { from { opacity: .35; translate: 0 10px; } to { opacity: 1; translate: 0 0; } }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 h1, h2, h3, p, figure { margin: 0; }
 h2, h3 { text-wrap: balance; }
 p { text-wrap: pretty; }
@@ -90,6 +92,7 @@ img { display: block; width: 100%; height: auto; }
 .skip, .visually-hidden { position: absolute; inline-size: 1px; block-size: 1px; clip-path: inset(50%); overflow: hidden; white-space: nowrap; }
 .skip:focus { inset: .5rem auto auto .5rem; z-index: 5; inline-size: auto; block-size: auto; clip-path: none; background: white; padding: .6rem; }
 .top { position: sticky; top: 0; z-index: 4; border-bottom: 1px solid var(--line); background: rgb(243 243 233 / 92%); backdrop-filter: blur(12px); }
+.scroll-progress { position: absolute; inset: auto 0 -1px; block-size: 2px; background: var(--pine); opacity: .75; transform: scaleX(var(--progress, 0)); transform-origin: left center; pointer-events: none; }
 .top-inner, nav, .brand { display: flex; align-items: center; }
 .top-inner { min-height: 4.5rem; justify-content: space-between; gap: .75rem; }
 .brand { gap: .65rem; text-decoration: none; font-size: 1.125rem; font-weight: 800; white-space: nowrap; }
@@ -98,7 +101,7 @@ img { display: block; width: 100%; height: auto; }
 nav { position: relative; gap: clamp(.55rem, 2.8vw, 2.35rem); font-size: .875rem; font-weight: 650; }
 .nav-marker { position: absolute; inset-block-start: auto; inset-block-end: .38rem; inset-inline-start: 0; z-index: 0; block-size: 2px; inline-size: 0; border-radius: 999px; background: #6f8a58; translate: 0 0; pointer-events: none; }
 nav a, #language { position: relative; z-index: 1; }
-@media (prefers-reduced-motion: no-preference) { .nav-marker { transition: translate .26s cubic-bezier(.2,.75,.2,1), inline-size .26s cubic-bezier(.2,.75,.2,1); } }
+.nav-marker { transition: translate .26s cubic-bezier(.2,.75,.2,1), inline-size .26s cubic-bezier(.2,.75,.2,1); }
 nav a { text-decoration: none; }
 nav a:hover { text-decoration: underline; text-underline-offset: .28em; }
 nav a[aria-current="location"] { color: var(--ink); }
@@ -187,14 +190,6 @@ tbody tr[data-active="true"] { background: #edf1dd; }
 .source-grid p { margin-block: .3rem .55rem; color: var(--muted); }
 .source-grid a { font-weight: 700; color: #365b36; }
 .footer { border-top: 1px solid var(--line); color: var(--muted); font-size: .75rem; padding-block: .9rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .45rem 1rem; }
-.motion-toggle { border: 1px solid var(--line); border-radius: .28rem; background: transparent; color: var(--muted); padding: .28rem .5rem; font: 600 .63rem/1.2 var(--mono); letter-spacing: .03em; }
-.motion-toggle:hover { color: var(--ink); background: #e8edda; }
-.motion-toggle[aria-pressed="true"] { color: var(--ink); border-color: #9bad85; background: #edf1dd; }
-@media (prefers-reduced-motion: reduce) {
-  html.force-motion .nav-marker { transition: translate .26s cubic-bezier(.2,.75,.2,1), inline-size .26s cubic-bezier(.2,.75,.2,1) !important; }
-  html.force-motion .field.site-change .field-main, html.force-motion .field.site-change .field-sidebar { animation: field-change .5s cubic-bezier(.2,.75,.2,1) both !important; }
-  html.force-motion .field.arrived .field-heading, html.force-motion .workspace.arrived > .section-heading, html.force-motion .sources.arrived > h2 { animation: section-arrive .5s cubic-bezier(.2,.75,.2,1) both !important; }
-}
 body.dialog-open { overflow: hidden; }
 .brief {
   width: min(54rem, calc(100% - 2rem));
@@ -251,9 +246,6 @@ body.dialog-open { overflow: hidden; }
 }
 @media (max-width: 48rem) {
   .planner-grid { grid-template-columns: minmax(0, 1fr); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .globe-pin[data-active="true"]::after { animation: none; }
 }
 @media (max-width: 34rem) {
   .shell { width: calc(100% - 1.75rem); }
@@ -336,6 +328,9 @@ body.dialog-open { overflow: hidden; }
 .atlas {
   background: radial-gradient(ellipse at 74% 47%, #234438 0%, #162e27 47%, #14241e 81%);
   color: #f4f5e7;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   border: 1px solid rgb(255 255 255 / .08);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / .08), 0 40px 80px -54px rgb(11 23 18 / .85);
   border-radius: .72rem;
@@ -348,6 +343,8 @@ body.dialog-open { overflow: hidden; }
   padding: clamp(1.1rem, 3.7vw, 3.75rem) clamp(1.05rem, 4.65vw, 5.5rem);
   margin-top: clamp(1rem, 2.1vw, 2rem);
 }
+.atlas::before { content: ""; position: absolute; z-index: 0; inset: -24% -12% auto auto; inline-size: 72%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, #93af6d33, transparent 64%); filter: blur(38px); animation: hero-glow 14s ease-in-out infinite alternate; pointer-events: none; }
+.atlas > * { position: relative; z-index: 1; }
 .atlas-intro { grid-area: intro; align-self: end; }
 .atlas-kicker { color: #d7e78d; letter-spacing: .075em; margin-bottom: .55rem; }
 .atlas .intro { color: #cfdecd; max-width: 33rem; }
