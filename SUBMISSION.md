@@ -2,11 +2,20 @@
 
 Deadline on the current Project Submission Guide: **Sunday 15 November 2026, 23:59 in the Team Owner's local time**. The project page must be submitted with the **Submit for Judging** button; saving is not submitting. Do not rely on the earlier 16 November 07:59 note — the guide attached to this page is authoritative.
 
-Two public links are still required. The local preview (`127.0.0.1:8766`) is not a public project link. See [DEPLOY.md](docs/DEPLOY.md).
+Public links are live and verified: the project site and the 7-slide demo deck. The local preview (`127.0.0.1:8766`) is not the submission link. See [DEPLOY.md](docs/DEPLOY.md) for redeployment.
 
 ## Project name
 
 **Next Crop**
+
+## Team
+
+- **Guan Xiao**
+- **Lin Yi**
+- **Cai Yang**
+- **Ye Fenghong**
+
+Team name on the submission page: **Dui Dui Dui**. The deck uses the names above on slide 1.
 
 ## High-level summary (50–200 words)
 
@@ -65,6 +74,7 @@ AI tools assisted with implementation, illustration code, tests and documentatio
 ## Final checklist
 
 - [ ] Project name is **Next Crop**, not the current placeholder.
+- [ ] Team members match: Guan Xiao, Lin Yi, Cai Yang, Ye Fenghong.
 - [ ] Summary 50–200 words.
 - [ ] Demo link is public, English, ≤7 slides or ≤30 seconds.
 - [ ] Project link is public and opens without login.
