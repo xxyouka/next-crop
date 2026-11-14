@@ -46,6 +46,7 @@ const copy = {
   guideConflict: ["The crop runs into the next rice date.", "作物与下一季水稻农时发生冲突。"],
   guideNote: ["Unknown drainage or soil adds a review flag. Set both to refine the result.", "排水或土壤选择“待确认”会增加复核项；两项都设置后判断更明确。"],
   recommendation: ["Recommended", "推荐"],
+  plannerSection: ["Field planner", "田间规划"], evidenceSection: ["Evidence", "依据"],
   shiftTitle: ["Find a safer window", "换一个更稳的农时窗口"],
   shiftNote: ["Search nearby rice dates for a window that clears the crop calendar and the three-day rain in all three seasons. Field conditions stay as you set them.", "在附近的收割/插秧日期中，寻找一个三个历史季节都能通过农时与三日降雨的窗口。田况保持不变。"],
   findShift: ["Find a safer window", "寻找更稳窗口"], applyShift: ["Apply this window", "应用这个窗口"],
@@ -202,6 +203,7 @@ const places = NextCrop.sites.map(point => {
   const system = document.createElement("small");
   const arrow = document.createElement("span");
   system.className = "place-system";
+  arrow.className = "place-arrow";
   arrow.setAttribute("aria-hidden", "true");
   arrow.textContent = "↘";
   labels.append(title, area, system);
@@ -295,7 +297,10 @@ function animateScrollTo(target, { focus = false, onDone } = {}) {
     activeScrollBehavior = null;
     scrollRaf = 0;
     syncNav();
-    if (focus) target.focus({ preventScroll: true });
+    if (focus) {
+      const focusTarget = target.matches("a, button") ? target : target.querySelector("h1, h2") ?? target;
+      focusTarget.focus({ preventScroll: true });
+    }
     onDone?.();
   };
   if (reducedMotion.matches || Math.abs(distance) < 2) {

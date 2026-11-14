@@ -43,7 +43,7 @@
       <div class="atlas-intro">
         <div>
           <p class="eyebrow atlas-kicker">NASA Space Apps 2026 · Field Shift</p>
-          <h1 id="page-title" data-t="headline">What grows after rice?</h1>
+          <h1 id="page-title" data-t="headline" tabindex="-1">What grows after rice?</h1>
           <p class="intro" data-t="intro">Choose a region to watch its crops grow, then test a winter rotation against NASA POWER rainfall from three historical years.</p>
           <p class="atlas-source"><span data-t="builtWith">Built with NASA POWER daily rainfall and Blue Marble imagery.</span><button type="button" class="text-link" id="brief-open" data-t="briefLink">Project brief</button></p>
         </div>
@@ -60,7 +60,7 @@
 
     <section id="field" class="field" aria-labelledby="field-title" tabindex="-1">
       <div class="section-heading field-heading">
-        <div><p class="eyebrow" id="field-location"></p><h2 id="field-title" tabindex="-1"></h2><p class="field-system" id="field-system"></p></div>
+        <div><p class="eyebrow field-eyebrow"><span class="section-num">01</span><span id="field-location"></span></p><h2 id="field-title" tabindex="-1"></h2><p class="field-system" id="field-system"></p></div>
         <a class="field-back" href="#atlas" data-t="backToAtlas">Change region ↑</a>
       </div>
       <div class="field-layout">
@@ -111,7 +111,8 @@
     <section id="planner" class="workspace" aria-labelledby="planner-title" tabindex="-1">
       <div class="section-heading">
         <div>
-          <h2 id="planner-title" data-t="workspace">Winter rotation planner</h2>
+          <p class="eyebrow section-index"><span class="section-num">02</span><span data-t="plannerSection">Field planner</span></p>
+          <h2 id="planner-title" data-t="workspace" tabindex="-1">Winter rotation planner</h2>
           <p class="section-lede" data-t="plannerLede">Set rice dates and field conditions. The table checks calendar fit, field conditions and rain at each operation; the three-season check repeats the same plan, and Find a safer window searches for the nearest dates that clear both checks in all three seasons.</p>
         </div>
         <div class="heading-actions">
@@ -215,7 +216,8 @@
     </section>
 
     <section class="sources" id="evidence" aria-labelledby="evidence-title" tabindex="-1">
-      <h2 id="evidence-title" data-t="behind">Behind the comparison</h2>
+      <p class="eyebrow section-index"><span class="section-num">03</span><span data-t="evidenceSection">Evidence</span></p>
+      <h2 id="evidence-title" data-t="behind" tabindex="-1">Behind the comparison</h2>
       <p class="section-lede" data-t="evidenceLede">Three evidence layers: NASA POWER weather, local crop calendars and a Sentinel-2 field image.</p>
       <div class="source-grid">
         <div><h3 data-t="sourceWeather">NASA POWER</h3><p id="source-weather"></p><a href="https://power.larc.nasa.gov/docs/services/api/temporal/daily/" target="_blank" rel="noopener" data-t="powerLink">Daily API documentation ↗</a></div>
