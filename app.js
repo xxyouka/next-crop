@@ -150,6 +150,10 @@ const brief = $("brief");
 const copyButton = $("copy-link");
 let copyTimer = 0;
 let shiftSuggestion = null;
+let scrollRaf = 0;
+let activeScrollBehavior = null;
+let siteChangeTimer = 0;
+let arrivalTimer = 0;
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 function withMotionTransition(update) {
   if (!document.startViewTransition || reducedMotion.matches) { update(); return; }
@@ -264,11 +268,79 @@ function loadSite(point) {
   render();
 }
 
+function headerOffset() {
+  const top = document.querySelector(".top");
+  return (top?.getBoundingClientRect().height ?? 0) + 14;
+}
+
+function cancelAnimatedScroll() {
+  if (!scrollRaf) return;
+  cancelAnimationFrame(scrollRaf);
+  scrollRaf = 0;
+  if (activeScrollBehavior !== null) {
+    document.documentElement.style.scrollBehavior = activeScrollBehavior;
+    activeScrollBehavior = null;
+  }
+}
+
+function animateScrollTo(target, { focus = false, onDone } = {}) {
+  if (!target) return;
+  cancelAnimatedScroll();
+  const root = document.documentElement;
+  const startY = scrollY;
+  const endY = Math.max(0, target.getBoundingClientRect().top + startY - headerOffset());
+  const distance = endY - startY;
+  const settle = () => {
+    root.style.scrollBehavior = activeScrollBehavior ?? "";
+    activeScrollBehavior = null;
+    scrollRaf = 0;
+    syncNav();
+    if (focus) target.focus({ preventScroll: true });
+    onDone?.();
+  };
+  if (reducedMotion.matches || Math.abs(distance) < 2) {
+    activeScrollBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    scrollTo(0, endY);
+    settle();
+    return;
+  }
+  activeScrollBehavior = root.style.scrollBehavior;
+  root.style.scrollBehavior = "auto";
+  const duration = Math.min(900, Math.max(420, Math.abs(distance) * .5));
+  const started = performance.now();
+  const step = now => {
+    const t = Math.min(1, (now - started) / duration);
+    const eased = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    scrollTo(0, startY + distance * eased);
+    if (t < 1) scrollRaf = requestAnimationFrame(step);
+    else settle();
+  };
+  scrollRaf = requestAnimationFrame(step);
+}
+
+function markArrived(target) {
+  target.classList.add("arrived");
+  clearTimeout(arrivalTimer);
+  arrivalTimer = setTimeout(() => target.classList.remove("arrived"), 650);
+}
+
 function enterSite(point) {
-  if (site !== point) loadSite(point);
+  const changed = site !== point;
+  if (changed) loadSite(point);
   globe.focus(point);
   $("field-title").focus({ preventScroll: true });
-  $("field").scrollIntoView();
+  animateScrollTo($("field"), {
+    onDone: () => {
+      const field = $("field");
+      markArrived(field);
+      if (!changed) return;
+      field.classList.remove("site-change");
+      requestAnimationFrame(() => field.classList.add("site-change"));
+      clearTimeout(siteChangeTimer);
+      siteChangeTimer = setTimeout(() => field.classList.remove("site-change"), 700);
+    },
+  });
   if (location.hash !== "#field") history.pushState(null, "", `${location.pathname}${location.search}#field`);
 }
 
@@ -834,7 +906,7 @@ $("brief-demo-start").addEventListener("click", () => {
   }
   runWetDemo();
   $("field-title").focus({ preventScroll: true });
-  $("field").scrollIntoView();
+  animateScrollTo($("field"), { onDone: () => markArrived($("field")) });
 });
 form.addEventListener("input", render);
 form.addEventListener("input", () => { if (shiftSuggestion || $("shift-status").textContent) clearShift(); });
@@ -901,3 +973,19 @@ if (revealTargets.length && !reducedMotion.matches && "IntersectionObserver" in 
   }, { rootMargin: "0px 0px -10% 0px", threshold: .15 });
   for (const target of revealTargets) revealObserver.observe(target);
 }
+
+document.addEventListener("click", event => {
+  if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  const link = event.target.closest?.('a[href^="#"]');
+  if (!link) return;
+  const target = document.getElementById(link.hash.slice(1));
+  if (!target) return;
+  event.preventDefault();
+  if (location.hash !== link.hash) history.pushState(null, "", link.hash);
+  animateScrollTo(target, { focus: true, onDone: () => markArrived(target) });
+});
+addEventListener("wheel", cancelAnimatedScroll, { passive: true });
+addEventListener("touchstart", cancelAnimatedScroll, { passive: true });
+addEventListener("keydown", event => {
+  if (["PageUp", "PageDown", "Home", "End", "ArrowUp", "ArrowDown", " "].includes(event.key)) cancelAnimatedScroll();
+});
