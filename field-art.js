@@ -5,8 +5,12 @@ function makeFieldArt(canvas, closeupCanvas) {
   if (!ctx) return () => {};
   const fieldContext = ctx;
   const detailContext = closeupCanvas.getContext("2d");
-  const width = canvas.width;
-  const height = canvas.height;
+  const width = 960;
+  const height = 500;
+  const detailWidth = 320;
+  const detailHeight = 180;
+  fieldContext.scale(canvas.width / width, canvas.height / height);
+  if (detailContext) detailContext.scale(closeupCanvas.width / detailWidth, closeupCanvas.height / detailHeight);
   const terrain = {
     delta: ["#889776", "#a0ac87", "#576c49", "#67865c", "#7b9361"],
     plain: ["#a4a879", "#b6bb91", "#647657", "#8b995f", "#a2a96f"],
@@ -157,8 +161,8 @@ function makeFieldArt(canvas, closeupCanvas) {
   function paintCloseup(crop, phase, wet, growth, stage) {
     if (!detailContext) return;
     ctx = detailContext;
-    const w = closeupCanvas.width;
-    const h = closeupCanvas.height;
+    const w = detailWidth;
+    const h = detailHeight;
     const flooded = phase === "riceStage";
     const sky = ctx.createLinearGradient(0, 0, 0, h);
     sky.addColorStop(0, wet ? "#78908a" : "#d9e6c5");

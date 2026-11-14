@@ -90,6 +90,14 @@ function mountField({ t, dateLabel, selectCrop, cropColor }) {
     draw();
   }
 
+  function jumpToDay(day) {
+    if (!current) return;
+    const target = Number(day);
+    stop();
+    timeline.value = Math.max(0, Math.min(Number(timeline.max), Number.isFinite(target) ? target : 0));
+    draw();
+  }
+
   function update(site, result, results, dates) {
     const replay = NextCrop.fieldReplay(result, dates);
     const previous = current;
@@ -145,5 +153,5 @@ function mountField({ t, dateLabel, selectCrop, cropColor }) {
     draw();
   }
 
-  return { update, jumpToOperation };
+  return { update, jumpToOperation, jumpToDay };
 }

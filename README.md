@@ -1,4 +1,4 @@
-# Next Crop · 下一茬
+# Next Crop
 
 Explore rice rotations in **Kaiping, Nueva Ecija, Rajshahi and the Sacramento Valley**. This project addresses NASA Space Apps' **Field Shift: Adapting Farms with NASA Data** challenge.
 
@@ -11,6 +11,8 @@ Next Crop turns that decision into a field-level check across four rice landscap
 - **4** rice regions · **7** winter crops · **3** NASA POWER seasons · **3,760** daily weather records.
 - Designed for a short judge demo and for local extension conversations; every recommendation carries its assumptions.
 - The **Project brief** button in the hero opens the same summary, data notes and demo inside the app.
+- Submission assets: [7-slide demo deck](docs/Next-Crop-Demo-Deck.pdf) · [one-page judge brief](docs/Next-Crop-Judge-Brief.pdf) · [submission copy and checklist](SUBMISSION.md) · [public deployment guide](docs/DEPLOY.md).
+- The demo deck is within the Space Apps 7-slide limit. The current submission guide closes on **15 November at 23:59 in the Team Owner's local time**; see [SUBMISSION.md](SUBMISSION.md).
 
 ## 30-second judge demo
 
@@ -29,13 +31,14 @@ Next Crop turns that decision into a field-level check across four rice landscap
 
 ## Run and try
 
-Double-click `index.html` or run `python3 -m http.server 8766 --bind 127.0.0.1` in this directory. The globe, field replay, planner and bundled data work offline. Use **中文** for Chinese.
+Double-click `index.html` or run `python3 -m http.server 8766 --bind 127.0.0.1` in this directory. The globe, field replay, planner and bundled data work offline. Use the language button for Chinese.
 
 1. Rotate the globe and choose a pin, or select a place from the region list.
 2. Choose a rotation. Drag the observation date, click a growth stage, or play the season. The sidebar close-up follows the same crop and stage. Each region uses its own crops, seasonal calendar and historical weather. The field is an illustration and the growth stages are assumptions.
 3. In the planner, set field conditions and compare strategies. **Three-season check** runs the same plan through 2024/25, 2023/24 and 2021/22; click a cell to switch season and strategy.
 4. In Kaiping, select **Try a wet harvest**. The field jumps to 11 March 2024, shows the wet harvest and reports 39.34 mm in the three days ending that date. Switch to 2024/25 with the other inputs held constant to see the rain fall to 0.59 mm at the corresponding 12 March 2025 harvest.
 5. In Kaiping, move late-rice harvest to the latest date and early-rice transplant to the earliest. Both winter crops show calendar conflicts. Replay the potato scenario to see the field stay occupied at the planned rice date.
+6. Use **Copy scenario link** in the planner to share the region, crop, season, dates, field conditions and observation day. Opening the copied URL restores the same state, including the field date.
 
 ## Data and methods
 

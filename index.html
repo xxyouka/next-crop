@@ -66,7 +66,7 @@
         <div class="field-main">
           <figure class="field-figure">
             <div class="field-view">
-              <canvas id="field-art" width="960" height="500" aria-hidden="true"></canvas>
+              <canvas id="field-art" width="1440" height="750" aria-hidden="true"></canvas>
               <div class="field-stage"><span id="field-stage"></span><time id="field-date"></time></div>
               <span class="field-illustration" data-t="illustration">Illustrated field</span>
             </div>
@@ -88,7 +88,7 @@
             <h3 data-t="chooseCrop">Choose a rotation</h3>
             <div id="field-crops" class="field-crops"></div>
             <figure class="crop-closeup">
-              <canvas id="crop-art" width="320" height="180" aria-hidden="true"></canvas>
+              <canvas id="crop-art" width="480" height="270" aria-hidden="true"></canvas>
               <figcaption data-t="closeup">Crop close-up</figcaption>
             </figure>
           </div>
@@ -113,7 +113,11 @@
           <h2 id="planner-title" data-t="workspace">Winter rotation planner</h2>
           <p class="section-lede" data-t="plannerLede">Set rice dates and field conditions. The table checks calendar fit, field conditions and rain at each operation; the three-season check repeats the same plan across 2024/25, 2023/24 and 2021/22.</p>
         </div>
-        <button class="quiet demo" type="button" id="wet-demo" data-t="wetDemo">Try a wet harvest ↗</button>
+        <div class="heading-actions">
+          <button class="quiet" type="button" id="copy-link" data-t="copyLink">Copy scenario link</button>
+          <button class="quiet demo" type="button" id="wet-demo" data-t="wetDemo">Try a wet harvest ↗</button>
+        </div>
+        <p id="copy-status" class="visually-hidden" role="status" aria-live="polite"></p>
       </div>
       <div class="planner-grid">
         <div class="settings-column">
@@ -228,6 +232,8 @@
       </ol></section>
       <div class="brief-actions">
         <button type="button" class="primary" id="brief-demo-start" data-t="briefStart">Run the wet-harvest demo</button>
+        <a class="quiet" href="docs/Next-Crop-Demo-Deck.pdf" target="_blank" rel="noopener" data-t="briefDeck">7-slide demo (PDF)</a>
+        <a class="quiet" href="docs/Next-Crop-Judge-Brief.pdf" target="_blank" rel="noopener" data-t="briefPdf">One-page brief (PDF)</a>
         <button type="button" class="quiet" id="brief-close-2" data-t="briefClose">Close</button>
       </div>
     </div>

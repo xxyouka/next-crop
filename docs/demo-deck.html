@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <title>Next Crop · Demo deck</title>
+  <style>
+    @page { size: 1280px 720px; margin: 0; }
+    :root {
+      --paper: #f3f3e9;
+      --white: #fbfbf5;
+      --ink: #182922;
+      --muted: #4c6054;
+      --line: #cdd3c4;
+      --pine: #233f31;
+      --dark: #142a22;
+      --leaf: #d7e78d;
+      --amber: #8a5a1f;
+      --sans: "Avenir Next", "Helvetica Neue", system-ui, sans-serif;
+      --serif: Georgia, "Iowan Old Style", serif;
+      --mono: "SFMono-Regular", "IBM Plex Mono", ui-monospace, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--paper); }
+    body { width: 1280px; color: var(--ink); font-family: var(--sans); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .deck { width: 1280px; }
+    .slide {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      width: 1280px;
+      height: 720px;
+      padding: 40px 60px 26px;
+      overflow: hidden;
+      page-break-after: always;
+      background: var(--paper);
+    }
+    .slide:last-child { page-break-after: auto; }
+    .slide.dark { background: var(--dark); color: #f4f5e7; }
+    .topline, .footline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      color: var(--muted);
+      font: 700 7.5px/1.3 var(--mono);
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .topline { padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+    .dark .topline, .dark .footline { color: #a9bca5; border-color: #3d5749; }
+    .footline {
+      margin-top: auto;
+      padding-top: 8px;
+      border-top: 1px solid var(--line);
+      font-weight: 500;
+      letter-spacing: .07em;
+    }
+    .body { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; min-height: 0; padding-top: 24px; }
+    .slide:first-child .body { justify-content: center; padding-top: 0; }
+    .kicker {
+      margin: 0 0 8px;
+      color: #4c661c;
+      font: 700 8.5px/1.3 var(--mono);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .dark .kicker { color: var(--leaf); }
+    h1 { margin: 4px 0 16px; font: 500 83px/.93 var(--serif); letter-spacing: -.055em; }
+    h2 { margin: 6px 0 10px; font: 500 48px/1.02 var(--serif); letter-spacing: -.045em; }
+    h3 { margin: 0 0 5px; font-size: 12px; line-height: 1.3; font-weight: 800; }
+    p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.48; }
+    .dark p { color: #cfdecd; }
+    .lede { max-width: 720px; font-size: 15px; }
+    .num { color: #7c8d7d; }
+    .hero { display: grid; grid-template-columns: 1.12fr .88fr; gap: 64px; align-items: center; }
+    .hero h1 { margin-bottom: 18px; }
+    .hero-lede { max-width: 570px; font-size: 17px; line-height: 1.5; }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px 24px;
+      margin-top: 22px;
+      color: #b7c9b2;
+      font: 600 8px/1.4 var(--mono);
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+    .stat-stack { display: grid; gap: 10px; padding-left: 24px; border-left: 1px solid #3d5749; }
+    .stat-card {
+      padding: 14px 18px;
+      border: 1px solid #3d5749;
+      border-radius: 4px;
+      background: #1a3328;
+    }
+    .stat-card span { display: block; color: #a9bca5; font: 600 7.5px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .stat-card strong { display: block; margin: 5px 0 2px; color: #f4f5e7; font: 500 43px/1 var(--serif); letter-spacing: -.04em; }
+    .stat-card strong em { color: var(--leaf); font-style: normal; }
+    .stat-card small { color: #b7c9b2; font-size: 9px; }
+    .flow-line { display: flex; align-items: center; gap: 10px; color: #a9bca5; font: 600 7px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .flow-line::before { content: ""; flex: 1; height: 1px; background: #3d5749; }
+    .flow-line::after { content: ""; flex: 1; height: 1px; background: #3d5749; }
+    .timeline {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr 1fr;
+      align-items: stretch;
+      margin: 16px 0 18px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .timeline > div { padding: 13px 16px; border-right: 1px solid var(--line); }
+    .timeline > div:last-child { border-right: 0; }
+    .timeline span { display: block; color: var(--muted); font: 600 7.5px/1.3 var(--mono); letter-spacing: .07em; text-transform: uppercase; }
+    .timeline strong { display: block; margin-top: 4px; font: 500 23px/1.1 var(--serif); }
+    .timeline .window { background: #e8edda; }
+    .timeline .window strong { color: #35502b; }
+    .rain-risk {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 10px 0 0;
+      color: var(--amber);
+      font: 700 8px/1.4 var(--mono);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .rain-risk::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #c58d42; }
+    .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 8px; }
+    .three > div { padding-top: 10px; border-top: 1px solid var(--line); }
+    .three span { color: #7a8c74; font: 700 7px/1.3 var(--mono); letter-spacing: .08em; }
+    .three h3 { margin-top: 4px; }
+    .three p { font-size: 11px; line-height: 1.45; }
+    .split { display: grid; grid-template-columns: 1.02fr .98fr; gap: 42px; align-items: center; }
+    .split.reverse { grid-template-columns: .96fr 1.04fr; }
+    figure { margin: 0; }
+    figure img { display: block; width: 100%; height: auto; border-radius: 4px; border: 1px solid var(--line); }
+    .dark figure img { border-color: #3d5749; }
+    figcaption { margin-top: 7px; color: var(--muted); font: 500 7px/1.4 var(--mono); letter-spacing: .03em; }
+    .dark figcaption { color: #a9bca5; }
+    .stats-row { display: flex; gap: 24px; margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--line); }
+    .stats-row strong { display: block; font: 500 28px/1 var(--serif); letter-spacing: -.03em; }
+    .stats-row span { display: block; margin-top: 3px; color: var(--muted); font: 600 7px/1.3 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+    .checklist { margin: 12px 0 0; padding: 0; list-style: none; }
+    .checklist li { position: relative; padding-left: 16px; margin-bottom: 6px; color: var(--muted); font-size: 11.5px; line-height: 1.45; }
+    .checklist li::before { content: ""; position: absolute; left: 0; top: 5px; width: 5px; height: 5px; border-radius: 50%; background: #7f9a5a; }
+    .flow-col { display: grid; gap: 7px; }
+    .flow-box { position: relative; padding: 10px 12px; border: 1px solid var(--line); border-radius: 4px; background: var(--white); }
+    .flow-box strong { display: block; font-size: 11.5px; }
+    .flow-box small { display: block; margin-top: 3px; color: var(--muted); font: 500 7.5px/1.35 var(--mono); }
+    .flow-box.status { border-color: #a9bd83; background: #e8edda; }
+    .flow-col .arrow { color: #83957c; font: 700 13px/1 var(--mono); text-align: center; }
+    .how-bottom { display: grid; grid-template-columns: 1fr .9fr; gap: 26px; align-items: start; margin-top: 14px; }
+    .how-note { padding-top: 10px; border-top: 1px solid var(--line); }
+    .how-note strong { font-size: 11px; }
+    .how-note p { margin-top: 4px; font-size: 9.5px; line-height: 1.45; }
+    .planner-shot { max-height: 366px; overflow: hidden; border: 1px solid var(--line); border-radius: 4px; }
+    .planner-shot img { width: 100%; height: 366px; object-fit: cover; object-position: top; border: 0; border-radius: 0; }
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0 12px; }
+    .compare > div { padding: 12px 14px; border: 1px solid #3d5749; border-radius: 4px; background: #1a3328; }
+    .compare span { display: block; color: #a9bca5; font: 600 7.5px/1.3 var(--mono); letter-spacing: .07em; text-transform: uppercase; }
+    .compare strong { display: block; margin: 5px 0 3px; color: var(--leaf); font: 500 42px/1 var(--serif); letter-spacing: -.045em; }
+    .compare small { color: #b7c9b2; font-size: 9px; }
+    blockquote { margin: 12px 0 0; padding: 10px 0 0; border-top: 1px solid #3d5749; color: #e5edd9; font: 500 13px/1.4 var(--serif); letter-spacing: -.01em; }
+    .dark .lede { color: #cfdecd; }
+    .three-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 6px; }
+    .three-cols section { padding-top: 12px; border-top: 1px solid var(--line); }
+    .three-cols h3 { margin-bottom: 7px; }
+    .three-cols p { font-size: 11.5px; }
+    .validation {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      margin-top: 16px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font: 500 7.5px/1.4 var(--mono);
+      letter-spacing: .03em;
+    }
+    .validation span::before { content: "✓"; margin-right: 6px; color: #597541; }
+    .valid-quote {
+      margin-top: 16px;
+      padding: 10px 14px;
+      border-radius: 4px;
+      background: #233f31;
+      color: #e5edd9;
+      font: 500 13px/1.4 var(--serif);
+      letter-spacing: -.01em;
+    }
+    .impact-layout { display: grid; grid-template-columns: 1.15fr .85fr; gap: 36px; align-items: center; }
+    .impact-layout figure img { height: 220px; object-fit: cover; }
+    .decision-band {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-end;
+      gap: 5px;
+      min-height: 168px;
+      margin-top: auto;
+      padding: 15px 18px;
+      overflow: hidden;
+      border-radius: 4px;
+      background:
+        linear-gradient(0deg, #142a22f5 5%, #142a227a 100%),
+        url("field-wet.png") center 58% / cover;
+      color: #f4f5e7;
+    }
+    .decision-band p { max-width: 900px; color: #f4f5e7; font: 500 16px/1.4 var(--serif); letter-spacing: -.01em; }
+    .decision-band span { color: var(--leaf); font: 600 7px/1.4 var(--mono); letter-spacing: .07em; text-transform: uppercase; }
+    .evidence-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+    .evidence-strip strong { display: block; font: 500 24px/1 var(--serif); letter-spacing: -.03em; }
+    .evidence-strip span { display: block; margin-top: 3px; color: var(--muted); font: 600 7px/1.3 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+    .impact { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 18px 0; }
+    .impact > div { padding-top: 12px; border-top: 1px solid #3d5749; }
+    .impact span { color: var(--leaf); font: 700 7.5px/1.3 var(--mono); letter-spacing: .08em; }
+    .impact p { margin-top: 6px; color: #cfdecd; font-size: 12px; line-height: 1.5; }
+    .next {
+      display: flex;
+      gap: 10px;
+      margin-top: 4px;
+      padding-top: 12px;
+      border-top: 1px solid #3d5749;
+      color: #cfdecd;
+      font-size: 11.5px;
+      line-height: 1.5;
+    }
+    .next strong { color: var(--leaf); font-weight: 700; }
+    .try { margin-top: 16px; color: #a9bca5; font: 600 7.5px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+<div class="deck">
+
+  <section class="slide dark">
+    <div class="topline"><span>Next Crop</span><span>NASA Space Apps 2026 · Field Shift</span><span class="num">01 / 07</span></div>
+    <div class="body hero">
+      <div>
+        <p class="kicker">Field Shift · Adapting Farms with NASA Data</p>
+        <h1>What grows<br>after rice?</h1>
+        <p class="hero-lede">A field-level rotation check for the weeks between rice seasons.</p>
+        <div class="hero-meta"><span>Team Dui Dui Dui</span><span>4 regions · 7 crops · 3 NASA POWER seasons</span></div>
+      </div>
+      <div class="stat-stack">
+        <div class="stat-card"><span>2023/24 · wet window</span><strong>39.34 <em>mm</em></strong><small>Three days at the 11 March operation.</small></div>
+        <div class="flow-line">same March operation</div>
+        <div class="stat-card"><span>2024/25 · fits</span><strong>0.59 <em>mm</em></strong><small>Same plan, different rainfall year.</small></div>
+      </div>
+    </div>
+    <div class="footline"><span>Next Crop · NASA Space Apps Challenge 2026</span><span>Data: NASA POWER · NASA Blue Marble</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="topline"><span>Next Crop</span><span>02 / 07 · The decision</span><span class="num">NASA Space Apps 2026</span></div>
+    <div class="body">
+      <p class="kicker">The problem</p>
+      <h2>One narrow window.</h2>
+      <p class="lede">A late harvest, a wet operation day or an unknown field can turn a good rotation into a missed rice season.</p>
+      <div class="timeline">
+        <div><span>Rice harvest</span><strong>Oct–Nov</strong></div>
+        <div class="window"><span>Winter crop window</span><strong>90–150 days</strong></div>
+        <div><span>Next rice transplant</span><strong>Feb–May</strong></div>
+      </div>
+      <div class="rain-risk">A wet three-day window can stop the operation.</div>
+      <div class="three">
+        <div><span>01</span><h3>Calendar</h3><p>Does the crop finish and leave time for rice field preparation?</p></div>
+        <div><span>02</span><h3>Rain</h3><p>What is the three-day rainfall around the operation date?</p></div>
+        <div><span>03</span><h3>Field</h3><p>Can this field drain and be worked at that moment?</p></div>
+      </div>
+      <div class="decision-band">
+        <p>“The question is not whether a winter crop can grow. It is whether it can grow and still leave the rice season intact.”</p>
+        <span>Calendar · rain · field</span>
+      </div>
+    </div>
+    <div class="footline"><span>Next Crop · NASA Space Apps Challenge 2026</span><span>NASA POWER · local crop calendars</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="topline"><span>Next Crop</span><span>03 / 07 · The tool</span><span class="num">NASA Space Apps 2026</span></div>
+    <div class="body split">
+      <div>
+        <p class="kicker">The tool</p>
+        <h2>Four landscapes.<br>One question.</h2>
+        <p class="lede">Pick a region, replay the crop, compare winter rotations and test the same plan across three historical seasons.</p>
+        <ul class="checklist">
+          <li>Field replay: seedlings, canopy, flowering, harvest.</li>
+          <li>Planner: calendar fit, field conditions and operation-day rain.</li>
+          <li>Three-season check: a lucky year or a robust rotation?</li>
+        </ul>
+        <div class="stats-row">
+          <div><strong>4</strong><span>regions</span></div>
+          <div><strong>7</strong><span>winter crops</span></div>
+          <div><strong>3</strong><span>NASA POWER seasons</span></div>
+          <div><strong>3,760</strong><span>daily records</span></div>
+        </div>
+      </div>
+      <figure>
+        <img src="hero.png" alt="Next Crop home screen with globe and four rice regions">
+        <figcaption>Kaiping · Nueva Ecija · Rajshahi · Sacramento Valley</figcaption>
+      </figure>
+    </div>
+    <div class="footline"><span>Next Crop · NASA Space Apps Challenge 2026</span><span>Bilingual · desktop and mobile · offline-ready</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="topline"><span>Next Crop</span><span>04 / 07 · How it works</span><span class="num">NASA Space Apps 2026</span></div>
+    <div class="body">
+      <p class="kicker">How it works</p>
+      <h2>From rainfall to a field decision.</h2>
+      <div class="how-bottom">
+        <div class="flow-col">
+          <div class="flow-box"><strong>NASA POWER daily rainfall</strong><small>PRECTOTCORR · T2M_MIN · local solar time</small></div>
+          <div class="arrow">↓</div>
+          <div class="flow-box"><strong>Three-day window</strong><small>operation day + two days before</small></div>
+          <div class="arrow">↓</div>
+          <div class="flow-box"><strong>Calendar + field inputs</strong><small>rice dates · preparation buffer · drainage · soil</small></div>
+          <div class="arrow">↓</div>
+          <div class="flow-box status"><strong>Fits / Review / Conflict</strong><small>then repeat across 2021/22 · 2023/24 · 2024/25</small></div>
+        </div>
+        <div class="how-note">
+          <strong>Why three seasons?</strong>
+          <p>The same calendar meets different rainfall. The three-season check makes that difference visible instead of hiding it behind a single “yes”. The 30 mm threshold is illustrative; the field conditions are the user’s.</p>
+          <div class="planner-shot"><img src="planner.png" alt="Planner with summary, comparison table and three-season check"></div>
+        </div>
+      </div>
+    </div>
+    <div class="footline"><span>Next Crop · NASA Space Apps Challenge 2026</span><span>NASA POWER · three-day rain window</span></div>
+  </section>
+
+  <section class="slide dark">
+    <div class="topline"><span>Next Crop</span><span>05 / 07 · Demo</span><span class="num">NASA Space Apps 2026</span></div>
+    <div class="body split reverse">
+      <figure>
+        <img src="field-wet.png" alt="Illustrated field at a wet potato harvest with rain">
+        <figcaption>Kaiping · winter potato · 11 March 2024</figcaption>
+      </figure>
+      <div>
+        <p class="kicker">Demo · wet harvest</p>
+        <h2>The weather<br>changes the answer.</h2>
+        <p class="lede">The field jumps to the harvest date. The same planned operation is safe in one season and wet in another.</p>
+        <div class="compare">
+          <div><span>2023/24</span><strong>39.34 mm</strong><small>wet window</small></div>
+          <div><span>2024/25</span><strong>0.59 mm</strong><small>fits</small></div>
+        </div>
+        <blockquote>“One season is a story; three seasons are a decision.”</blockquote>
+      </div>
+    </div>
+    <div class="footline"><span>Next Crop · NASA Space Apps Challenge 2026</span><span>Try a wet harvest → three-season check</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="topline"><span>Next Crop</span><span>06 / 07 · Validity</span><span class="num">NASA Space Apps 2026</span></div>
+    <div class="body">
+      <p class="kicker">Validity and limits</p>
+      <h2>Built to be checked,<br>not trusted blindly.</h2>
+      <div class="three-cols">
+        <section><h3>NASA data</h3><p>NASA POWER Daily: corrected precipitation and minimum temperature for 2021/22, 2023/24 and 2024/25. 4 sites × 940 days = 3,760 records. NASA Blue Marble supplies the globe. Copernicus Sentinel-2 provides a local context image.</p></section>
+        <section><h3>Method</h3><p>Local crop calendars from cited extension and research sources. A three-day rain window around each operation, an illustrative 30 mm review threshold and fixed crop durations and stages.</p></section>
+        <section><h3>Limits</h3><p>Weather is a regional grid estimate, not a field sensor. Drainage and soil texture are user inputs. Check local variety, maturity, pumps, field access and market conditions before planting.</p></section>
+      </div>
+      <div class="validation">
+        <span>Model checks pass</span><span>940-day coverage per site and season</span><span>320 / 390 / 1440 px</span><span>English and Chinese</span><span>Offline file:// build</span>
+      </div>
+      <div class="valid-quote">“The tool does not predict the future. It makes the historical risk visible.”</div>
+      <div class="evidence-strip">
+        <div><strong>940</strong><span>days per site</span></div>
+        <div><strong>3</strong><span>NASA POWER seasons</span></div>
+        <div><strong>3,760</strong><span>daily records</span></div>
+        <div><strong>4</strong><span>rice regions</span></div>
+      </div>
+    </div>
+    <div class="footline"><span>Next Crop · NASA Space Apps Challenge 2026</span><span>node scripts/check-model.cjs</span></div>
+  </section>
+
+  <section class="slide dark">
+    <div class="topline"><span>Next Crop</span><span>07 / 07 · Impact</span><span class="num">NASA Space Apps 2026</span></div>
+    <div class="body impact-layout">
+      <div>
+        <p class="kicker">Impact</p>
+        <h2>A 30-second check<br>before a season-long commitment.</h2>
+        <div class="impact">
+          <div><span>01 · Extension</span><p>A shared, testable rotation scenario for conversations with farmers.</p></div>
+          <div><span>02 · Farm</span><p>Avoid a winter crop that collides with the next rice window — or plant with evidence.</p></div>
+          <div><span>03 · Planning</span><p>Separate a lucky year from a robust rotation across historical rainfall.</p></div>
+        </div>
+        <div class="next"><strong>Next:</strong> local variety and maturity data, soil moisture, and farmer validation in the four regions.</div>
+        <p class="try">Try the live demo from the project link · Team Dui Dui Dui · NASA Space Apps 2026</p>
+      </div>
+      <figure>
+        <img src="field-wet.png" alt="Kaiping field at a wet winter-potato harvest">
+        <figcaption>Kaiping · wet harvest · 11 March 2024</figcaption>
+      </figure>
+    </div>
+    <div class="footline"><span>Next Crop · NASA Space Apps Challenge 2026</span><span>Data: NASA POWER · NASA Blue Marble · Sentinel-2: Copernicus</span></div>
+  </section>
+
+</div>
+</body>
+</html>

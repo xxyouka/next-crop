@@ -58,6 +58,7 @@ const copy = {
   loam: ["Loamy", "壤土"], sand: ["Sandy", "沙质土"], clay: ["Heavy clay", "重黏土"],
   keepRice: ["Keep rice on schedule", "保证下季水稻农时"], income: ["Explore winter income", "探索冬季收入"], cover: ["Keep soil covered", "保持土壤覆盖"],
   wetDemo: ["Try a wet harvest ↗", "试算雨后采收 ↗"],
+  copyLink: ["Copy scenario link", "复制方案链接"], copied: ["Copied ✓", "已复制 ✓"], copyFailed: ["Copy failed", "复制失败"],
   timeline: ["Season timeline", "轮作时间线"],
   cropWindow: ["Winter window", "冬季农时"],
   prepWindow: ["Rice preparation", "早稻整地"],
@@ -89,6 +90,8 @@ const copy = {
   briefDemo3: ["Switch the season to 2024/25: the corresponding operation falls to 0.59 mm.", "把历史季节切到 2024/25：对应作业日的三日累计降到 0.59 毫米。"],
   briefDemo4: ["Open the three-season check and click 2023/24 to see the wet window.", "打开三个历史季节对照，点 2023/24 查看这次偏大的降雨。"],
   briefStart: ["Run the wet-harvest demo", "运行雨后采收演示"],
+  briefDeck: ["7-slide demo (PDF)", "7 页演示（PDF）"],
+  briefPdf: ["One-page brief (PDF)", "一页简介（PDF）"],
   briefClose: ["Close", "关闭"],
   sourceWeather: ["NASA POWER", "NASA POWER"],
   powerLink: ["Daily API documentation ↗", "逐日数据接口说明 ↗"],
@@ -132,6 +135,8 @@ const comparison = $("comparison");
 const seasonHead = $("season-head");
 const seasonBody = $("season-body");
 const brief = $("brief");
+const copyButton = $("copy-link");
+let copyTimer = 0;
 const colors = {
   fallow: "#7d775e", potato: "#8e6439", vetch: "#775297", maize: "#91702d",
   mung: "#587c4a", mustard: "#a8781e", rye: "#627743", hairy: "#725c97",
@@ -244,7 +249,7 @@ function enterSite(point) {
   globe.focus(point);
   $("field-title").focus({ preventScroll: true });
   $("field").scrollIntoView();
-  if (location.hash !== "#field") history.pushState(null, "", "#field");
+  if (location.hash !== "#field") history.pushState(null, "", `${location.pathname}${location.search}#field`);
 }
 
 function dateLabel(date) {
@@ -522,6 +527,94 @@ $("language").addEventListener("click", event => {
   updateSiteLabels();
   render();
 });
+function scenarioFromURL() {
+  const params = new URLSearchParams(location.search);
+  const point = NextCrop.sites.find(candidate => candidate.id === params.get("site"));
+  if (!point) return null;
+  const crop = params.get("crop");
+  const cropIds = ["fallow", ...point.crops.map(entry => entry.id)];
+  const season = Number(params.get("season"));
+  const harvest = Number(params.get("harvest"));
+  const transplant = Number(params.get("transplant"));
+  const drainage = params.get("drainage");
+  const soil = params.get("soil");
+  const priority = params.get("priority");
+  const day = Number(params.get("day"));
+  return {
+    point,
+    crop: cropIds.includes(crop) ? crop : point.crops[0].id,
+    season: NextCrop.scenarios.includes(season) ? season : 2024,
+    harvest: Number.isFinite(harvest) ? Math.min(point.harvestMax, Math.max(0, harvest)) : point.harvestDefault,
+    transplant: Number.isFinite(transplant) ? Math.min(point.riceMax, Math.max(0, transplant)) : point.riceDefault,
+    drainage: ["unknown", "good", "poor"].includes(drainage) ? drainage : "unknown",
+    soil: ["unknown", "loam", "sand", "clay"].includes(soil) ? soil : "unknown",
+    priority: point.priorities[priority] ? priority : "rice",
+    day: Number.isFinite(day) ? day : 0,
+  };
+}
+
+function applyScenario(scenario) {
+  loadSite(scenario.point);
+  $("season").value = String(scenario.season);
+  $("harvest").value = scenario.harvest;
+  $("transplant").value = scenario.transplant;
+  $("drainage").value = scenario.drainage;
+  $("soil").value = scenario.soil;
+  $("priority").value = scenario.priority;
+  selected = scenario.crop;
+  render();
+  field.jumpToDay(scenario.day);
+}
+
+function scenarioURL() {
+  const url = new URL(location.href);
+  const params = url.searchParams;
+  params.set("site", site.id);
+  params.set("crop", selected);
+  params.set("season", $("season").value);
+  params.set("harvest", $("harvest").value);
+  params.set("transplant", $("transplant").value);
+  params.set("drainage", $("drainage").value);
+  params.set("soil", $("soil").value);
+  params.set("priority", $("priority").value);
+  params.set("day", $("field-day").value);
+  url.hash = "#field";
+  return url.href;
+}
+
+function fallbackCopy(text) {
+  const area = document.createElement("textarea");
+  area.value = text;
+  area.setAttribute("readonly", "");
+  area.style.position = "fixed";
+  area.style.top = "-1000px";
+  area.style.opacity = "0";
+  document.body.append(area);
+  area.select();
+  const copied = document.execCommand("copy");
+  area.remove();
+  if (!copied) throw new Error("Copy failed");
+}
+
+async function copyScenario() {
+  const url = scenarioURL();
+  history.replaceState(null, "", url);
+  try {
+    if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(url);
+    else fallbackCopy(url);
+    copyButton.textContent = t("copied");
+    $("copy-status").textContent = t("copied");
+  } catch {
+    copyButton.textContent = t("copyFailed");
+    $("copy-status").textContent = t("copyFailed");
+  }
+  clearTimeout(copyTimer);
+  copyTimer = setTimeout(() => {
+    copyButton.textContent = t("copyLink");
+    $("copy-status").textContent = "";
+  }, 2200);
+}
+
 function runWetDemo() {
   $("harvest").value = 12;
   $("transplant").value = 15;
@@ -550,6 +643,7 @@ function closeBrief() {
 }
 
 $("wet-demo").addEventListener("click", runWetDemo);
+copyButton.addEventListener("click", copyScenario);
 $("brief-open").addEventListener("click", openBrief);
 $("brief-close").addEventListener("click", closeBrief);
 $("brief-close-2").addEventListener("click", closeBrief);
@@ -571,4 +665,6 @@ form.addEventListener("reset", () => {
   selected = site.crops[0].id;
   requestAnimationFrame(render);
 });
-loadSite(site);
+const initialScenario = scenarioFromURL();
+if (initialScenario) applyScenario(initialScenario);
+else loadSite(site);

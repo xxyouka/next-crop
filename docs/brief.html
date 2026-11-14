@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <title>Next Crop · Judge brief</title>
+  <style>
+    @page { size: A4 landscape; margin: 0; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: #f3f3e9; }
+    body {
+      width: 1123px;
+      height: 794px;
+      overflow: hidden;
+      color: #182922;
+      font-family: "Avenir Next", "Helvetica Neue", system-ui, sans-serif;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .page {
+      width: 1123px;
+      height: 794px;
+      padding: 36px 48px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 20px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #8e9e87;
+    }
+    .kicker, .stat span, .field figcaption, footer {
+      font-family: "SFMono-Regular", "IBM Plex Mono", ui-monospace, monospace;
+    }
+    .kicker {
+      color: #4c6054;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .brand { font-size: 14px; font-weight: 800; letter-spacing: -.01em; }
+    .brand span { margin-left: 7px; color: #4c6054; font: 500 15px/1 Georgia, serif; }
+    .top { display: grid; grid-template-columns: 1.03fr 1fr; gap: 28px; align-items: start; }
+    h1 {
+      margin: 0 0 8px;
+      font: 500 53px/.95 Georgia, "Iowan Old Style", serif;
+      letter-spacing: -.05em;
+      text-wrap: balance;
+    }
+    .lede {
+      max-width: 470px;
+      margin: 0 0 10px;
+      color: #4c6054;
+      font-size: 12.5px;
+      line-height: 1.42;
+    }
+    .problem {
+      max-width: 485px;
+      margin: 0 0 12px;
+      color: #4c6054;
+      font-size: 10.4px;
+      line-height: 1.5;
+    }
+    .problem strong { color: #182922; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      padding: 9px 0 8px;
+      border-top: 1px solid #cdd3c4;
+      border-bottom: 1px solid #cdd3c4;
+    }
+    .stat strong { display: block; font: 500 25px/1 Georgia, serif; letter-spacing: -.035em; }
+    .stat span {
+      display: block;
+      margin-top: 4px;
+      color: #4c6054;
+      font-size: 6.6px;
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: .035em;
+      text-transform: uppercase;
+    }
+    .field { margin: 0; }
+    .field img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid #cdd3c4;
+      border-radius: 4px;
+    }
+    .field figcaption {
+      margin-top: 6px;
+      color: #4c6054;
+      font-size: 7.2px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .lower {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr 1.15fr;
+      gap: 24px;
+      padding-top: 11px;
+      border-top: 1px solid #cdd3c4;
+    }
+    .bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      padding-top: 10px;
+      border-top: 1px solid #cdd3c4;
+    }
+    h2 {
+      margin: 0 0 4px;
+      color: #233f31;
+      font-size: 9.8px;
+      font-weight: 800;
+      letter-spacing: .01em;
+    }
+    .lower p, .bottom p, .lower li {
+      margin: 0;
+      color: #4c6054;
+      font-size: 9.4px;
+      line-height: 1.48;
+    }
+    .lower ol {
+      margin: 0;
+      padding-left: 13px;
+      color: #4c6054;
+      font-size: 9.4px;
+      line-height: 1.48;
+    }
+    .lower li { margin-bottom: 2px; }
+    .insight {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 11px 16px;
+      border-radius: 5px;
+      background: #233f31;
+      color: #f4f5e7;
+    }
+    .insight p {
+      margin: 0;
+      font: 500 14px/1.35 Georgia, "Iowan Old Style", serif;
+      letter-spacing: -.015em;
+    }
+    .insight p strong { color: #d7e78d; font-weight: 500; }
+    .insight span {
+      flex: none;
+      color: #c9d8b7;
+      font: 600 6.5px/1.4 "SFMono-Regular", ui-monospace, monospace;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .lower code, .bottom code {
+      padding: 0 2px;
+      border-radius: 2px;
+      background: #e8ecdf;
+      color: #35502b;
+      font: 500 8.2px/1.2 "SFMono-Regular", ui-monospace, monospace;
+    }
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      margin-top: 0;
+      padding-top: 6px;
+      border-top: 1px solid #8e9e87;
+      color: #4c6054;
+      font-size: 6.6px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+  </style>
+</head>
+<body>
+  <article class="page">
+    <header>
+      <p class="kicker">NASA Space Apps 2026 · Field Shift</p>
+      <p class="brand">NEXT CROP</p>
+    </header>
+
+    <div class="top">
+      <div class="intro">
+        <h1>What grows after rice?</h1>
+        <p class="lede">A field-level rotation check for four rice landscapes, built with NASA POWER daily rainfall.</p>
+        <p class="problem"><strong>The decision.</strong> Between rice harvest and the next transplant, a winter crop has one narrow window. A late harvest, a wet operation day or an unknown field can turn a good rotation into a missed rice season.</p>
+        <div class="stats">
+          <div class="stat"><strong>4</strong><span>rice regions</span></div>
+          <div class="stat"><strong>7</strong><span>winter crops</span></div>
+          <div class="stat"><strong>3</strong><span>NASA POWER seasons</span></div>
+          <div class="stat"><strong>3,760</strong><span>daily weather records</span></div>
+        </div>
+      </div>
+      <figure class="field">
+        <img src="field-wet.png" width="1440" height="750" alt="Illustrated Kaiping field at a wet winter-potato harvest">
+        <figcaption>Kaiping · winter potato · 11 March 2024 · 39.34 mm in three days</figcaption>
+      </figure>
+    </div>
+
+    <div class="lower">
+      <section>
+        <h2>What we built</h2>
+        <p>An interactive four-region explorer: pick a landscape, replay the crop, compare winter rotations and test the same plan across three NASA POWER seasons. Each status separates calendar fit, field conditions and operation-day rain; the sidebar close-up follows the crop and stage.</p>
+      </section>
+      <section>
+        <h2>NASA data</h2>
+        <p>NASA POWER Daily: corrected precipitation and minimum temperature, local solar time, 2021/22, 2023/24 and 2024/25 — 4 sites × 940 days = 3,760 records. NASA Blue Marble supplies the globe texture. A Copernicus Sentinel-2A image provides local context (not NASA data).</p>
+      </section>
+      <section>
+        <h2>Try it in 30 seconds</h2>
+        <ol>
+          <li>Kaiping → winter potato, 2024/25.</li>
+          <li>Try a wet harvest → 39.34 mm / 3 days, 11 March 2024.</li>
+          <li>Switch the season to 2024/25 → 0.59 mm at the corresponding operation.</li>
+          <li>Open the three-season check → 2023/24 is wet; move the late-rice harvest to the latest date → calendar conflicts.</li>
+        </ol>
+      </section>
+    </div>
+
+    <section class="insight">
+      <p>&ldquo;The same March operation is <strong>39.34 mm</strong> in 2023/24 and <strong>0.59 mm</strong> in 2024/25. One season is a story; three seasons are a decision.&rdquo;</p>
+      <span>NASA POWER · three seasons · four regions</span>
+    </section>
+
+    <div class="bottom">
+      <section>
+        <h2>Method and limits</h2>
+        <p>Local crop calendars come from cited extension and research sources. The planner uses a three-day rain window around each operation, an illustrative 30 mm review threshold and fixed crop durations and stages. Weather is a regional grid estimate, not a field sensor; drainage and soil texture are user inputs. Check local variety, maturity, pumps, field access and markets.</p>
+      </section>
+      <section>
+        <h2>Validation</h2>
+        <p><code>node scripts/check-model.cjs</code> covers rotation rules, the 39.34 → 0.59 mm wet-harvest comparison, 940-day coverage for every site and season, and stage order. The interface was checked at 320, 390 and 1440 px in English and Chinese, across all four sites, with no console errors or horizontal page overflow. The app runs from <code>file://</code> with its bundled data.</p>
+      </section>
+    </div>
+
+    <footer>
+      <span>Next Crop · NASA Space Apps Challenge 2026</span>
+      <span>Data: NASA POWER · NASA Blue Marble · Sentinel-2: Copernicus, contains modified Copernicus Sentinel data 2025</span>
+    </footer>
+  </article>
+</body>
+</html>

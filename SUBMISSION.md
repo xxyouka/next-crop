@@ -1,0 +1,72 @@
+# Next Crop · submission pack
+
+Deadline on the current Project Submission Guide: **Sunday 15 November 2026, 23:59 in the Team Owner's local time**. The project page must be submitted with the **Submit for Judging** button; saving is not submitting. Do not rely on the earlier 16 November 07:59 note — the guide attached to this page is authoritative.
+
+Two public links are still required. The local preview (`127.0.0.1:8766`) is not a public project link. See [DEPLOY.md](docs/DEPLOY.md).
+
+## Project name
+
+**Next Crop**
+
+## High-level summary (50–200 words)
+
+Next Crop is a field-level rotation planner for the weeks between rice seasons. A farmer must decide whether a winter crop can fit before the next transplant, but rainfall varies sharply from year to year. Next Crop combines local crop calendars with NASA POWER daily rainfall across four rice landscapes and three historical seasons. It checks calendar fit, preparation buffers, the three-day rainfall around each operation, and field conditions supplied by the user. A crop replay shows the field from seedlings to harvest; a three-season matrix separates a lucky year from a robust rotation. In Kaiping, the same winter-potato operation records 39.34 mm in 2023/24 and 0.59 mm in 2024/25. The project is a static, bilingual, offline-ready web prototype for extension workers and local discussions, and it clearly labels its illustrative assumptions.
+
+## Detailed project description
+
+Next Crop is an interactive decision-support prototype for rice-based rotations. It addresses the Field Shift challenge by making a field-scale decision visible: after rice harvest, can a winter crop fit before the next rice season, and does the weather at its operation date cooperate?
+
+What it does: the user chooses one of four rice landscapes (Kaiping, Nueva Ecija, Rajshahi, Sacramento Valley), replays crop growth from seedlings to harvest, and compares winter rotations against a winter-fallow baseline. The planner reports calendar fit and preparation time, field-condition flags for drainage and soil texture, and the three-day rainfall around the operation. The three-season check repeats the same plan across 2021/22, 2023/24 and 2024/25, so one wet operation day is visible as a risk rather than hidden by a single season.
+
+How it works: bundled NASA POWER Daily corrected precipitation and minimum temperature (local solar time) provide 940 days per site across three seasons. The model uses a three-day rain window, an illustrative 30 mm review threshold, local crop calendars and fixed crop durations and stages. It is deliberately transparent about what is illustrative.
+
+Benefits and impact: the tool helps extension workers and cooperatives compare a winter-income option, a soil-cover option and the safe fallow baseline; it shows when a crop collides with the next rice window or a wet operation. The aim is not to replace local agronomy but to make the rainfall and calendar evidence shareable before planting.
+
+Tools: vanilla HTML, CSS and JavaScript; Canvas for the globe, field and crop illustrations; Python for NASA POWER and Sentinel-2 data preparation; Node.js for model checks; Git for versioning. No web framework and no runtime network dependency.
+
+Creative choices: the field itself is the interface — the same crop that is compared in a table is replayed visually, with a close-up and a wet-harvest state. The three-season check turns a single historical comparison into a robustness test. A “copy scenario link” shares the exact region, crop, season, dates, field conditions and observation day for reproduction.
+
+Factors considered: regional rainfall variability, the rice preparation buffer, field workability, local crop calendars, the difference between a regional grid estimate and a field sensor, and the need for English-language, judge-readable documentation.
+
+## Project demonstration
+
+- Upload [docs/Next-Crop-Demo-Deck.pdf](docs/Next-Crop-Demo-Deck.pdf) — **7 slides, English** — to Google Drive, Dropbox, OneDrive or a public code host. Set the file to public access and paste the link.
+- The deck is within the 7-slide limit. A 30-second English-subtitled video is an alternative.
+- Before uploading, add the final member names to slides 1 and 7 if they are not already on the submission page. The deck currently uses the team name “Team Dui Dui Dui”.
+- Test the link in a private browser with no login.
+
+## Project link
+
+- Deploy the static app to a public host (GitHub Pages, Cloudflare Pages or Netlify Drop). Instructions: [docs/DEPLOY.md](docs/DEPLOY.md).
+- Paste the public app URL after testing it in a private browser. The link must open without a password, permission or registration.
+
+## NASA data
+
+- NASA POWER Daily — corrected precipitation and minimum temperature, local solar time: https://power.larc.nasa.gov/docs/services/api/temporal/daily/
+- NASA POWER — main data access: https://power.larc.nasa.gov/
+- NASA Blue Marble — globe texture: https://science.nasa.gov/earth/earth-observatory/the-blue-marble-true-color-global-imagery-at-1km-resolution/
+
+## Space Agency Partner & Other Data
+
+- Copernicus Sentinel-2A image record (Kaiping context image): https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_49QFE_20250103_0_L2A — contains modified Copernicus Sentinel data 2025.
+- Kaiping municipal winter-rotation report: https://www.kaiping.gov.cn/kpszfw/xwdt/bmdt/content/post_3261533.html
+- PhilRice research highlights: https://www.philrice.gov.ph/wp-content/uploads/2020/07/ASPPD-Highlights-2019.pdf
+- Bangladesh Agricultural University mustard trial: https://ageconsearch.umn.edu/record/211170
+- UC Cooperative Extension rice-field cover crop trial: https://ucanr.edu/blog/uc-rice-blog/article/winter-cover-crop-variety-evaluation
+- Plant morphology references: Flora of China (Chinese milk vetch), KPU Plant Database (potato), NSW Flora Online (mung bean), NC State Extension (mustard), University of Minnesota (maize).
+- Globe texture source: NASA Blue Marble image distributed with the three-globe example: https://github.com/vasturiano/three-globe/blob/master/example/img/earth-blue-marble.jpg
+- Code and data preparation: Python, Node.js, HTML/CSS/JavaScript, Canvas, Git; no third-party runtime libraries.
+
+## Use of Super Intelligence (SI)
+
+AI tools assisted with implementation, illustration code, tests and documentation (Codex / DeepSeek Harness); the team chose the challenge, data, model, visual direction and final decisions, and reviewed the output. The field and crop illustrations are procedural Canvas drawings produced by code, not generative image-model outputs. The globe and Sentinel-2 imagery are real agency imagery, credited above. The project brief and demo deck were drafted and edited with AI assistance and reviewed by the team. No NASA logos, flags or mission identifiers are used.
+
+## Final checklist
+
+- [ ] Project name is **Next Crop**, not the current placeholder.
+- [ ] Summary 50–200 words.
+- [ ] Demo link is public, English, ≤7 slides or ≤30 seconds.
+- [ ] Project link is public and opens without login.
+- [ ] Detailed description, SI disclosure, NASA data and other data filled.
+- [ ] All team members confirmed at the same Local Event.
+- [ ] Click **Submit for Judging** before the Team Owner’s local 15 November 23:59 deadline.
