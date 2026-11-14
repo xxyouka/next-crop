@@ -1,7 +1,7 @@
 "use strict";
 
 const copy = {
-  skip: ["Skip to the regions", "跳到地区选择"], brand: ["Next Crop", "下一茬"],
+  skip: ["Skip to the regions", "跳到地区选择"], sections: ["Sections", "页面导航"], brand: ["Next Crop", "下一茬"],
   atlas: ["Regions", "地区"], fieldNav: ["Field replay", "田块回放"],
   planner: ["Planner", "轮作工具"], evidence: ["Evidence", "数据依据"],
   headline: ["What grows after rice?", "水稻收完，\n下一茬种什么？"],
@@ -920,7 +920,15 @@ $("brief-demo-start").addEventListener("click", () => {
   $("field-title").focus({ preventScroll: true });
   animateScrollTo($("field"), { onDone: () => markArrived($("field")) });
 });
-form.addEventListener("input", render);
+let renderFrame = 0;
+function scheduleRender() {
+  if (renderFrame) return;
+  renderFrame = requestAnimationFrame(() => {
+    renderFrame = 0;
+    render();
+  });
+}
+form.addEventListener("input", scheduleRender);
 form.addEventListener("input", () => { if (shiftSuggestion || $("shift-status").textContent) clearShift(); });
 form.addEventListener("submit", event => event.preventDefault());
 form.addEventListener("reset", () => {
@@ -933,6 +941,30 @@ else loadSite(site);
 
 const nav = document.querySelector(".top nav");
 const navMarker = nav?.querySelector(".nav-marker");
+const navToggle = $("nav-toggle");
+const navLinksWrap = $("nav-links");
+function setNavOpen(open) {
+  if (!nav || !navToggle || !navLinksWrap) return;
+  nav.classList.toggle("is-open", open);
+  navToggle.setAttribute("aria-expanded", String(open));
+  if (open && matchMedia("(max-width: 48rem)").matches) {
+    requestAnimationFrame(() => navLinksWrap.querySelector("a")?.focus({ preventScroll: true }));
+  }
+}
+if (nav && navToggle && navLinksWrap) {
+  navToggle.addEventListener("click", () => setNavOpen(navToggle.getAttribute("aria-expanded") !== "true"));
+  document.addEventListener("click", event => {
+    if (!nav.contains(event.target)) setNavOpen(false);
+  });
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && nav.classList.contains("is-open")) {
+      setNavOpen(false);
+      navToggle.focus();
+    }
+  });
+  const desktopNav = matchMedia("(min-width: 48.0625rem)");
+  desktopNav.addEventListener?.("change", event => { if (event.matches) setNavOpen(false); });
+}
 const navLinks = [...document.querySelectorAll('nav a[href^="#"]')];
 const navSections = navLinks.map(link => document.getElementById(link.hash.slice(1))).filter(Boolean);
 let navFrame = 0;
@@ -978,6 +1010,13 @@ addEventListener("resize", requestNavSync);
 addEventListener("hashchange", requestNavSync);
 syncNav();
 
+const atlas = document.querySelector(".atlas");
+if (atlas && "IntersectionObserver" in window) {
+  const atlasObserver = new IntersectionObserver(([entry]) => {
+    atlas.classList.toggle("is-offscreen", !entry.isIntersecting);
+  }, { rootMargin: "120px" });
+  atlasObserver.observe(atlas);
+}
 const revealTargets = [...document.querySelectorAll(".field-heading, .field-main, .field-sidebar, #planner > .section-heading, .settings, .results, .sources > h2, .source-grid")];
 if (revealTargets.length && "IntersectionObserver" in window) {
   for (const target of revealTargets) target.classList.add("reveal");
@@ -998,6 +1037,7 @@ document.addEventListener("click", event => {
   const target = document.getElementById(link.hash.slice(1));
   if (!target) return;
   event.preventDefault();
+  if (navLinksWrap?.contains(link)) setNavOpen(false);
   if (location.hash !== link.hash) history.pushState(null, "", link.hash);
   animateScrollTo(target, { focus: true, onDone: () => markArrived(target) });
 });

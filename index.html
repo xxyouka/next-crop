@@ -11,28 +11,28 @@
   <meta property="og:title" content="Next Crop · What grows after rice?">
   <meta property="og:description" content="A field-level rice rotation planner for four landscapes, built with NASA POWER rainfall across three historical seasons.">
   <meta property="og:url" content="https://xxyouka.github.io/next-crop/">
-  <meta property="og:image" content="https://xxyouka.github.io/next-crop/docs/hero.png">
-  <meta property="og:image:width" content="1384">
-  <meta property="og:image:height" content="803">
-  <meta property="og:image:alt" content="Next Crop hero: a globe, four rice regions and a field-shift planner.">
+  <meta property="og:image" content="https://xxyouka.github.io/next-crop/docs/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Next Crop social card: “What grows after rice?” over a rain-soaked field.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Next Crop · What grows after rice?">
   <meta name="twitter:description" content="A field-level rice rotation planner built with NASA POWER rainfall for NASA Space Apps 2026.">
-  <meta name="twitter:image" content="https://xxyouka.github.io/next-crop/docs/hero.png">
+  <meta name="twitter:image" content="https://xxyouka.github.io/next-crop/docs/og.png">
   <title>Next Crop · What grows after rice?</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/instrument-sans.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/instrument-serif.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=20261115d">
-  <script defer src="assets/weather.js?v=20261115d"></script>
-  <script defer src="assets/earth.js?v=20261115d"></script>
-  <script defer src="sites.js?v=20261115d"></script>
-  <script defer src="model.js?v=20261115d"></script>
-  <script defer src="globe.js?v=20261115d"></script>
-  <script defer src="plant-art.js?v=20261115d"></script>
-  <script defer src="field-art.js?v=20261115d"></script>
-  <script defer src="field.js?v=20261115d"></script>
-  <script defer src="app.js?v=20261115d"></script>
+  <link rel="stylesheet" href="styles.css?v=20261115e">
+  <script defer src="assets/weather.js?v=20261115e"></script>
+  <script defer src="assets/earth.js?v=20261115e"></script>
+  <script defer src="sites.js?v=20261115e"></script>
+  <script defer src="model.js?v=20261115e"></script>
+  <script defer src="globe.js?v=20261115e"></script>
+  <script defer src="plant-art.js?v=20261115e"></script>
+  <script defer src="field-art.js?v=20261115e"></script>
+  <script defer src="field.js?v=20261115e"></script>
+  <script defer src="app.js?v=20261115e"></script>
 </head>
 <body>
   <a class="skip" href="#atlas" data-t="skip">Skip to the regions</a>
@@ -41,10 +41,16 @@
       <a class="brand" href="#atlas"><span class="brand-mark" aria-hidden="true"></span><span data-t="brand">Next Crop</span></a>
       <nav aria-label="Page">
         <span class="nav-marker" aria-hidden="true"></span>
-        <a href="#atlas" data-t="atlas">Regions</a>
-        <a href="#field" data-t="fieldNav">Field replay</a>
-        <a href="#planner" data-t="planner">Planner</a>
-        <a href="#evidence" data-t="evidence">Evidence</a>
+        <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">
+          <span class="visually-hidden" data-t="sections">Sections</span>
+          <span class="nav-toggle-icon" aria-hidden="true"></span>
+        </button>
+        <div class="nav-links" id="nav-links">
+          <a href="#atlas" data-t="atlas">Regions</a>
+          <a href="#field" data-t="fieldNav">Field replay</a>
+          <a href="#planner" data-t="planner">Planner</a>
+          <a href="#evidence" data-t="evidence">Evidence</a>
+        </div>
         <button type="button" id="language" lang="zh-Hans">中文</button>
       </nav>
     </div>
