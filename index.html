@@ -3,20 +3,27 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Compare three winter rotations in Kaiping using NASA POWER rainfall and your field conditions.">
+  <meta name="description" content="Explore four rice-growing regions and replay crop rotations using NASA POWER historical rainfall.">
   <meta name="theme-color" content="#f3f3e9">
-  <title>Next Crop · Kaiping rotation planner</title>
+  <title>Next Crop · Global rotation explorer</title>
   <link rel="stylesheet" href="styles.css">
   <script defer src="assets/weather.js"></script>
+  <script defer src="assets/earth.js"></script>
+  <script defer src="sites.js"></script>
   <script defer src="model.js"></script>
+  <script defer src="globe.js"></script>
+  <script defer src="field-art.js"></script>
+  <script defer src="field.js"></script>
   <script defer src="app.js"></script>
 </head>
 <body>
-  <a class="skip" href="#planner" data-t="skip">Skip to the planner</a>
+  <a class="skip" href="#atlas" data-t="skip">Skip to the regions</a>
   <header class="top">
     <div class="shell top-inner">
-      <a class="brand" href="#"><span class="brand-mark" aria-hidden="true"></span><span data-t="brand">Next Crop</span></a>
+      <a class="brand" href="#atlas"><span class="brand-mark" aria-hidden="true"></span><span data-t="brand">Next Crop</span></a>
       <nav aria-label="Page">
+        <a href="#atlas" data-t="atlas">Regions</a>
+        <a href="#field" data-t="fieldNav">Field replay</a>
         <a href="#planner" data-t="planner">Planner</a>
         <a href="#evidence" data-t="evidence">Evidence</a>
         <button type="button" id="language" lang="zh-Hans">中文</button>
@@ -24,22 +31,70 @@
     </div>
   </header>
   <main class="shell">
-    <section class="hero" aria-labelledby="page-title">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="signal" aria-hidden="true"></span><span data-t="location">Kaiping, Guangdong · China</span></p>
-        <h1 id="page-title" data-t="headline">What can we grow before the next rice season?</h1>
-        <p class="intro" data-t="intro">Set your rice dates and compare three winter rotations against real historical rainfall and the conditions on your farm.</p>
-        <a class="primary" href="#planner"><span data-t="start">Compare rotations</span><span aria-hidden="true">↘</span></a>
-      </div>
-      <figure class="map">
-        <div class="map-frame">
-          <img src="assets/kaiping.webp" width="1080" height="850" alt="" fetchpriority="high">
-          <span class="map-north" aria-hidden="true">↑ N</span>
-          <div class="map-point"><span class="dot" aria-hidden="true"></span><span data-t="sample">NASA POWER sample</span></div>
-          <span class="map-coordinate">22.48°N &nbsp; 112.60°E</span>
+    <section id="atlas" class="atlas" aria-labelledby="page-title">
+      <div class="atlas-intro">
+        <div>
+          <h1 id="page-title" data-t="headline">What grows after rice?</h1>
+          <p class="intro" data-t="intro">Choose a region to watch its crops grow and compare what can fit between rice seasons.</p>
         </div>
-        <figcaption><span data-t="imagery">Kaiping area · Sentinel-2A true color</span><time datetime="2025-01-03" data-t="imageDate">03 Jan 2025</time></figcaption>
+      </div>
+      <figure class="globe-figure">
+        <div class="globe-stage">
+          <canvas id="globe" width="530" height="530" aria-hidden="true"></canvas>
+          <div id="globe-pins"></div>
+        </div>
+        <figcaption><span data-t="drag">Drag to rotate</span><a href="https://science.nasa.gov/earth/earth-observatory/the-blue-marble-true-color-global-imagery-at-1km-resolution/">NASA Blue Marble ↗</a></figcaption>
       </figure>
+      <div class="atlas-places" id="site-list"></div>
+    </section>
+
+    <section id="field" class="field" aria-labelledby="field-title">
+      <div class="section-heading field-heading">
+        <div><p class="eyebrow" id="field-location"></p><h2 id="field-title" tabindex="-1"></h2></div>
+        <a class="field-back" href="#atlas" data-t="backToAtlas">Change region ↑</a>
+      </div>
+      <div class="field-layout">
+        <div class="field-main">
+          <figure class="field-figure">
+            <div class="field-view">
+              <canvas id="field-art" width="960" height="500" aria-hidden="true"></canvas>
+              <div class="field-stage"><span id="field-stage"></span><time id="field-date"></time></div>
+              <span class="field-illustration" data-t="illustration">Illustrated field</span>
+            </div>
+            <figcaption id="field-caption"></figcaption>
+          </figure>
+          <div class="field-controls">
+            <div class="replay-controls">
+              <button type="button" class="play" id="field-play"></button>
+              <div class="scrub">
+                <label for="field-day" data-t="observe">Observation date</label>
+                <input id="field-day" type="range" min="0" max="100" value="0">
+              </div>
+            </div>
+            <div class="field-stages" id="field-stages" role="group" aria-label="Growth stages"></div>
+          </div>
+        </div>
+        <aside class="field-sidebar">
+          <div class="field-options">
+            <h3 data-t="chooseCrop">Choose a rotation</h3>
+            <div id="field-crops" class="field-crops"></div>
+            <figure class="crop-closeup">
+              <canvas id="crop-art" width="320" height="108" aria-hidden="true"></canvas>
+              <figcaption data-t="closeup">Crop close-up</figcaption>
+            </figure>
+          </div>
+          <div class="field-observation">
+            <h3 data-t="observation">Regional weather</h3>
+            <dl>
+              <div><dt data-t="observedRain">Daily rainfall</dt><dd id="field-rain"></dd></div>
+              <div><dt data-t="observedTemp">Daily minimum</dt><dd id="field-temp"></dd></div>
+            </dl>
+            <p id="field-coordinates"></p>
+            <p data-t="weatherScale">NASA POWER historical grid estimates.</p>
+          </div>
+          <a class="primary" href="#planner"><span data-t="start">Compare rotations</span><span aria-hidden="true">↘</span></a>
+        </aside>
+      </div>
     </section>
 
     <section id="planner" class="workspace" aria-labelledby="planner-title">
@@ -50,9 +105,9 @@
       <div class="planner-grid">
         <form id="field-settings" class="settings">
           <div class="settings-head"><h3 data-t="inputs">Your field</h3><button class="quiet" type="reset" data-t="reset">Reset</button></div>
-          <label for="harvest" class="range-label"><span data-t="harvest">Late rice harvest</span><output id="harvest-value" for="harvest"></output></label>
+          <label for="harvest" class="range-label"><span id="harvest-label">Late rice harvest</span><output id="harvest-value" for="harvest"></output></label>
           <input type="range" id="harvest" min="0" max="35" value="11">
-          <label for="transplant" class="range-label"><span data-t="transplant">Early rice transplant</span><output id="transplant-value" for="transplant"></output></label>
+          <label for="transplant" class="range-label"><span id="transplant-label">Early rice transplant</span><output id="transplant-value" for="transplant"></output></label>
           <input type="range" id="transplant" min="0" max="30" value="15">
           <label for="season" data-t="season">Historical season</label>
           <select id="season"><option value="2024">2024/25</option><option value="2023">2023/24</option><option value="2021">2021/22</option></select>
@@ -82,9 +137,9 @@
           </div>
           <p class="table-note" data-t="rainNote">Rain includes the operation day and the two days before it. Choose a strategy to see its evidence.</p>
           <section class="timeline" aria-labelledby="timeline-title">
-            <div class="detail-head"><h3 id="timeline-title" data-t="timeline">Season timeline</h3><span class="section-context" data-t="rotationContext">Late rice → winter → early rice</span></div>
+            <div class="detail-head"><h3 id="timeline-title" data-t="timeline">Season timeline</h3><span id="rotation-context" class="section-context"></span></div>
             <div class="timeline-rows" id="timeline-rows" aria-hidden="true"></div>
-            <div class="timeline-legend" aria-hidden="true"><span data-t="cropWindow">Winter window</span><span data-t="prepWindow">Rice preparation</span><span data-t="riceMarker">Early rice transplant</span></div>
+            <div class="timeline-legend" aria-hidden="true"><span data-t="cropWindow">Winter window</span><span data-t="prepWindow">Rice preparation</span><span data-t="riceMarker">Next rice planting</span></div>
           </section>
           <article class="detail" id="strategy-detail" aria-labelledby="detail-title">
             <div class="detail-head"><h3 id="detail-title"></h3><span id="detail-tag" class="status"></span></div>
@@ -99,9 +154,12 @@
     <section class="sources" id="evidence" aria-labelledby="evidence-title">
       <h2 id="evidence-title" data-t="behind">Behind the comparison</h2>
       <div class="source-grid">
-        <div><h3 data-t="sourceWeather">NASA POWER</h3><p data-t="sourceWeatherDesc">Daily corrected precipitation at 22.48°N, 112.60°E in local solar time. Values represent a regional grid estimate.</p><a href="https://power.larc.nasa.gov/docs/services/api/temporal/daily/" data-t="powerLink">Daily API documentation ↗</a></div>
-        <div><h3 data-t="sourceLocal">Local crop practices</h3><p data-t="sourceLocalDesc">Kaiping documents winter potato, Chinese milk vetch and traditional winter fallow in its double-rice area.</p><a href="https://www.kaiping.gov.cn/kpszfw/xwdt/bmdt/content/post_3261533.html" data-t="localLink">Kaiping case report ↗</a></div>
-        <div><h3 data-t="sourceRules">Planning assumptions</h3><p data-t="sourceRulesDesc">Illustrative crop durations, rice preparation buffers and a 30 mm rain alert. Drainage and soil texture come from your inputs.</p><a href="https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_49QFE_20250103_0_L2A" data-t="imageLink">Sentinel-2A image record ↗</a></div>
+        <div><h3 data-t="sourceWeather">NASA POWER</h3><p id="source-weather"></p><a href="https://power.larc.nasa.gov/docs/services/api/temporal/daily/" data-t="powerLink">Daily API documentation ↗</a></div>
+        <div><h3 data-t="sourceLocal">Local crop practices</h3><p id="source-local"></p><a id="source-link" data-t="localLink">Local source ↗</a></div>
+        <div><h3 data-t="sourceRules">Planning assumptions</h3><p data-t="sourceRulesDesc">Illustrative crop stages, crop durations, rice preparation buffers and a 30 mm rain alert. Drainage and soil texture come from your inputs.</p><details id="kaiping-image"><summary data-t="viewImage">Kaiping satellite image</summary>
+          <img src="assets/kaiping.webp" width="1080" height="850" alt="" loading="lazy">
+          <a href="https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_49QFE_20250103_0_L2A" data-t="imageLink">Sentinel-2A image record ↗</a>
+        </details></div>
       </div>
     </section>
   </main>
