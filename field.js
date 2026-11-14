@@ -46,6 +46,7 @@ function mountField({ t, dateLabel, selectCrop, cropColor }) {
     $("field-stage").textContent = status;
     $("field-date").textContent = dateText;
     $("field-date").dateTime = date;
+    $("closeup-caption").textContent = `${t(activeCrop)} · ${t(key)}`;
     $("field-caption").textContent = t(`${key}Note`);
     $("field-rain").textContent = Number.isFinite(rain) ? `${rain.toFixed(2)} mm` : "—";
     $("field-temp").textContent = Number.isFinite(minimum) ? `${minimum.toFixed(1)} °C` : "—";

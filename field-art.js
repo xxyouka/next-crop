@@ -7,8 +7,8 @@ function makeFieldArt(canvas, closeupCanvas) {
   const detailContext = closeupCanvas.getContext("2d");
   const width = 960;
   const height = 500;
-  const detailWidth = 320;
-  const detailHeight = 180;
+  const detailWidth = 360;
+  const detailHeight = 320;
   fieldContext.scale(canvas.width / width, canvas.height / height);
   if (detailContext) detailContext.scale(closeupCanvas.width / detailWidth, closeupCanvas.height / detailHeight);
   const terrain = {
@@ -166,54 +166,54 @@ function makeFieldArt(canvas, closeupCanvas) {
     const flooded = phase === "riceStage";
     const sky = ctx.createLinearGradient(0, 0, 0, h);
     sky.addColorStop(0, wet ? "#78908a" : "#d9e6c5");
-    sky.addColorStop(.48, wet ? "#9fb3a2" : "#c3d3aa");
-    sky.addColorStop(.72, wet ? "#657a63" : "#879d6d");
+    sky.addColorStop(.45, wet ? "#9fb3a2" : "#c3d3aa");
+    sky.addColorStop(.7, wet ? "#657a63" : "#879d6d");
     sky.addColorStop(1, "#4a392d");
     ctx.fillStyle = sky;
     ctx.fillRect(0, 0, w, h);
 
-    const glow = ctx.createRadialGradient(w * .26, 18, 2, w * .26, 18, 155);
+    const glow = ctx.createRadialGradient(w * .26, 24, 2, w * .26, 24, 200);
     glow.addColorStop(0, wet ? "#e6f0e644" : "#fff5cdaa");
     glow.addColorStop(1, "#fff5cd00");
     ctx.fillStyle = glow;
-    ctx.fillRect(0, 0, w, h * .75);
+    ctx.fillRect(0, 0, w, h * .72);
 
     for (let i = 0; i < 3; i++) {
-      const band = ctx.createLinearGradient(0, 58 + i * 7, 0, 80 + i * 7);
+      const band = ctx.createLinearGradient(0, 106 + i * 8, 0, 140 + i * 8);
       band.addColorStop(0, ["#6c8360", "#7c926b", "#91a477"][i] + "00");
       band.addColorStop(1, ["#6c8360", "#7c926b", "#91a477"][i] + "88");
       ctx.fillStyle = band;
-      ctx.fillRect(0, 58 + i * 7, w, 20);
+      ctx.fillRect(0, 106 + i * 8, w, 34);
     }
-    const hedgeBand = ctx.createLinearGradient(0, 72, 0, 84);
+    const hedgeBand = ctx.createLinearGradient(0, 128, 0, 154);
     hedgeBand.addColorStop(0, "#5d765a00");
     hedgeBand.addColorStop(1, "#4b654966");
     ctx.fillStyle = hedgeBand;
-    ctx.fillRect(0, 72, w, 12);
-    for (let i = 0; i < 12; i++) {
-      const x = -4 + i * 29 + random(i + 8) * 10;
-      const y = 78 + random(i + 20) * 2;
+    ctx.fillRect(0, 128, w, 26);
+    for (let i = 0; i < 16; i++) {
+      const x = -4 + i * 32 + random(i + 8) * 10;
+      const y = 140 + random(i + 20) * 3;
       ellipse(x, y, 4 + random(i + 30) * 4, 2.5 + random(i + 40) * 2, "#4b654a55");
     }
-    const haze = ctx.createLinearGradient(0, 58, 0, 92);
+    const haze = ctx.createLinearGradient(0, 100, 0, 162);
     haze.addColorStop(0, "#d9e6c500");
     haze.addColorStop(.7, wet ? "#a9b99e55" : "#e8efd066");
     haze.addColorStop(1, "#d9e6c500");
     ctx.fillStyle = haze;
-    ctx.fillRect(0, 58, w, 34);
+    ctx.fillRect(0, 100, w, 62);
 
     const species = plants.species[crop];
     if (species) {
       ctx.save();
-      ctx.globalAlpha = .13;
+      ctx.globalAlpha = .12;
       for (let i = 0; i < 6; i++) {
-        const x = 24 + i * 54 + random(i + 210) * 18;
-        plants.draw(ctx, crop, stage === "seedling" ? "growing" : stage, x, 112, .48 + random(i + 220) * .12, i + 301);
+        const x = 20 + i * 62 + random(i + 210) * 18;
+        plants.draw(ctx, crop, stage === "seedling" ? "growing" : stage, x, 198, .58 + random(i + 220) * .12, i + 301);
       }
       ctx.restore();
     }
 
-    const soilY = 82;
+    const soilY = 152;
     const soil = ctx.createLinearGradient(0, soilY, 0, h);
     if (flooded) {
       soil.addColorStop(0, wet ? "#7f9f96" : "#9ebdb2");
@@ -223,61 +223,65 @@ function makeFieldArt(canvas, closeupCanvas) {
       soil.addColorStop(0, wet ? "#7b6651" : "#9b8160");
       soil.addColorStop(1, wet ? "#4a3b31" : "#5d4536");
     }
-    polygon([[0, soilY + 3], [42, soilY - 2], [90, soilY + 1], [132, soilY - 4], [178, soilY], [222, soilY - 3], [270, soilY + 1], [320, soilY - 2], [320, h], [0, h]], soil);
+    polygon([[0, soilY + 3], [48, soilY - 2], [102, soilY + 1], [150, soilY - 4], [203, soilY], [252, soilY - 3], [308, soilY + 1], [360, soilY - 2], [360, h], [0, h]], soil);
     if (flooded) {
-      for (let i = 0; i < 26; i++) {
-        const y = soilY + 6 + random(i + 400) * (h - soilY - 8);
+      for (let i = 0; i < 34; i++) {
+        const y = soilY + 10 + random(i + 400) * (h - soilY - 14);
         const x = random(i + 500) * w;
-        ellipse(x, y, 8 + random(i + 600) * 28, .55, "#dcefda52", -.04);
+        ellipse(x, y, 12 + random(i + 600) * 36, .7, "#dcefda52", -.04);
       }
     } else {
-      for (let i = 0; i < 110; i++) {
+      for (let i = 0; i < 180; i++) {
         const x = random(i + 528) * w;
         const y = soilY + random(i + 711) * (h - soilY);
-        ellipse(x, y, 1 + random(i + 47) * 2.4, .5 + random(i + 51) * 1.2, i % 3 ? "#e0c08c2e" : "#241a1538", -.1);
+        ellipse(x, y, 1.2 + random(i + 47) * 3.2, .6 + random(i + 51) * 1.6, i % 3 ? "#e0c08c2e" : "#241a1538", -.1);
       }
-      for (let i = 0; i < 12; i++) {
+      for (let i = 0; i < 20; i++) {
         const x = 12 + random(i + 88) * (w - 24);
-        const y = 96 + random(i + 99) * (h - 102);
-        ellipse(x, y, 3 + random(i + 5) * 7, 1.4 + random(i + 7) * 2.8, "#3b2c2352", -.12);
-        ellipse(x - 1, y - 1.5, 2 + random(i + 6) * 4, .9 + random(i + 9) * 1.6, "#d9bb8752", -.12);
+        const y = 172 + random(i + 99) * (h - 180);
+        ellipse(x, y, 3 + random(i + 5) * 9, 1.6 + random(i + 7) * 3.8, "#3b2c2352", -.12);
+        ellipse(x - 1, y - 1.5, 2 + random(i + 6) * 5, 1 + random(i + 9) * 2, "#d9bb8752", -.12);
       }
     }
 
     const dormant = ["harvestStage", "incorporationStage", "prepStage", "delayedStage", "fallowStage"].includes(phase);
+    const baseY = h - 28;
+    if (species) {
+      ellipse(w / 2, baseY + 1, 86, 11, flooded ? "#3f5f5a" : wet ? "#4a382b" : "#4f3b2c", 0);
+      ellipse(w / 2 - 18, baseY - 2, 38, 3.4, "#d8b98222", 0);
+    }
     if (!dormant && species) {
-      const base = stage === "seedling" ? 1.3 : 1.34 + growth * .24;
-      const positions = stage === "seedling"
-        ? [[28, h, .9], [96, h, 1.05], [162, h, 1.12], [228, h, 1.02], [296, h, .88]]
-        : [[40, h, .78], [160, h, 1.04], [280, h - 4, .82]];
-      for (const [x, y, factor] of positions) {
-        const scale = base * factor;
-        ellipse(x + scale * 8, y - 4, scale * 29, scale * 5, flooded ? "#2f514a55" : "#1f2a1e44", -.1);
-        if (flooded) ellipse(x + scale * 8, y - 1, scale * 20, scale * 3, "#d5e9d93b", -.1);
-        plants.draw(ctx, crop, stage, x, y, scale, x + 43);
+      const scale = stage === "seedling" ? 2.0 : 1.95 + growth * .15;
+      ctx.save();
+      ctx.globalAlpha = .28;
+      for (const [x, factor] of [[w * .18, .3], [w * .82, .32]]) {
+        plants.draw(ctx, crop, stage, x, baseY - 7, scale * factor, x + 17);
       }
+      ctx.restore();
+      ellipse(w / 2 + scale * 8, baseY - 4, scale * 33, scale * 5, flooded ? "#2f514a55" : "#1f2a1e44", -.1);
+      if (flooded) ellipse(w / 2 + scale * 8, baseY, scale * 22, scale * 3, "#d5e9d93b", -.1);
+      plants.draw(ctx, crop, stage, w / 2, baseY, scale, w + 12);
     } else if (dormant) {
       if (crop === "potato" && phase === "harvestStage") {
-        for (let i = 0; i < 5; i++) {
-          const x = 36 + i * 63 + random(i + 2) * 10;
-          tuber(x, 132 + random(i + 5) * 18, 17 + random(i + 7) * 9, i + 2);
+        for (let i = 0; i < 4; i++) {
+          const x = 70 + i * 70 + random(i + 2) * 8;
+          tuber(x, 232 + random(i + 5) * 28, 26 + random(i + 7) * 8, i + 2);
         }
       } else if (species) {
         const closeStage = crop === "vetch" || crop === "hairy" ? "full" : "mature";
-        for (const [x, y, scale] of [[38, h, .86], [162, h, 1.18], [282, h - 5, .88]]) {
-          ellipse(x + scale * 8, y - 4, scale * 27, scale * 4.5, "#1f2a1e38", -.1);
-          plants.draw(ctx, crop, closeStage, x, y, scale, x + 29);
-        }
-        for (let i = 0; i < 7; i++) {
-          const x = 12 + i * 46;
-          const y = 126 + random(i + 8) * 22;
-          path([[x - 3, y + 2], [x, y - 8], [x + 2, y]], "#d0ad6a99", 1.2);
+        const scale = 1.8;
+        ellipse(w / 2 + scale * 8, baseY - 4, scale * 30, scale * 4.8, "#1f2a1e38", -.1);
+        plants.draw(ctx, crop, closeStage, w / 2, baseY, scale, w + 29);
+        for (let i = 0; i < 9; i++) {
+          const x = w * .18 + i * 18;
+          const y = baseY - 8 + random(i + 8) * 14;
+          path([[x - 3, y + 2], [x, y - 8], [x + 2, y]], "#d0ad6a99", 1.1);
         }
       } else {
-        for (let i = 0; i < 12; i++) {
-          const x = 10 + i * 27;
-          const y = 102 + random(i + 8) * 20;
-          path([[x - 3, y + 2], [x, y - 7], [x + 2, y]], "#d0ad6a99", 1.2);
+        for (let i = 0; i < 16; i++) {
+          const x = 12 + i * 21;
+          const y = 194 + random(i + 8) * 24;
+          path([[x - 3, y + 2], [x, y - 8], [x + 2, y]], "#d0ad6a99", 1.2);
         }
       }
     }
@@ -290,33 +294,32 @@ function makeFieldArt(canvas, closeupCanvas) {
       mound.addColorStop(0, wet ? "#5a4638" : "#6f543e");
       mound.addColorStop(1, wet ? "#30251d" : "#463427");
     }
-    polygon([[0, h - 25], [48, h - 29], [104, h - 23], [158, h - 28], [214, h - 24], [270, h - 29], [320, h - 23], [320, h], [0, h]], mound);
+    polygon([[0, h - 25], [52, h - 29], [112, h - 23], [172, h - 28], [232, h - 24], [292, h - 29], [360, h - 23], [360, h], [0, h]], mound);
     if (flooded) {
-      for (let i = 0; i < 12; i++) {
-        ellipse(random(i + 701) * w, h - 18 + random(i + 702) * 14, 7 + random(i + 703) * 18, .5, "#dcefda40", -.04);
+      for (let i = 0; i < 14; i++) {
+        ellipse(random(i + 701) * w, h - 18 + random(i + 702) * 14, 8 + random(i + 703) * 22, .5, "#dcefda40", -.04);
       }
     } else {
-      for (let i = 0; i < 38; i++) {
-        ellipse(random(i + 704) * w, h - 22 + random(i + 705) * 20, 1 + random(i + 706) * 2, .6 + random(i + 707), i % 2 ? "#e0c08c2e" : "#241a1538");
+      for (let i = 0; i < 52; i++) {
+        ellipse(random(i + 704) * w, h - 22 + random(i + 705) * 20, 1 + random(i + 706) * 2.4, .6 + random(i + 707) * 1.2, i % 2 ? "#e0c08c2e" : "#241a1538");
       }
     }
 
     if (!flooded) {
-      for (let i = 0; i < 9; i++) {
-        const x = i % 2 ? 6 + random(i + 20) * 30 : w - 6 - random(i + 20) * 30;
+      for (let i = 0; i < 11; i++) {
+        const x = i % 2 ? 6 + random(i + 20) * 36 : w - 6 - random(i + 20) * 36;
         const y = h - 2 - random(i + 30) * 8;
         path([[x - 2, y], [x, y - 6 - random(i + 40) * 8], [x + 2, y]], "#7d965c", 1);
       }
     }
 
-    const vignette = ctx.createRadialGradient(w / 2, h * .58, h * .2, w / 2, h * .55, w * .72);
+    const vignette = ctx.createRadialGradient(w / 2, h * .6, h * .22, w / 2, h * .55, w * .66);
     vignette.addColorStop(0, "#0c160b00");
     vignette.addColorStop(1, "#0c160b52");
     ctx.fillStyle = vignette;
     ctx.fillRect(0, 0, w, h);
     ctx = fieldContext;
   }
-
   return function paint({ terrain: placeType, crop, progress, phase, growthPhase, wet }) {
     landscape(placeType, wet);
     for (let i = 0; i < 3; i++) {
