@@ -58,6 +58,8 @@ const copy = {
   seasonCheckContext: ["Calendar and rain only", "仅看农时与降雨"],
   seasonCaption: ["Same plan in each historical season", "同一方案在三个历史季节中的表现"],
   seasonCheckNote: ["Same inputs and 30 mm rain threshold, run through each historical season. Field-condition flags are left out; select a cell to inspect its full result in the table above.", "使用相同输入和 30 毫米降雨阈值，在三个历史季节中各跑一遍。此处不计排水与土壤复核项；点选格子可回到上方表格查看完整判断。"],
+  seasonScale: ["Bars 0–40 mm; marker 30 mm", "条形 0–40 毫米；标记 30 毫米"],
+  selectedStrategy: ["Selected strategy", "当前所选方案"],
   fitsShort: ["Fits", "排得进去"], conflictShort: ["Conflict", "农时冲突"],
   wetWindow: ["Wet window", "雨量偏大"], noData: ["No data", "无数据"],
   inputs: ["Your field", "你的田况"], reset: ["Reset", "重置"],
@@ -338,7 +340,13 @@ function buildSeasonGrid() {
       status.className = "status";
       const rain = document.createElement("span");
       rain.className = "season-rain";
-      button.append(status, rain);
+      const bar = document.createElement("span");
+      bar.className = "season-bar";
+      bar.setAttribute("aria-hidden", "true");
+      const fill = document.createElement("span");
+      fill.className = "season-bar-fill";
+      bar.append(fill);
+      button.append(status, rain, bar);
       button.addEventListener("click", () => {
         $("season").value = String(year);
         selected = id;
@@ -346,7 +354,7 @@ function buildSeasonGrid() {
       });
       cell.append(button);
       row.append(cell);
-      return { button, status, rain };
+      return { button, status, rain, bar, fill };
     });
     seasonBody.append(row);
     seasonRows[id] = { row, text, cells };
@@ -389,6 +397,9 @@ function updateSeasonGrid() {
       cell.status.dataset.state = state;
       cell.status.textContent = label;
       cell.rain.textContent = result.rain === null ? "—" : `${result.rain.toFixed(2)} mm`;
+      cell.button.dataset.state = state;
+      cell.bar.hidden = result.id === "fallow" || result.rain === null;
+      cell.fill.style.inlineSize = result.rain === null ? "0%" : `${Math.max(2, Math.min(100, result.rain / 40 * 100))}%`;
       const active = result.id === selected && scenarioYear === year;
       cell.button.dataset.active = String(active);
       cell.button.setAttribute("aria-pressed", String(active));
