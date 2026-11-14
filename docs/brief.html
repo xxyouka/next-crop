@@ -6,6 +6,20 @@
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <title>Next Crop · Judge brief</title>
   <style>
+    @font-face {
+      font-family: "Instrument Sans";
+      src: url("../assets/fonts/instrument-sans.woff2") format("woff2");
+      font-weight: 400 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Instrument Serif";
+      src: url("../assets/fonts/instrument-serif.woff2") format("woff2");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
     @page { size: A4 landscape; margin: 0; }
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; background: #f3f3e9; }
@@ -150,7 +164,7 @@
     }
     .insight p {
       margin: 0;
-      font: 500 14px/1.35 Georgia, "Iowan Old Style", serif;
+      font: 400 14px/1.35 "Instrument Serif", Georgia, serif;
       letter-spacing: -.015em;
     }
     .insight p strong { color: #d7e78d; font-weight: 500; }
