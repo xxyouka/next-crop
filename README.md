@@ -2,6 +2,8 @@
 
 Explore rice rotations in **Kaiping, Nueva Ecija, Rajshahi and the Sacramento Valley**. This project addresses NASA Space Apps' **Field Shift: Adapting Farms with NASA Data** challenge.
 
+**Live demo:** <https://xxyouka.github.io/next-crop/> · **Public repo:** <https://github.com/xxyouka/next-crop> · **Public demo deck:** <https://xxyouka.github.io/next-crop/docs/Next-Crop-Demo-Deck.pdf>
+
 ## Why this matters
 
 Between rice harvest and the next transplant, a farmer has one narrow window. A winter crop can add income or protect the soil, but only if its calendar and the weather at its operation date do not put the next rice season at risk.

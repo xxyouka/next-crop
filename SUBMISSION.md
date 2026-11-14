@@ -30,15 +30,16 @@ Factors considered: regional rainfall variability, the rice preparation buffer, 
 
 ## Project demonstration
 
-- Upload [docs/Next-Crop-Demo-Deck.pdf](docs/Next-Crop-Demo-Deck.pdf) — **7 slides, English** — to Google Drive, Dropbox, OneDrive or a public code host. Set the file to public access and paste the link.
+- **Public demo (ready to paste):** https://xxyouka.github.io/next-crop/docs/Next-Crop-Demo-Deck.pdf — **7 slides, English**, public, no login.
 - The deck is within the 7-slide limit. A 30-second English-subtitled video is an alternative.
-- Before uploading, add the final member names to slides 1 and 7 if they are not already on the submission page. The deck currently uses the team name “Team Dui Dui Dui”.
+- Before submitting, add the final member names to slides 1 and 7 if they are not already on the submission page. The deck currently uses the team name “Team Dui Dui Dui”.
 - Test the link in a private browser with no login.
 
 ## Project link
 
-- Deploy the static app to a public host (GitHub Pages, Cloudflare Pages or Netlify Drop). Instructions: [docs/DEPLOY.md](docs/DEPLOY.md).
-- Paste the public app URL after testing it in a private browser. The link must open without a password, permission or registration.
+- **Live project (ready to paste):** https://xxyouka.github.io/next-crop/ — public, no login, tested.
+- Repository: https://github.com/xxyouka/next-crop
+- If the site is changed later, redeploy with [docs/DEPLOY.md](docs/DEPLOY.md) and re-test in a private browser.
 
 ## NASA data
 
