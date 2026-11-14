@@ -150,6 +150,12 @@ const brief = $("brief");
 const copyButton = $("copy-link");
 let copyTimer = 0;
 let shiftSuggestion = null;
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+function withMotionTransition(update) {
+  if (!document.startViewTransition || reducedMotion.matches) { update(); return; }
+  try { document.startViewTransition(update); }
+  catch { update(); }
+}
 const colors = {
   fallow: "#7d775e", potato: "#8e6439", vetch: "#775297", maize: "#91702d",
   mung: "#587c4a", mustard: "#a8781e", rye: "#627743", hairy: "#725c97",
@@ -542,15 +548,44 @@ function render() {
 }
 
 $("language").addEventListener("click", event => {
-  chinese = !chinese;
-  document.documentElement.lang = chinese ? "zh-Hans" : "en";
-  document.title = either("Next Crop · What grows after rice?", "下一茬 · 水稻收完，种什么？");
-  event.currentTarget.lang = chinese ? "en" : "zh-Hans";
-  event.currentTarget.textContent = either("中文", "English");
-  clearShift();
-  for (const node of document.querySelectorAll("[data-t]")) node.textContent = t(node.dataset.t);
-  updateSiteLabels();
-  render();
+  const toggle = event.currentTarget;
+  const activeLink = document.querySelector('nav a[aria-current="location"]');
+  const activeSection = document.getElementById(activeLink?.hash.slice(1) ?? "atlas");
+  const activeTop = activeSection?.getBoundingClientRect().top;
+  withMotionTransition(() => {
+    const root = document.documentElement;
+    const previousAnchor = root.style.overflowAnchor;
+    const previousBodyAnchor = document.body.style.overflowAnchor;
+    root.style.overflowAnchor = "none";
+    document.body.style.overflowAnchor = "none";
+    chinese = !chinese;
+    document.documentElement.lang = chinese ? "zh-Hans" : "en";
+    document.title = either("Next Crop · What grows after rice?", "下一茬 · 水稻收完，种什么？");
+    toggle.lang = chinese ? "en" : "zh-Hans";
+    toggle.textContent = either("中文", "English");
+    clearShift();
+    for (const node of document.querySelectorAll("[data-t]")) node.textContent = t(node.dataset.t);
+    updateSiteLabels();
+    render();
+    const restore = () => {
+      if (!activeSection || activeTop === undefined) return;
+      const target = activeSection.getBoundingClientRect().top + scrollY - activeTop;
+      const behavior = root.style.scrollBehavior;
+      root.style.scrollBehavior = "auto";
+      scrollTo(0, Math.max(0, target));
+      root.style.scrollBehavior = behavior;
+      syncNav();
+    };
+    restore();
+    requestAnimationFrame(() => {
+      restore();
+      requestAnimationFrame(() => {
+        restore();
+        root.style.overflowAnchor = previousAnchor;
+        document.body.style.overflowAnchor = previousBodyAnchor;
+      });
+    });
+  });
 });
 function scenarioFromURL() {
   const params = new URLSearchParams(location.search);
@@ -740,16 +775,18 @@ function findSaferWindow() {
 
 function applyShift() {
   if (!shiftSuggestion) return;
-  const { harvest, transplant, wet } = shiftSuggestion;
-  shiftSuggestion = null;
-  $("harvest").value = harvest;
-  $("transplant").value = transplant;
-  $("apply-shift").hidden = true;
-  $("shift-compare").hidden = true;
-  render();
-  field.jumpToOperation();
-  $("shift-status").dataset.state = wet === 0 ? "fits" : "review";
-  $("shift-status").textContent = wet === 0 ? t("shiftApplied") : t("shiftAppliedPartial").replace("{n}", wet);
+  withMotionTransition(() => {
+    const { harvest, transplant, wet } = shiftSuggestion;
+    shiftSuggestion = null;
+    $("harvest").value = harvest;
+    $("transplant").value = transplant;
+    $("apply-shift").hidden = true;
+    $("shift-compare").hidden = true;
+    render();
+    field.jumpToOperation();
+    $("shift-status").dataset.state = wet === 0 ? "fits" : "review";
+    $("shift-status").textContent = wet === 0 ? t("shiftApplied") : t("shiftAppliedPartial").replace("{n}", wet);
+  });
 }
 
 function runWetDemo() {
@@ -810,6 +847,8 @@ const initialScenario = scenarioFromURL();
 if (initialScenario) applyScenario(initialScenario);
 else loadSite(site);
 
+const nav = document.querySelector(".top nav");
+const navMarker = nav?.querySelector(".nav-marker");
 const navLinks = [...document.querySelectorAll('nav a[href^="#"]')];
 const navSections = navLinks.map(link => document.getElementById(link.hash.slice(1))).filter(Boolean);
 let navFrame = 0;
@@ -823,9 +862,23 @@ function syncNav() {
       if (section.getBoundingClientRect().top + scrollY <= anchor) active = section;
     }
   }
+  let current = null;
   for (const link of navLinks) {
-    if (link.hash === `#${active.id}`) link.setAttribute("aria-current", "location");
-    else link.removeAttribute("aria-current");
+    if (link.hash === `#${active.id}`) {
+      link.setAttribute("aria-current", "location");
+      current = link;
+    } else link.removeAttribute("aria-current");
+  }
+  if (navMarker) {
+    if (current && current.getClientRects().length) {
+      const navRect = nav.getBoundingClientRect();
+      const linkRect = current.getBoundingClientRect();
+      navMarker.hidden = false;
+      navMarker.style.translate = `${linkRect.left - navRect.left}px 0`;
+      navMarker.style.inlineSize = `${linkRect.width}px`;
+    } else {
+      navMarker.hidden = true;
+    }
   }
 }
 function requestNavSync() {
@@ -835,3 +888,16 @@ addEventListener("scroll", requestNavSync, { passive: true });
 addEventListener("resize", requestNavSync);
 addEventListener("hashchange", requestNavSync);
 syncNav();
+
+const revealTargets = [...document.querySelectorAll(".field-heading, #planner > .section-heading, .sources > h2")];
+if (revealTargets.length && !reducedMotion.matches && "IntersectionObserver" in window) {
+  for (const target of revealTargets) target.classList.add("reveal");
+  const revealObserver = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      entry.target.classList.add("is-revealed");
+      revealObserver.unobserve(entry.target);
+    }
+  }, { rootMargin: "0px 0px -10% 0px", threshold: .15 });
+  for (const target of revealTargets) revealObserver.observe(target);
+}
