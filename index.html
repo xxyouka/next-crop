@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Compare three winter rotations in Kaiping using NASA POWER rainfall and your field conditions.">
+  <meta name="theme-color" content="#f3f3e9">
+  <title>Next Crop · Kaiping rotation planner</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="assets/weather.js"></script>
+  <script defer src="model.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#planner" data-t="skip">Skip to the planner</a>
+  <header class="top">
+    <div class="shell top-inner">
+      <a class="brand" href="#"><span class="brand-mark" aria-hidden="true"></span><span data-t="brand">Next Crop</span></a>
+      <nav aria-label="Page">
+        <a href="#planner" data-t="planner">Planner</a>
+        <a href="#evidence" data-t="evidence">Evidence</a>
+        <button type="button" id="language" lang="zh-Hans">中文</button>
+      </nav>
+    </div>
+  </header>
+  <main class="shell">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="signal" aria-hidden="true"></span><span data-t="location">Kaiping, Guangdong · China</span></p>
+        <h1 id="page-title" data-t="headline">What can we grow before the next rice season?</h1>
+        <p class="intro" data-t="intro">Set your rice dates and compare three winter rotations against real historical rainfall and the conditions on your farm.</p>
+        <a class="primary" href="#planner"><span data-t="start">Compare rotations</span><span aria-hidden="true">↘</span></a>
+      </div>
+      <figure class="map">
+        <div class="map-frame">
+          <img src="assets/kaiping.webp" width="1080" height="850" alt="" fetchpriority="high">
+          <span class="map-north" aria-hidden="true">↑ N</span>
+          <div class="map-point"><span class="dot" aria-hidden="true"></span><span data-t="sample">NASA POWER sample</span></div>
+          <span class="map-coordinate">22.48°N &nbsp; 112.60°E</span>
+        </div>
+        <figcaption><span data-t="imagery">Kaiping area · Sentinel-2A true color</span><time datetime="2025-01-03" data-t="imageDate">03 Jan 2025</time></figcaption>
+      </figure>
+    </section>
+
+    <section id="planner" class="workspace" aria-labelledby="planner-title">
+      <div class="section-heading">
+        <h2 id="planner-title" data-t="workspace">Winter rotation planner</h2>
+        <button class="quiet demo" type="button" id="wet-demo" data-t="wetDemo">Try a wet harvest ↗</button>
+      </div>
+      <div class="planner-grid">
+        <form id="field-settings" class="settings">
+          <div class="settings-head"><h3 data-t="inputs">Your field</h3><button class="quiet" type="reset" data-t="reset">Reset</button></div>
+          <label for="harvest" class="range-label"><span data-t="harvest">Late rice harvest</span><output id="harvest-value" for="harvest"></output></label>
+          <input type="range" id="harvest" min="0" max="35" value="11">
+          <label for="transplant" class="range-label"><span data-t="transplant">Early rice transplant</span><output id="transplant-value" for="transplant"></output></label>
+          <input type="range" id="transplant" min="0" max="30" value="15">
+          <label for="season" data-t="season">Historical season</label>
+          <select id="season"><option value="2024">2024/25</option><option value="2023">2023/24</option><option value="2021">2021/22</option></select>
+          <label for="drainage" data-t="drainage">Field drainage</label>
+          <select id="drainage"><option value="unknown" data-t="unknown">Unknown</option><option value="good" data-t="good">Drains well</option><option value="poor" data-t="poor">Water tends to pool</option></select>
+          <label for="soil" data-t="soil">Field soil texture</label>
+          <select id="soil"><option value="unknown" data-t="unknown">Unknown</option><option value="loam" data-t="loam">Loamy</option><option value="sand" data-t="sand">Sandy</option><option value="clay" data-t="clay">Heavy clay</option></select>
+          <label for="priority" data-t="priority">Farm priority</label>
+          <select id="priority"><option value="rice" data-t="keepRice">Keep rice on schedule</option><option value="income" data-t="income">Explore winter income</option><option value="cover" data-t="cover">Keep soil covered</option></select>
+        </form>
+
+        <div class="results">
+          <div class="summary" aria-live="polite" aria-atomic="true">
+            <p id="summary-label" class="eyebrow"></p><p id="summary-title"></p><p id="summary-detail"></p>
+          </div>
+          <div class="table-scroll" tabindex="0" role="region" aria-labelledby="comparison-title">
+            <table>
+              <caption id="comparison-title" class="visually-hidden" data-t="compare">Winter rotation comparison</caption>
+              <thead><tr>
+                <th scope="col" data-t="strategy">Strategy</th>
+                <th scope="col" data-t="window">Winter window</th>
+                <th scope="col" data-t="rainHead">3-day rain</th>
+                <th scope="col" data-t="status">Status</th>
+              </tr></thead>
+              <tbody id="comparison"></tbody>
+            </table>
+          </div>
+          <p class="table-note" data-t="rainNote">Rain includes the operation day and the two days before it. Choose a strategy to see its evidence.</p>
+          <section class="timeline" aria-labelledby="timeline-title">
+            <div class="detail-head"><h3 id="timeline-title" data-t="timeline">Season timeline</h3><span class="section-context" data-t="rotationContext">Late rice → winter → early rice</span></div>
+            <div class="timeline-rows" id="timeline-rows" aria-hidden="true"></div>
+            <div class="timeline-legend" aria-hidden="true"><span data-t="cropWindow">Winter window</span><span data-t="prepWindow">Rice preparation</span><span data-t="riceMarker">Early rice transplant</span></div>
+          </section>
+          <article class="detail" id="strategy-detail" aria-labelledby="detail-title">
+            <div class="detail-head"><h3 id="detail-title"></h3><span id="detail-tag" class="status"></span></div>
+            <p id="detail-benefit"></p>
+            <ul id="detail-reasons"></ul>
+            <p id="detail-rain"></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="sources" id="evidence" aria-labelledby="evidence-title">
+      <h2 id="evidence-title" data-t="behind">Behind the comparison</h2>
+      <div class="source-grid">
+        <div><h3 data-t="sourceWeather">NASA POWER</h3><p data-t="sourceWeatherDesc">Daily corrected precipitation at 22.48°N, 112.60°E in local solar time. Values represent a regional grid estimate.</p><a href="https://power.larc.nasa.gov/docs/services/api/temporal/daily/" data-t="powerLink">Daily API documentation ↗</a></div>
+        <div><h3 data-t="sourceLocal">Local crop practices</h3><p data-t="sourceLocalDesc">Kaiping documents winter potato, Chinese milk vetch and traditional winter fallow in its double-rice area.</p><a href="https://www.kaiping.gov.cn/kpszfw/xwdt/bmdt/content/post_3261533.html" data-t="localLink">Kaiping case report ↗</a></div>
+        <div><h3 data-t="sourceRules">Planning assumptions</h3><p data-t="sourceRulesDesc">Illustrative crop durations, rice preparation buffers and a 30 mm rain alert. Drainage and soil texture come from your inputs.</p><a href="https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_49QFE_20250103_0_L2A" data-t="imageLink">Sentinel-2A image record ↗</a></div>
+      </div>
+    </section>
+  </main>
+  <footer class="shell footer"><span data-t="footer">Next Crop · NASA Space Apps Challenge 2026</span><span>Contains modified Copernicus Sentinel data 2025</span></footer>
+</body>
+</html>
