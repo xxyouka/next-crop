@@ -23,16 +23,16 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/instrument-sans.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/instrument-serif.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=20261115g">
+  <link rel="stylesheet" href="styles.css?v=20261115h">
   <script defer src="assets/weather.js?v=20261115g"></script>
   <script defer src="assets/earth.js?v=20261115g"></script>
-  <script defer src="sites.js?v=20261115g"></script>
+  <script defer src="sites.js?v=20261115h"></script>
   <script defer src="model.js?v=20261115g"></script>
   <script defer src="globe.js?v=20261115g"></script>
   <script defer src="plant-art.js?v=20261115g"></script>
   <script defer src="field-art.js?v=20261115g"></script>
   <script defer src="field.js?v=20261115g"></script>
-  <script defer src="app.js?v=20261115g"></script>
+  <script defer src="app.js?v=20261115h"></script>
 </head>
 <body>
   <a class="skip" href="#atlas" data-t="skip">Skip to the regions</a>
@@ -63,6 +63,7 @@
           <p class="eyebrow atlas-kicker">NASA Space Apps 2026 · Field Shift</p>
           <h1 id="page-title" data-t="headline" tabindex="-1">What grows after rice?</h1>
           <p class="intro" data-t="intro">Choose a region to watch its crops grow, then test a winter rotation against NASA POWER rainfall from three historical years.</p>
+          <button type="button" class="primary" id="atlas-demo"><span data-t="atlasDemo">Try the Kaiping rain demo</span><span aria-hidden="true">↘</span></button>
           <p class="atlas-source"><span data-t="builtWith">Built with NASA POWER daily rainfall and Blue Marble imagery.</span><button type="button" class="text-link" id="brief-open" data-t="briefLink">Project brief</button></p>
         </div>
       </div>
@@ -166,23 +167,24 @@
             <p data-t="guideNote">Unknown drainage or soil adds a review flag. Set both to refine the result.</p>
           </aside>
           <aside class="field-shift" aria-labelledby="shift-title">
-            <h3 id="shift-title" data-t="shiftTitle">Find a safer window</h3>
+            <h3 id="shift-title" data-t="shiftTitle" tabindex="-1">Find a safer window</h3>
             <p data-t="shiftNote">Search nearby rice dates for a window that clears the crop calendar and the three-day rain in all three seasons. Field conditions stay as you set them.</p>
             <div class="shift-actions">
               <button class="quiet" type="button" id="find-shift" data-t="findShift">Find a safer window</button>
               <button class="quiet" type="button" id="apply-shift" data-t="applyShift" hidden>Apply this window</button>
             </div>
             <div id="shift-compare" class="shift-compare" hidden>
+              <p id="shift-context" class="shift-context"></p>
               <div>
-                <span data-t="shiftNow">Now · harvest</span>
-                <strong id="shift-now-date"></strong>
-                <small id="shift-now-rain"></small>
+                <span data-t="shiftNow">Current plan</span>
+                <strong id="shift-now-rain"></strong>
+                <small id="shift-now-date"></small>
               </div>
               <span class="shift-arrow" aria-hidden="true">→</span>
               <div class="shift-next">
-                <span data-t="shiftSafer">Safer · harvest</span>
-                <strong id="shift-new-date"></strong>
-                <small id="shift-new-rain"></small>
+                <span data-t="shiftSafer">Suggested plan</span>
+                <strong id="shift-new-rain"></strong>
+                <small id="shift-new-date"></small>
               </div>
             </div>
             <p id="shift-status" class="shift-status" role="status" aria-live="polite"></p>
@@ -268,13 +270,13 @@
         <section><h3 data-t="briefApproachTitle">What we built</h3><p data-t="briefApproach">Pick one of seven rice landscapes, replay the crop, compare rotations, then test the same plan against three NASA POWER seasons. A field-shift search finds the nearest rice-date window that clears both checks in all three seasons.</p></section>
         <section><h3 data-t="briefDataTitle">NASA data</h3><p data-t="briefData">NASA POWER daily corrected precipitation and minimum temperature; NASA Blue Marble imagery; a Copernicus Sentinel-2 context image.</p></section>
       </div>
-      <section class="brief-method"><h3 data-t="briefMethodTitle">Method and limits</h3><p data-t="briefMethod">Local crop calendars come from cited extension and research sources. The planner uses a three-day rain window around each operation, an illustrative 30 mm review threshold, and fixed crop durations and stages. Weather is a regional grid estimate, not a field sensor; check locally before planting.</p></section>
+      <section class="brief-method"><h3 data-t="briefMethodTitle">Method and limits</h3><p data-t="briefMethod">Regional sources inform the crop scenarios. The planner sums rain on the operation day and the two preceding days, using an illustrative 30 mm review threshold and fixed crop durations and stages. Weather is a regional grid estimate; check locally before planting.</p></section>
       <section class="brief-demo"><h3 data-t="briefDemoTitle">Try it in 30 seconds</h3><ol>
         <li data-t="briefDemo1">Start with Kaiping and winter potato in 2024/25.</li>
         <li data-t="briefDemo2">Select Try a wet harvest: the plan switches to 2023/24, the field jumps to 11 March 2024, and the three-day total is 39.34 mm.</li>
         <li data-t="briefDemo3">Switch the season to 2024/25: the corresponding operation falls to 0.59 mm.</li>
         <li data-t="briefDemo4">Open the three-season check and click 2023/24 to see the wet window.</li>
-        <li data-t="briefDemo5">After the wet result, open Find a safer window: the nearest robust window moves the harvest one day earlier and clears all three seasons.</li>
+        <li data-t="briefDemo5">Select Find a safer window. Moving late rice harvest one day earlier lowers three-day rain at the potato harvest to 22.89 mm. All three seasons pass the calendar and rain checks.</li>
       </ol></section>
       <div class="brief-actions">
         <button type="button" class="primary" id="brief-demo-start" data-t="briefStart">Run the wet-harvest demo</button>

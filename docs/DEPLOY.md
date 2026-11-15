@@ -56,7 +56,8 @@ Use the URL returned by Wrangler. Do not deploy the whole repository: `.git` and
 - Open the URL in a private/incognito window with no login.
 - Choose all seven regions; the globe, field replay, planner and three-season check work.
 - Open **Project brief** and both PDF links.
-- Try the wet-harvest demo: 39.34 mm, then 0.59 mm in 2024/25.
+- Open **Try the Kaiping rain demo** from the landing section. Confirm 39.34 → 22.89 mm and apply the window. The potato harvest moves from 11 to 10 March 2024.
+- Run the demo again before each check. Select milk vetch from the comparison or field replay, select the 2024/25 potato cell in the three-season table, and reset the inputs. Each action should clear the previous suggestion. Selecting the 2024/25 potato cell should show 0.59 mm.
 - Check the page at a phone width; no horizontal overflow.
 - Confirm the demo deck link is public as well.
 

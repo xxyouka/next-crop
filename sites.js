@@ -48,8 +48,8 @@ const farmSites = [
     previous: ["Rice harvest", "水稻收割"], next: ["Next rice transplant", "下一季水稻插秧"],
     harvestStart: [10, 1], harvestDefault: 15, harvestMax: 45, riceStart: [6, 5], riceDefault: 12, riceMax: 30,
     crops: [{ id: "wheat", offset: 3, duration: 165, buffer: 14 }, { id: "mustard", offset: 2, duration: 120, buffer: 14 }],
-    note: ["PAU / ICAR extension guidance places rice transplant around June and wheat sowing after rice in late October–November; exact dates vary by district and variety.", "旁遮普农业大学/ICAR 的推广资料将水稻插秧安排在 6 月前后，小麦在稻收后的 10 月下旬至 11 月播种；具体日期随地区与品种变化。"],
-    source: "https://www.pau.edu/",
+    note: ["Punjab Agricultural University recommends sowing most wheat in early November; some long-duration varieties can be sown in late October. The dates in this scenario are illustrative.", "旁遮普农业大学建议多数小麦品种于 11 月上半月播种，部分长生育期品种可在 10 月下旬播种。工具中的日期为示例。"],
+    source: "https://pau.edu/content/ccil/pf/pp_rabi.pdf",
   },
   {
     id: "nile", name: ["Nile Delta", "尼罗河三角洲"], area: ["Kafr el-Sheikh, Egypt", "埃及 · 谢赫村"],
@@ -58,8 +58,8 @@ const farmSites = [
     previous: ["Rice harvest", "水稻收割"], next: ["Next rice transplant", "下一季水稻插秧"],
     harvestStart: [9, 15], harvestDefault: 20, harvestMax: 35, riceStart: [5, 10], riceDefault: 20, riceMax: 30,
     crops: [{ id: "berseem", offset: 3, duration: 210, buffer: 21 }, { id: "wheat", offset: 3, duration: 160, buffer: 21 }],
-    note: ["FAO / ARC guidance describes rice–berseem rotations in the Nile Delta. Berseem is cut several times; the model treats the last cut as the operation date.", "FAO/ARC 资料描述了尼罗河三角洲的水稻—埃及三叶草轮作。三叶草可多次刈割；模型把最后一次刈割当作作业日。"],
-    source: "https://www.fao.org/",
+    note: ["FAO AQUASTAT documents summer rice in the Delta and multi-cut berseem among Egypt’s winter crops. The model checks rain at the assumed final cut.", "FAO AQUASTAT 记录了三角洲的夏季稻作与埃及冬季多次刈割的埃及三叶草。模型检查示例中最后一次刈割的降雨。"],
+    source: "https://www.fao.org/fileadmin/user_upload/aquastat/pdf_files/EGY_egypt_cp.pdf",
   },
   {
     id: "jianghan", name: ["Jianghan Plain", "江汉平原"], area: ["Hubei, China", "中国 · 湖北"],
@@ -68,8 +68,8 @@ const farmSites = [
     previous: ["Late rice harvest", "晚稻收割"], next: ["Next rice transplant", "下一季水稻插秧"],
     harvestStart: [10, 1], harvestDefault: 10, harvestMax: 30, riceStart: [5, 5], riceDefault: 15, riceMax: 25,
     crops: [{ id: "rapeseed", offset: 2, duration: 190, buffer: 14 }, { id: "vetch", offset: -5, end: [3, 18], cutoff: [11, 20], buffer: 10 }],
-    note: ["Hubei extension materials describe rice–rapeseed rotations. Rapeseed can be direct-sown after rice or relayed before harvest; this model uses a post-rice window.", "湖北推广资料描述了水稻—油菜轮作。油菜可在稻收后直播，也可在稻收前套播；本模型采用稻收后的窗口。"],
-    source: "http://nyt.hubei.gov.cn/",
+    note: ["Hubei’s farm technology guide documents direct seeding after rice harvest. This scenario uses that sequence with an illustrative sowing date and crop duration.", "湖北农技资料记录了水稻收获后直播油菜的流程。本情景采用这一茬口，并用示例播期与生育期进行计算。"],
+    source: "https://hbnysy.hubei.gov.cn/bmdt/ztzl/nykjcs/njnykjcs/njfw_nj/202410/t20241014_5368583.shtml",
   },
 ];
 

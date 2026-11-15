@@ -7,6 +7,7 @@ const copy = {
   headline: ["What grows after rice?", "水稻收完，\n下一茬种什么？"],
   intro: ["Choose a region to watch its crops grow, then test a winter rotation against NASA POWER rainfall from three historical years.", "选择一个地区，看作物从幼苗长到成熟，再用 NASA POWER 三个历史年份的降雨，检验冬季轮作能否接上下一季水稻。"],
   builtWith: ["Built with NASA POWER daily rainfall and Blue Marble imagery.", "基于 NASA POWER 逐日降雨与 Blue Marble 影像。"],
+  atlasDemo: ["Try the Kaiping rain demo", "试试开平雨天采收"],
   start: ["Compare rotations", "比较轮作方案"], drag: ["Drag to rotate", "拖动地球旋转"],
   backToAtlas: ["Change region ↑", "切换地区 ↑"], illustration: ["Illustrated field", "田块示意"],
   closeup: ["Crop close-up", "作物近景"],
@@ -50,7 +51,7 @@ const copy = {
   shiftTitle: ["Find a safer window", "换一个更稳的农时窗口"],
   shiftNote: ["Search nearby rice dates for a window that clears the crop calendar and the three-day rain in all three seasons. Field conditions stay as you set them.", "在附近的收割/插秧日期中，寻找一个三个历史季节都能通过农时与三日降雨的窗口。田况保持不变。"],
   findShift: ["Find a safer window", "寻找更稳窗口"], applyShift: ["Apply this window", "应用这个窗口"],
-  shiftNow: ["Now · harvest", "现在 · 收割"], shiftSafer: ["Safer · harvest", "更稳 · 收割"],
+  shiftNow: ["Current plan", "当前方案"], shiftSafer: ["Suggested plan", "建议方案"],
   shiftNone: ["No rice-date window within the sliders clears the calendar for the selected crop.", "在当前滑杆范围内，没有能让所选作物通过农时检查的窗口。"],
   shiftAlready: ["The current window already clears the calendar and three-day rain in all three seasons.", "当前窗口在三个历史季节中都已通过农时与三日降雨检查。"],
   shiftApplied: ["Applied. Calendar and rain clear all three seasons at this window.", "已应用。这个窗口在三个历史季节中均通过农时与降雨检查。"],
@@ -95,13 +96,13 @@ const copy = {
   briefDataTitle: ["NASA data", "NASA 数据"],
   briefData: ["NASA POWER daily corrected precipitation and minimum temperature; NASA Blue Marble imagery; a Copernicus Sentinel-2 context image.", "NASA POWER 逐日修正降水与最低温；NASA Blue Marble 影像；以及一张 Copernicus Sentinel-2 田块影像。"],
   briefMethodTitle: ["Method and limits", "方法与边界"],
-  briefMethod: ["Local crop calendars come from cited extension and research sources. The planner uses a three-day rain window around each operation, an illustrative 30 mm review threshold, and fixed crop durations and stages. Weather is a regional grid estimate, not a field sensor; check locally before planting.", "作物日历来自公开的推广与研究资料。工具使用作业日前后三天的降雨窗口、演示用 30 毫米复核阈值，以及固定的生育期与阶段。天气是区域格点估计，不是田块传感器；种植前请在当地核实。"],
+  briefMethod: ["Regional sources inform the crop scenarios. The planner sums rain on the operation day and the two preceding days, using an illustrative 30 mm review threshold and fixed crop durations and stages. Weather is a regional grid estimate; check locally before planting.", "作物情景参考地区农技与研究资料。模型累计作业当天和前两天的降雨，采用示例用的 30 毫米复核阈值、固定的生育期与阶段。天气是区域格点估计，种植前请在当地核实。"],
   briefDemoTitle: ["Try it in 30 seconds", "30 秒试用"],
   briefDemo1: ["Start with Kaiping and winter potato in 2024/25.", "从开平、冬马铃薯、2024/25 开始。"],
   briefDemo2: ["Select Try a wet harvest: the plan switches to 2023/24, the field jumps to 11 March 2024, and the three-day total is 39.34 mm.", "点“试算雨后采收”：方案切到 2023/24，田块跳到 2024 年 3 月 11 日，三日累计 39.34 毫米。"],
   briefDemo3: ["Switch the season to 2024/25: the corresponding operation falls to 0.59 mm.", "把历史季节切到 2024/25：对应作业日的三日累计降到 0.59 毫米。"],
   briefDemo4: ["Open the three-season check and click 2023/24 to see the wet window.", "打开三个历史季节对照，点 2023/24 查看这次偏大的降雨。"],
-  briefDemo5: ["After the wet result, open Find a safer window: the nearest robust window moves the harvest one day earlier and clears all three seasons.", "出现雨后结果后，点“寻找更稳窗口”：最近的稳定窗口把收割提前一天，并在三个历史季节中全部通过。"],
+  briefDemo5: ["Select Find a safer window. Moving late rice harvest one day earlier lowers three-day rain at the potato harvest to 22.89 mm. All three seasons pass the calendar and rain checks.", "点“寻找更稳窗口”。晚稻收割提前一天，马铃薯采收日的三日降雨降到 22.89 毫米。三个历史季节均通过农时和降雨检查。"],
   briefStart: ["Run the wet-harvest demo", "运行雨后采收演示"],
   briefDeck: ["7-slide demo (PDF)", "7 页演示（PDF）"],
   briefPdf: ["One-page brief (PDF)", "一页简介（PDF）"],
@@ -182,8 +183,10 @@ let seasonRows;
 let seasonHeadCells;
 let seasonCorner;
 
-function selectCrop(id) {
+function selectCrop(id, season = $("season").value) {
+  if (id !== selected || season !== $("season").value) clearShift();
   selected = id;
+  $("season").value = season;
   render();
 }
 
@@ -442,11 +445,7 @@ function buildSeasonGrid() {
       fill.className = "season-bar-fill";
       bar.append(fill);
       button.append(status, rain, bar);
-      button.addEventListener("click", () => {
-        $("season").value = String(year);
-        selected = id;
-        render();
-      });
+      button.addEventListener("click", () => selectCrop(id, String(year)));
       cell.append(button);
       row.append(cell);
       return { button, status, rain, bar, fill };
@@ -768,21 +767,27 @@ function clearShift() {
   shiftSuggestion = null;
   $("apply-shift").hidden = true;
   $("shift-compare").hidden = true;
-  $("shift-now-date").textContent = "";
-  $("shift-now-rain").textContent = "";
-  $("shift-new-date").textContent = "";
-  $("shift-new-rain").textContent = "";
   $("shift-status").textContent = "";
   $("shift-status").dataset.state = "";
 }
 
+function describeRiceDate(label, before, after, change) {
+  if (!change) return either(
+    `${local(label)} stays on ${dateLabel(after)}.`,
+    `${local(label)}仍为 ${dateLabel(after)}。`,
+  );
+  const days = Math.abs(change);
+  return either(
+    `${local(label)} moves ${days} ${days === 1 ? "day" : "days"} ${change < 0 ? "earlier" : "later"} (${dateLabel(before)} → ${dateLabel(after)}).`,
+    `${local(label)}${change < 0 ? "提前" : "推迟"} ${days} 天（${dateLabel(before)} → ${dateLabel(after)}）。`,
+  );
+}
+
 function findSaferWindow() {
+  clearShift();
   if (selected === "fallow") {
     $("shift-status").textContent = either("Choose a winter crop first.", "先选择一个冬季作物。");
     $("shift-status").dataset.state = "review";
-    $("apply-shift").hidden = true;
-    $("shift-compare").hidden = true;
-    shiftSuggestion = null;
     return;
   }
   const cropId = selected;
@@ -815,62 +820,53 @@ function findSaferWindow() {
   if (!suggestion) {
     $("shift-status").textContent = t("shiftNone");
     $("shift-status").dataset.state = "review";
-    $("apply-shift").hidden = true;
-    $("shift-compare").hidden = true;
-    shiftSuggestion = null;
     return;
   }
-  const dates = NextCrop.calendar(Number($("season").value), suggestion.harvest, suggestion.transplant, site);
-  const harvestDelta = suggestion.harvest - currentHarvest;
-  const transplantDelta = suggestion.transplant - currentTransplant;
-  const delta = `${harvestDelta >= 0 ? "+" : ""}${harvestDelta} / ${transplantDelta >= 0 ? "+" : ""}${transplantDelta}`;
   $("shift-status").dataset.state = suggestion.wet === 0 ? "fits" : "review";
   if (suggestion.score === 0) {
-    shiftSuggestion = null;
-    $("apply-shift").hidden = true;
-    $("shift-compare").hidden = true;
     $("shift-status").textContent = suggestion.wet === 0 ? t("shiftAlready") : either(
       `The current window is calendar-safe, but ${suggestion.wet} of 3 seasons still have a wet or missing rain window.`,
       `当前窗口农时通过，但三个季节中仍有 ${suggestion.wet} 个存在偏大或缺测的降雨窗口。`,
     );
     return;
   }
-  const seasonIndex = NextCrop.scenarios.indexOf(Number($("season").value));
-  const currentRows = rowsFor(currentHarvest, currentTransplant);
-  const suggestedRows = rowsFor(suggestion.harvest, suggestion.transplant);
-  const currentDates = NextCrop.calendar(Number($("season").value), currentHarvest, currentTransplant, site);
-  const rainText = row => row && row.rain !== null ? `${row.rain.toFixed(2)} mm` : "—";
-  $("shift-now-date").textContent = dateLabel(currentDates.harvest);
-  $("shift-now-rain").textContent = either(
-    `3d ${rainText(currentRows[seasonIndex])} · rice ${dateLabel(currentDates.rice)}`,
-    `三日 ${rainText(currentRows[seasonIndex])} · 插秧 ${dateLabel(currentDates.rice)}`,
-  );
-  $("shift-new-date").textContent = dateLabel(dates.harvest);
-  $("shift-new-rain").textContent = either(
-    `3d ${rainText(suggestedRows[seasonIndex])} · rice ${dateLabel(dates.rice)}`,
-    `三日 ${rainText(suggestedRows[seasonIndex])} · 插秧 ${dateLabel(dates.rice)}`,
-  );
+  const year = Number($("season").value);
+  const seasonIndex = NextCrop.scenarios.indexOf(year);
+  const currentDates = NextCrop.calendar(year, currentHarvest, currentTransplant, site);
+  const dates = NextCrop.calendar(year, suggestion.harvest, suggestion.transplant, site);
+  $("shift-context").textContent = `${local(site.name)} · ${t(cropId)} · ${seasonLabel(year)}`;
+  for (const [key, row] of [
+    ["now", rowsFor(currentHarvest, currentTransplant)[seasonIndex]],
+    ["new", rowsFor(suggestion.harvest, suggestion.transplant)[seasonIndex]],
+  ]) {
+    $(`shift-${key}-date`).textContent = either(`Crop operation · ${dateLabel(row.operation)}`, `作业日 · ${dateLabel(row.operation)}`);
+    $(`shift-${key}-rain`).textContent = row.rain === null ? t("noData") : `${row.rain.toFixed(2)} mm`;
+  }
+  const harvestChange = describeRiceDate(site.previous, currentDates.harvest, dates.harvest, suggestion.harvest - currentHarvest);
+  const riceChange = describeRiceDate(site.next, currentDates.rice, dates.rice, suggestion.transplant - currentTransplant);
   $("shift-compare").hidden = false;
   shiftSuggestion = suggestion;
   $("apply-shift").hidden = false;
-  $("shift-status").textContent = suggestion.wet === 0 ? either(
-    `All three seasons clear. Nearest shift: ${delta} days.`,
-    `三个季节均通过。最近调整：${delta} 天。`,
+  const outcome = suggestion.wet === 0 ? either(
+    "Calendar and rain pass in all three seasons.",
+    "农时与降雨在三个历史季节均通过。",
   ) : either(
-    `No window clears all three. Nearest calendar-safe option: ${suggestion.wet} of 3 seasons are wet or missing (${delta} days).`,
-    `没有三个季节全部通过的窗口。最近的农时安全方案中，${suggestion.wet} 个季节降雨偏大或缺失（${delta} 天）。`,
+    `The calendar fits. ${suggestion.wet} of 3 seasons still have high or missing rainfall.`,
+    `农时通过。三个季节中仍有 ${suggestion.wet} 个降雨偏大或缺测。`,
   );
+  $("shift-status").textContent = [outcome, harvestChange, riceChange].join(chinese ? "" : " ");
 }
 
 function applyShift() {
-  if (!shiftSuggestion) return;
+  const suggestion = shiftSuggestion;
+  if (!suggestion) return;
   withMotionTransition(() => {
-    const { harvest, transplant, wet } = shiftSuggestion;
-    shiftSuggestion = null;
+    if (suggestion !== shiftSuggestion) return;
+    const { harvest, transplant, wet } = suggestion;
+    if (document.activeElement === $("apply-shift")) $("find-shift").focus({ preventScroll: true });
+    clearShift();
     $("harvest").value = harvest;
     $("transplant").value = transplant;
-    $("apply-shift").hidden = true;
-    $("shift-compare").hidden = true;
     render();
     field.jumpToOperation();
     $("shift-status").dataset.state = wet === 0 ? "fits" : "review";
@@ -879,6 +875,10 @@ function applyShift() {
 }
 
 function runWetDemo() {
+  if (site.id !== "kaiping") {
+    loadSite(NextCrop.sites[0]);
+    globe.focus(NextCrop.sites[0]);
+  }
   clearShift();
   $("harvest").value = 12;
   $("transplant").value = 15;
@@ -886,7 +886,7 @@ function runWetDemo() {
   $("drainage").value = "good";
   $("soil").value = "loam";
   $("priority").value = "income";
-  selected = site.crops.some(entry => entry.id === "potato") ? "potato" : site.crops[0].id;
+  selected = "potato";
   render();
   field.jumpToOperation();
 }
@@ -907,6 +907,14 @@ function closeBrief() {
 }
 
 $("wet-demo").addEventListener("click", runWetDemo);
+$("atlas-demo").addEventListener("click", () => {
+  runWetDemo();
+  findSaferWindow();
+  animateScrollTo($("shift-title"), {
+    focus: true,
+    duration: matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : undefined,
+  });
+});
 $("find-shift").addEventListener("click", findSaferWindow);
 $("apply-shift").addEventListener("click", applyShift);
 copyButton.addEventListener("click", copyScenario);
@@ -917,10 +925,6 @@ brief.addEventListener("click", event => { if (event.target === brief) closeBrie
 brief.addEventListener("close", () => document.body.classList.remove("dialog-open"));
 $("brief-demo-start").addEventListener("click", event => {
   closeBrief();
-  if (site.id !== "kaiping") {
-    loadSite(NextCrop.sites[0]);
-    globe.focus(NextCrop.sites[0]);
-  }
   runWetDemo();
   if (event.detail === 0) $("field-title").focus({ preventScroll: true });
   animateScrollTo($("field"), { onDone: () => markArrived($("field")) });
@@ -937,6 +941,7 @@ form.addEventListener("input", scheduleRender);
 form.addEventListener("input", () => { if (shiftSuggestion || $("shift-status").textContent) clearShift(); });
 form.addEventListener("submit", event => event.preventDefault());
 form.addEventListener("reset", () => {
+  clearShift();
   selected = site.crops[0].id;
   requestAnimationFrame(render);
 });
