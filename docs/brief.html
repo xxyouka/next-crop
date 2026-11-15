@@ -235,33 +235,31 @@
       <section>
         <h2>Try it in 30 seconds</h2>
         <ol>
-          <li>Kaiping → winter potato, 2024/25.</li>
-          <li>Try a wet harvest → 39.34 mm / 3 days, 11 March 2024.</li>
-          <li>Switch the season to 2024/25 → 0.59 mm at the corresponding operation.</li>
-          <li>Use Find a safer window → the nearest robust harvest is one day earlier; 39.34 → 22.89 mm in 2023/24 and all three seasons clear.</li>
-          <li>Open the three-season check → 2023/24 is wet; move the late-rice harvest to the latest date → calendar conflicts.</li>
+          <li>Open Next Crop and select <strong>Try the Kaiping rain demo.</strong></li>
+          <li>Move late-rice harvest from 12 to 11 November. The simulated potato harvest moves from 11 to 10 March, and three-day rain drops from 39.34 to 22.89 mm.</li>
+          <li>The adjusted plan passes the calendar and rain checks in all three sampled seasons.</li>
         </ol>
       </section>
     </div>
 
     <section class="insight">
-      <p>&ldquo;The same March operation is <strong>39.34 mm</strong> in 2023/24 and <strong>0.59 mm</strong> in 2024/25. One season is a story; three seasons are a decision.&rdquo;</p>
+      <p>The original plan sees <strong>39.34 mm</strong> in 2023/24 and <strong>0.59 mm</strong> in 2024/25. The three-season check shows how rainfall changes the result.</p>
       <span>NASA POWER · three seasons · seven regions</span>
     </section>
 
     <div class="bottom">
       <section>
         <h2>Method and limits</h2>
-        <p>Local crop calendars come from cited extension and research sources. The planner uses a three-day rain window around each operation, an illustrative 30 mm review threshold and fixed crop durations and stages. Weather is a regional grid estimate, not a field sensor; drainage and soil texture are user inputs. Check local variety, maturity, pumps, field access and markets.</p>
+        <p>Regional sources inform the example crop calendars. The model sums rain on the operation day and the two preceding days using an illustrative 30 mm review threshold. Weather is a regional grid estimate. Users enter drainage and soil texture. Check local crop maturity, field access and markets.</p>
       </section>
       <section>
         <h2>Validation</h2>
-        <p><code>node scripts/check-model.cjs</code> covers rotation rules, the 39.34 → 0.59 mm wet-harvest comparison, 940-day coverage for every site and season, and stage order. The interface was checked at 320, 390 and 1440 px in English and Chinese, across all seven sites, with no console errors or horizontal page overflow. The app runs from <code>file://</code> with its bundled data.</p>
+        <p><code>node scripts/check-model.cjs</code> covers rotation rules, the rainfall examples, 940 days per site across three seasons, and replay stages. Browser checks covered the demo, window changes and switching crops at phone and desktop widths. The app runs offline with the bundled data.</p>
       </section>
     </div>
 
     <footer>
-      <span>Next Crop · xxyouka.github.io/next-crop · NASA Space Apps Challenge 2026</span>
+      <span><a href="https://xxyouka.github.io/next-crop/" style="color:inherit">Next Crop · xxyouka.github.io/next-crop</a> · AI-assisted code and editing</span>
       <span>Data: NASA POWER · NASA Blue Marble · Sentinel-2: Copernicus, contains modified Copernicus Sentinel data 2025</span>
     </footer>
   </article>

@@ -269,7 +269,7 @@
       </div>
       <div class="stat-stack">
         <div class="stat-card"><span>2023/24 · wet window</span><strong>39.34 <em>mm</em></strong><small>Three days at the 11 March operation.</small></div>
-        <div class="flow-line">same March operation</div>
+        <div class="flow-line">same rotation plan across years</div>
         <div class="stat-card"><span>2024/25 · fits</span><strong>0.59 <em>mm</em></strong><small>Same plan, different rainfall year.</small></div>
       </div>
     </div>
@@ -283,14 +283,14 @@
       <h2>One narrow window.</h2>
       <p class="lede">A late harvest, a wet operation day or an unknown field can turn a good rotation into a missed rice season.</p>
       <div class="timeline">
-        <div><span>Rice harvest</span><strong>Oct–Nov</strong></div>
-        <div class="window"><span>Winter crop window</span><strong>90–150 days</strong></div>
-        <div><span>Next rice transplant</span><strong>Feb–May</strong></div>
+        <div><span>Kaiping · late-rice harvest</span><strong>12 Nov</strong></div>
+        <div class="window"><span>Winter rotation</span><strong>Grow, harvest, prepare</strong></div>
+        <div><span>Next rice transplant</span><strong>4 Apr</strong></div>
       </div>
       <div class="rain-risk">A wet three-day window can stop the operation.</div>
       <div class="three">
         <div><span>01</span><h3>Calendar</h3><p>Does the crop finish and leave time for rice field preparation?</p></div>
-        <div><span>02</span><h3>Rain</h3><p>What is the three-day rainfall around the operation date?</p></div>
+        <div><span>02</span><h3>Rain</h3><p>How much rain fell on the operation day and the two days before it?</p></div>
         <div><span>03</span><h3>Field</h3><p>Can this field drain and be worked at that moment?</p></div>
       </div>
       <div class="decision-band">
@@ -347,7 +347,7 @@
         </div>
         <div class="how-note">
           <strong>Why three seasons?</strong>
-          <p>The same calendar meets different rainfall. The three-season check makes that difference visible instead of hiding it behind a single “yes”. The field-shift search uses the same test to find the nearest rice-date window that clears all three. The 30 mm threshold is illustrative; the field conditions are the user’s.</p>
+          <p>The same plan meets different rainfall. The three-season check and date search use calendar fit and an illustrative 30 mm rain threshold. The planner shows separate local review flags for soil and drainage.</p>
           <div class="planner-shot"><img src="planner.png" alt="Planner with summary, comparison table and three-season check"></div>
         </div>
       </div>
@@ -364,32 +364,32 @@
       </figure>
       <div>
         <p class="kicker">Demo · wet harvest</p>
-        <h2>The weather<br>changes the answer.</h2>
-        <p class="lede">The field jumps to the harvest date. The same planned operation is safe in one season and wet in another. Find a safer window moves the rice dates, not just the crop.</p>
+        <h2>One day earlier.</h2>
+        <p class="lede">Move the simulated late-rice harvest from 12 to 11 November. The potato harvest moves one day earlier. The next rice date stays at 4 April.</p>
         <div class="compare">
-          <div><span>2023/24</span><strong>39.34 mm</strong><small>wet window</small></div>
-          <div><span>2024/25</span><strong>0.59 mm</strong><small>fits</small></div>
+          <div><span>2023/24 · current plan</span><strong>39.34 mm</strong><small>Three days ending 11 March 2024</small></div>
+          <div><span>2023/24 · adjusted plan</span><strong>22.89 mm</strong><small>Three days ending 10 March 2024</small></div>
         </div>
-        <blockquote>“One season is a story; three seasons are a decision.”</blockquote>
+        <blockquote>The adjusted plan passes calendar and rain checks in all three sampled seasons.</blockquote>
       </div>
     </div>
-    <div class="footline"><span>Next Crop · NASA Space Apps Challenge 2026</span><span>Try a wet harvest → three-season check</span></div>
+    <div class="footline"><span>Next Crop · NASA Space Apps Challenge 2026</span><span>Open the app → Try the Kaiping rain demo</span></div>
   </section>
 
   <section class="slide">
     <div class="topline"><span>Next Crop</span><span>06 / 07 · Validity</span><span class="num">NASA Space Apps 2026</span></div>
     <div class="body">
       <p class="kicker">Validity and limits</p>
-      <h2>Built to be checked,<br>not trusted blindly.</h2>
+      <h2>What the result covers.</h2>
       <div class="three-cols">
         <section><h3>NASA data</h3><p>NASA POWER Daily: corrected precipitation and minimum temperature for 2021/22, 2023/24 and 2024/25. 7 sites × 940 days = 6,580 records. NASA Blue Marble supplies the globe. Copernicus Sentinel-2 provides a local context image.</p></section>
-        <section><h3>Method</h3><p>Local crop calendars from cited extension and research sources. A three-day rain window around each operation, an illustrative 30 mm review threshold and fixed crop durations and stages.</p></section>
-        <section><h3>Limits</h3><p>Weather is a regional grid estimate, not a field sensor. Drainage and soil texture are user inputs. Check local variety, maturity, pumps, field access and market conditions before planting.</p></section>
+        <section><h3>Method</h3><p>Regional sources inform the example crop calendars. The model sums rain on the operation day and the two preceding days and uses an illustrative 30 mm review threshold.</p></section>
+        <section><h3>Limits</h3><p>Weather is a regional grid estimate. Users enter drainage and soil texture. Local variety, maturity, field access and markets determine whether the plan is workable.</p></section>
       </div>
       <div class="validation">
-        <span>Model checks pass</span><span>940-day coverage per site and season</span><span>320 / 390 / 1440 px</span><span>English and Chinese</span><span>Offline file:// build</span>
+        <span>Model checks pass</span><span>940 days per site across three seasons</span><span>320 / 390 / 1440 px</span><span>English and Chinese</span><span>Runs offline</span>
       </div>
-      <div class="valid-quote">“The tool does not predict the future. It makes the historical risk visible.”</div>
+      <div class="valid-quote">The result describes the three historical windows sampled for each region.</div>
       <div class="evidence-strip">
         <div><strong>940</strong><span>days per site</span></div>
         <div><strong>3</strong><span>NASA POWER seasons</span></div>
@@ -411,15 +411,15 @@
           <div><span>02 · Farm</span><p>Avoid a winter crop that collides with the next rice window — or use Find a safer window to move the rice dates.</p></div>
           <div><span>03 · Planning</span><p>Separate a lucky year from a robust rotation across historical rainfall.</p></div>
         </div>
-        <div class="next"><strong>Next:</strong> local variety and maturity data, soil moisture, and farmer validation in the seven regions.</div>
-        <p class="try">Try it: xxyouka.github.io/next-crop · Team Dui Dui Dui · NASA Space Apps 2026</p>
+        <div class="next"><strong>Next steps</strong> Check crop maturity, soil moisture and the feasibility of date changes with local growers.</div>
+        <p class="try"><a href="https://xxyouka.github.io/next-crop/" style="color:inherit">Try Next Crop at xxyouka.github.io/next-crop</a> · Team Dui Dui Dui</p>
       </div>
       <figure>
         <img src="field-wet.png" alt="Kaiping field at a wet winter-potato harvest">
         <figcaption>Kaiping · wet harvest · 11 March 2024</figcaption>
       </figure>
     </div>
-    <div class="footline"><span>Next Crop · NASA Space Apps Challenge 2026</span><span>Data: NASA POWER · NASA Blue Marble · Sentinel-2: Copernicus</span></div>
+    <div class="footline"><span>NASA POWER · NASA Blue Marble · Contains modified Copernicus Sentinel data 2025</span><span>AI-assisted code and editing · Codex and DeepSeek Harness</span></div>
   </section>
 
 </div>

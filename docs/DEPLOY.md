@@ -63,8 +63,8 @@ Use the URL returned by Wrangler. Do not deploy the whole repository: `.git` and
 
 ## Demo link
 
-The submission page asks for a **project demonstration**, separate from the project link. Upload `docs/Next-Crop-Demo-Deck.pdf` to Google Drive, Dropbox or OneDrive, make the file public, and paste that URL. It is 7 slides, within the limit. A 30-second English-subtitled video is an alternative.
+The submission form asks for a demo link and a separate public project link. Use the [public 7-slide English deck](https://xxyouka.github.io/next-crop/docs/Next-Crop-Demo-Deck.pdf) for the demo and the [live app](https://xxyouka.github.io/next-crop/) for the project. A public video of at most 30 seconds with English captions is an alternative.
 
 ## Deadline
 
-The current guide says the project closes **Sunday 15 November 2026 at 23:59 in the Team Owner's local time** (Universal Event: Team Owner's local time). For a China-based owner that is 15 November 23:59 Beijing, not 16 November 07:59. Submit early; saving is not submitting.
+The deadline is **15 November 2026 at 23:59 in the Local Event time zone**. The Universal Event uses the Team Owner's local time. The team must click **Submit for Judging** and verify the confirmation banner. [Official submission guide](https://www.spaceappschallenge.org/resources/project-submission-guide/#submitting-your-project)

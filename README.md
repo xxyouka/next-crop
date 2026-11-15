@@ -15,8 +15,8 @@ Next Crop turns that decision into a field-level check across seven rice landsca
 - **7** rice regions · **10** winter crops · **3** NASA POWER seasons · **6,580** daily weather records.
 - Designed for a short judge demo and for local extension conversations; every recommendation carries its assumptions.
 - The **Project brief** button in the hero opens the same summary, data notes and demo inside the app.
-- Submission assets: [29.5-second demo video](docs/Next-Crop-Demo.mp4) · [7-slide demo deck](docs/Next-Crop-Demo-Deck.pdf) · [one-page judge brief](docs/Next-Crop-Judge-Brief.pdf) · [submission copy and checklist](SUBMISSION.md) · [public deployment guide](docs/DEPLOY.md).
-- The demo deck is within the Space Apps 7-slide limit. The current submission guide closes on **15 November at 23:59 in the Team Owner's local time**; see [SUBMISSION.md](SUBMISSION.md).
+- Submission assets: [7-slide demo deck](docs/Next-Crop-Demo-Deck.pdf) · [one-page judge brief](docs/Next-Crop-Judge-Brief.pdf) · [29.5-second video](docs/Next-Crop-Demo.mp4) · [submission copy and checklist](SUBMISSION.md).
+- Space Apps closes submissions at **23:59 on 15 November in the Local Event time zone**. Universal Event teams use the Team Owner's local time. [Official submission guide](https://www.spaceappschallenge.org/resources/project-submission-guide/#project-submission-start-end-times)
 
 ## 30-second judge demo
 
@@ -50,15 +50,15 @@ Double-click `index.html` or run `python3 -m http.server 8766 --bind 127.0.0.1` 
 - Regional references include the [Kaiping municipal report](https://www.kaiping.gov.cn/kpszfw/xwdt/bmdt/content/post_3261533.html), [PhilRice research highlights](https://www.philrice.gov.ph/wp-content/uploads/2020/07/ASPPD-Highlights-2019.pdf), a [Bangladesh Agricultural University mustard trial](https://ageconsearch.umn.edu/record/211170), the [UC Cooperative Extension rice-field cover crop trial](https://ucanr.edu/blog/uc-rice-blog/article/winter-cover-crop-variety-evaluation), the [Punjab Agricultural University winter-crop guide](https://pau.edu/content/ccil/pf/pp_rabi.pdf), the [FAO AQUASTAT Egypt crop profile](https://www.fao.org/fileadmin/user_upload/aquastat/pdf_files/EGY_egypt_cp.pdf) and the [Hubei rice–rapeseed direct-seeding guide](https://hbnysy.hubei.gov.cn/bmdt/ztzl/nykjcs/njnykjcs/njfw_nj/202410/t20241014_5368583.shtml). Calendar offsets, growth stages, preparation buffers and the 30 mm rain threshold are illustrative. Check locally before using them for field decisions.
 - The [Kaiping Sentinel-2A image](https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_49QFE_20250103_0_L2A) is included under Evidence. Crop and resampling are reproduced by `scripts/fetch-image.py` with Rasterio and Pillow. Contains modified Copernicus Sentinel data 2025.
 - Plant illustrations use morphology described by [Flora of China for Chinese milk vetch](https://www.worldfloraonline.org/taxon/wfo-0000185133), [KPU Plant Database for potato](https://dplantdatabase.kpu.ca/Plant/sotu), [NSW Flora Online for mung bean](https://plantnet.rbgsyd.nsw.gov.au/cgi-bin/NSWfl.pl?lvl=sp&name=Vigna~radiata&page=nswfl), [NC State Extension for mustard](https://plants.ces.ncsu.edu/plants/brassica-juncea/), [University of Minnesota for maize](https://ipmworld.umn.edu/maize-insect-pests-maize-growth-development).
-- Codex assisted with implementation, illustration code, test creation and documentation. Python, Node.js, Git and Microsoft Edge were used for data preparation, version history and verification.
+- OpenAI Codex and DeepSeek Harness assisted with implementation, procedural illustration code, model checks and editing. NASA POWER supplies the weather records. Python, Node.js, Git and Microsoft Edge were used for data preparation, version history and verification.
 - Typefaces: Instrument Sans and Instrument Serif, self-hosted under the SIL Open Font License 1.1. License texts are in `assets/fonts/`.
 
 ## What is illustrative
 
-Crop calendars, growth stages, crop durations, preparation buffers and the 30 mm rain alert are demonstration values drawn from the cited regional sources. Weather is a regional NASA POWER grid estimate, not a field sensor. Drainage and soil texture are user inputs. Check local variety, maturity, pumps, field access and market conditions before using a rotation for a real planting decision.
+The regional sources inform the crop choices and example calendars. Growth stages, crop durations, preparation buffers and the 30 mm rain alert are illustrative assumptions. Weather is a regional NASA POWER grid estimate. Users enter drainage and soil texture. Check local variety, maturity, pumps, field access and market conditions before using a rotation for a planting decision.
 
 ## Validation
 
-- `node scripts/check-model.cjs` covers the rotation rules, the 39.34 → 0.59 mm wet-harvest comparison, full 940-day coverage for every site and season, and field-replay stage order.
+- `node scripts/check-model.cjs` covers rotation rules, the 39.34 → 0.59 mm wet-harvest comparison, all 940 daily records per site across three seasons, and field-replay stage order.
 - The interface has been checked at 320, 390 and 1440 px in English and Chinese, across all seven regions, with no console errors or horizontal page overflow.
 - The app works from `file://` with the bundled weather, globe texture and field illustrations; the external source links are the only network dependency.
