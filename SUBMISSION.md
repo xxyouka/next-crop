@@ -88,6 +88,9 @@ https://xxyouka.github.io/next-crop/docs/Next-Crop-Demo-Deck.pdf
 - PhilRice research highlights: https://www.philrice.gov.ph/wp-content/uploads/2020/07/ASPPD-Highlights-2019.pdf
 - Bangladesh Agricultural University mustard trial: https://ageconsearch.umn.edu/record/211170
 - UC Cooperative Extension rice-field cover crop trial: https://ucanr.edu/blog/uc-rice-blog/article/winter-cover-crop-variety-evaluation
+- Punjab Agricultural University extension source (rice–wheat context): https://www.pau.edu/
+- FAO / Agricultural Research Center, Egypt (rice–berseem context): https://www.fao.org/
+- Hubei Provincial Department of Agriculture and Rural Affairs (rice–rapeseed context): http://nyt.hubei.gov.cn/
 - Plant morphology references: Flora of China (Chinese milk vetch), KPU Plant Database (potato), NSW Flora Online (mung bean), NC State Extension (mustard), University of Minnesota (maize).
 - Globe texture source: NASA Blue Marble image distributed with the three-globe example: https://github.com/vasturiano/three-globe/blob/master/example/img/earth-blue-marble.jpg
 - Code and data preparation: Python, Node.js, HTML/CSS/JavaScript, Canvas, Git; no third-party runtime libraries.
