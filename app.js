@@ -48,7 +48,7 @@ const copy = {
   guideReview: ["A field condition or the 3-day rain needs a local check.", "田况或三日降雨需要当地复核。"],
   guideConflict: ["The crop runs into the next rice date.", "作物与下一季水稻农时发生冲突。"],
   guideNote: ["Unknown drainage or soil adds a review flag. Set both to refine the result.", "排水或土壤选择“待确认”会增加复核项；两项都设置后判断更明确。"],
-  recommendation: ["Recommended", "推荐"],
+  recommendation: ["Recommended", "推荐"], suggested: ["Suggested", "建议"],
   plannerSection: ["Field planner", "田间规划"], evidenceSection: ["Evidence", "依据"],
   shiftTitle: ["Find a safer window", "换一个更稳的农时窗口"],
   shiftNote: ["Search nearby rice dates across three historical seasons. The calendar and three-day rain checks use an illustrative 30 mm threshold for rainfall.", "在附近的水稻收割与插秧日期中，寻找三个历史季节都能通过农时和三日降雨检查的方案。示例降雨阈值为 30 毫米。"],
@@ -145,8 +145,6 @@ const copy = {
   poorDrainage: ["Check whether pooled water could delay field work.", "确认积水是否会耽误进田作业。"],
   unknownSoil: ["Confirm field soil texture locally.", "请在当地核实田块土壤质地。"],
   clay: ["Check workability for potato harvest on heavy clay.", "在重黏土上核实马铃薯能否按时进田采收。"],
-  matched: ["Fits the current scenario", "符合当前情景"],
-  reviewFirst: ["Check conditions before choosing", "先复核条件"],
   keepBaseline: ["Keep the baseline in view", "保留冬闲基准"],
   riceFirst: ["Fallow reserves time for rice field preparation.", "休耕方案给下季水稻保留整地时间。"],
   conflictSummary: ["The preferred crop runs into a calendar conflict in this scenario.", "优先考虑的作物在当前情景下遇到农时冲突。"],
@@ -259,6 +257,12 @@ function updateSiteLabels() {
   $("kaiping-image").hidden = site.id !== "kaiping";
 }
 
+function sitePriority(point = site) {
+  if (point.priorities.income) return "income";
+  if (point.priorities.cover) return "cover";
+  return "rice";
+}
+
 function loadSite(point) {
   site = point;
   selected = site.crops[0].id;
@@ -275,6 +279,9 @@ function loadSite(point) {
     option.hidden = !site.priorities[priority];
     option.disabled = option.hidden;
   }
+  const defaultPriority = sitePriority();
+  for (const option of $("priority").options) option.defaultSelected = option.value === defaultPriority;
+  $("priority").value = defaultPriority;
   $("wet-demo").hidden = site.id !== "kaiping";
   clearShift();
   updateSiteLabels();
@@ -517,7 +524,9 @@ function updateSummary(preferred, priority) {
   const { id, status, slack, reasons } = preferred;
   let title = t(id);
   let detail;
-  const label = text => { $("summary-label").textContent = `${t("recommendation")} · ${text}`; };
+  const label = (text, tone = "recommendation") => {
+    $("summary-label").textContent = `${t(tone)} · ${text}`;
+  };
   if (priority === "rice") {
     label(t("keepRice"));
     detail = t("riceFirst");
@@ -526,7 +535,7 @@ function updateSummary(preferred, priority) {
     title = t("fallow");
     detail = t("conflictSummary");
   } else {
-    label(t(status === "fits" ? "matched" : "reviewFirst"));
+    label(t(priority), status === "fits" ? "recommendation" : "suggested");
     detail = status === "review" ? t(reasons[0]) : either(
       `${slack} extra days before the next rice planting, after the preparation buffer.`,
       `扣除整地缓冲后，距下一季水稻种植还有 ${slack} 天。`,
@@ -703,7 +712,7 @@ function scenarioFromURL() {
     transplant: Number.isFinite(transplant) ? Math.min(point.riceMax, Math.max(0, transplant)) : point.riceDefault,
     drainage: ["unknown", "good", "poor"].includes(drainage) ? drainage : "unknown",
     soil: ["unknown", "loam", "sand", "clay"].includes(soil) ? soil : "unknown",
-    priority: point.priorities[priority] ? priority : "rice",
+    priority: priority === "rice" || point.priorities[priority] ? priority : sitePriority(point),
     day: Number.isFinite(day) ? day : 0,
   };
 }
