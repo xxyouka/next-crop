@@ -15,6 +15,7 @@ function makePlantArt() {
     rice: { habit: "rice", size: 1.45, leaves: ["#315839", "#5a8844", "#9bb953", "#c6d37d"] },
   };
   const sprites = new Map();
+  const blends = [];
   const random = seed => {
     const value = Math.sin(seed * 157.73 + 15.43) * 43758.5453;
     return value - Math.floor(value);
@@ -182,14 +183,15 @@ function makePlantArt() {
     }
     if (stage !== "bloom" && stage !== "full") return;
     const hairy = crop === species.hairy;
-    const heads = stage === "full" ? 4 : 2 + Math.round(random(seed + 13));
-    for (let i = 0; i < heads; i++) {
-      const x = -25 + i * (49 / (heads - 1)) + random(seed + i * 3) * 6;
-      const y = -43 - random(seed + i * 5) * 20;
+    // Keep the same flower-head positions as the next clusters open.
+    const heads = stage === "full" ? [1, 2, 0, 3] : [1, 2];
+    for (const head of heads) {
+      const x = -25 + head * (49 / 3) + random(seed + head * 3) * 6;
+      const y = -43 - random(seed + head * 5) * 20;
       stem(ctx, palette, x * .22, -10, x, y, 1.25);
       for (let j = 0; j < 7; j++) {
         const angle = j * Math.PI * 2 / 7;
-        const fx = hairy ? x + (j % 2 ? -3 : 3) : x + Math.cos(angle) * (8 + i % 2);
+        const fx = hairy ? x + (j % 2 ? -3 : 3) : x + Math.cos(angle) * (8 + head % 2);
         const fy = hairy ? y - j * 3.1 : y + Math.sin(angle) * 3.2 - 2;
         stroke(ctx, palette[0], .75, [x, hairy ? fy + 2 : y + 3, fx, fy]);
         peaFlower(ctx, fx, fy - 2.2, hairy ? 3.35 : 4.1, hairy ? (j % 2 ? .6 : -.6) : Math.cos(angle) * .72, crop.flowers);
@@ -320,8 +322,37 @@ function makePlantArt() {
     return image;
   }
 
-  function draw(ctx, id, stage, x, y, scale, seed) {
-    const image = sprite(id, stage, Math.floor(random(seed + 73) * 6));
+  function blendedSprite(id, from, to, mix, variation) {
+    const offset = (variation - 2.5) * .14 * mix * (1 - mix);
+    const step = Math.round((mix + offset) * 24);
+    if (from === to || step === 0) return sprite(id, from, variation);
+    if (step === 24) return sprite(id, to, variation);
+
+    let blend = blends[variation];
+    if (!blend) {
+      const image = document.createElement("canvas");
+      image.width = 176;
+      image.height = 230;
+      blend = { image, ctx: image.getContext("2d"), key: "" };
+      blends[variation] = blend;
+    }
+    const key = `${id}:${from}:${to}:${step}`;
+    if (blend.key === key) return blend.image;
+    const { image, ctx } = blend;
+    ctx.clearRect(0, 0, image.width, image.height);
+    ctx.globalCompositeOperation = "source-over";
+    ctx.globalAlpha = 1 - step / 24;
+    ctx.drawImage(sprite(id, from, variation), 0, 0);
+    // The premultiplied colors of both sprites must add without dimming overlaps.
+    ctx.globalCompositeOperation = "lighter";
+    ctx.globalAlpha = step / 24;
+    ctx.drawImage(sprite(id, to, variation), 0, 0);
+    blend.key = key;
+    return image;
+  }
+
+  function draw(ctx, id, { from, to, mix }, x, y, scale, seed) {
+    const image = blendedSprite(id, from, to, mix, Math.floor(random(seed + 73) * 6));
     ctx.drawImage(image, x - 44 * scale, y - 101 * scale, 88 * scale, 115 * scale);
   }
 

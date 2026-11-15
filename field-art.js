@@ -18,7 +18,7 @@ function makeFieldArt(canvas, closeupCanvas) {
     valley: ["#a0a18e", "#b9b59d", "#717456", "#89906d", "#a0a17b"],
   };
   const plants = makePlantArt();
-  const landscapes = new Map();
+  const grounds = new Map();
 
   function random(seed) {
     const number = Math.sin(seed * 157.73 + 15.43) * 43758.5453;
@@ -60,6 +60,20 @@ function makeFieldArt(canvas, closeupCanvas) {
   ];
   const rim = (u1, v1, u2, v2) => [place(u1, v1), place(u2, v1), place(u2, v2), place(u1, v2)];
   const drop = ([x, y], amount) => [x, y + amount];
+  const rows = 13;
+  const cols = 16;
+  const rowValues = Array.from({ length: rows }, (_, row) => .09 + .78 * (row / (rows - 1)) ** 1.22);
+  const rowStep = row => row < rows - 1 ? rowValues[row + 1] - rowValues[row] : rowValues[row] - rowValues[row - 1];
+  const spots = [];
+  for (let row = 0; row < rows; row++) {
+    for (let col = cols - 1; col >= 0; col--) {
+      const seed = row * cols + col;
+      const depth = rowValues[row] + rowStep(row) * .19 + (random(seed + 31) - .5) * .019;
+      const [x, y] = place(.079 + col * .056 + (random(seed + 7) - .5) * .026, depth);
+      const size = (.15 + depth * .29) * (.76 + random(seed + 60) * .47);
+      spots.push({ x, y, depth, seed, size, planted: random(seed + 210) > .045 });
+    }
+  }
 
   function paintLandscape(palette, wet) {
     const [far, soft, dark, green, light] = palette;
@@ -120,20 +134,6 @@ function makeFieldArt(canvas, closeupCanvas) {
     }
   }
 
-  function landscape(placeType, wet) {
-    const key = `${placeType}:${wet}`;
-    if (!landscapes.has(key)) {
-      const layer = document.createElement("canvas");
-      layer.width = width;
-      layer.height = height;
-      ctx = layer.getContext("2d");
-      paintLandscape(terrain[placeType], wet);
-      ctx = fieldContext;
-      landscapes.set(key, layer);
-    }
-    ctx.drawImage(landscapes.get(key), 0, 0);
-  }
-
   function tuber(x, y, scale, seed) {
     const angle = -.7 + random(seed + 7) * 1.4;
     const tilt = .59 + random(seed + 18) * .16;
@@ -150,15 +150,42 @@ function makeFieldArt(canvas, closeupCanvas) {
     }
   }
 
-  function plantStage(phase) {
+  function plantStage(phase, crop) {
     if (phase === "flowerStage" || phase === "headingStage" || phase === "tasselStage") return "bloom";
     if (phase === "fullBloomStage") return "full";
-    if (phase === "matureStage") return "mature";
+    if (phase === "matureStage") return crop === "hairy" || crop === "berseem" ? "full" : "mature";
     if (phase === "seedlingStage" || phase === "riceStage") return "seedling";
     return "growing";
   }
 
-  function paintCloseup(crop, phase, wet, growth, stage) {
+  function smooth(value) {
+    const t = Math.min(1, Math.max(0, value));
+    return t * t * (3 - 2 * t);
+  }
+
+  function appearance(crop, phase, replay, day) {
+    if (phase === "riceStage") return { from: "seedling", to: "seedling", mix: 0, growth: .64, cleared: 0 };
+    if (crop === "fallow") return { growth: 0, cleared: 1 };
+
+    const stageIndex = replay.stages.findLastIndex(stage => stage.day <= day && stage.day < replay.operation);
+    const stage = replay.stages[stageIndex];
+    const next = replay.stages[stageIndex + 1];
+    const from = plantStage(stage.key, crop);
+    let to = from;
+    let mix = 0;
+    if (next && next.day < replay.operation) {
+      const transition = Math.min(15, (next.day - stage.day) * .55);
+      to = plantStage(next.key, crop);
+      mix = smooth(1 - (next.day - day) / transition);
+    }
+    const progress = Math.min(1, day / replay.operation);
+    const growth = .24 + .76 * (1 - (1 - progress) ** 1.55);
+    // Show the crop being cleared at the scheduled operation without moving its date.
+    const cleared = smooth(1 - (replay.operation - day) / 2.5);
+    return { from, to, mix, growth, cleared };
+  }
+
+  function paintCloseup(crop, phase, wet, pose) {
     if (!detailContext) return;
     ctx = detailContext;
     const w = detailWidth;
@@ -203,12 +230,13 @@ function makeFieldArt(canvas, closeupCanvas) {
     ctx.fillRect(0, 100, w, 62);
 
     const species = plants.species[crop];
-    if (species) {
+    const { growth, cleared } = pose;
+    if (species && cleared < 1) {
       ctx.save();
-      ctx.globalAlpha = .12;
+      ctx.globalAlpha = .12 * (1 - cleared);
       for (let i = 0; i < 6; i++) {
         const x = 20 + i * 62 + random(i + 210) * 18;
-        plants.draw(ctx, crop, stage === "seedling" ? "growing" : stage, x, 198, .58 + random(i + 220) * .12, i + 301);
+        plants.draw(ctx, crop, pose, x, 198, (.45 + random(i + 220) * .12) * growth, i + 301);
       }
       ctx.restore();
     }
@@ -244,46 +272,41 @@ function makeFieldArt(canvas, closeupCanvas) {
       }
     }
 
-    const dormant = ["harvestStage", "incorporationStage", "prepStage", "delayedStage", "fallowStage"].includes(phase);
     const baseY = h - 28;
-    if (species) {
+    if (species && cleared < 1) {
+      const scale = (.92 + growth * 1.27) * (1 - .3 * cleared);
+      ctx.save();
+      ctx.globalAlpha = 1 - cleared;
       ellipse(w / 2, baseY + 1, 86, 11, flooded ? "#3f5f5a" : wet ? "#4a382b" : "#4f3b2c", 0);
       ellipse(w / 2 - 18, baseY - 2, 38, 3.4, "#d8b98222", 0);
-    }
-    if (!dormant && species) {
-      const scale = stage === "seedling" ? 2.0 : 1.95 + growth * .15;
       ctx.save();
-      ctx.globalAlpha = .28;
+      ctx.globalAlpha *= .28;
       for (const [x, factor] of [[w * .18, .3], [w * .82, .32]]) {
-        plants.draw(ctx, crop, stage, x, baseY - 7, scale * factor, x + 17);
+        plants.draw(ctx, crop, pose, x, baseY - 7, scale * factor, x + 17);
       }
       ctx.restore();
       ellipse(w / 2 + scale * 8, baseY - 4, scale * 33, scale * 5, flooded ? "#2f514a55" : "#1f2a1e44", -.1);
       if (flooded) ellipse(w / 2 + scale * 8, baseY, scale * 22, scale * 3, "#d5e9d93b", -.1);
-      plants.draw(ctx, crop, stage, w / 2, baseY, scale, w + 12);
-    } else if (dormant) {
+      plants.draw(ctx, crop, pose, w / 2, baseY, scale, w + 12);
+      ctx.restore();
+    }
+    if (cleared > 0) {
+      ctx.save();
+      ctx.globalAlpha = cleared;
       if (crop === "potato" && phase === "harvestStage") {
         for (let i = 0; i < 4; i++) {
           const x = 70 + i * 70 + random(i + 2) * 8;
           tuber(x, 232 + random(i + 5) * 28, 26 + random(i + 7) * 8, i + 2);
         }
-      } else if (species) {
-        const closeStage = crop === "vetch" || crop === "hairy" ? "full" : "mature";
-        const scale = 1.8;
-        ellipse(w / 2 + scale * 8, baseY - 4, scale * 30, scale * 4.8, "#1f2a1e38", -.1);
-        plants.draw(ctx, crop, closeStage, w / 2, baseY, scale, w + 29);
-        for (let i = 0; i < 9; i++) {
-          const x = w * .18 + i * 18;
-          const y = baseY - 8 + random(i + 8) * 14;
-          path([[x - 3, y + 2], [x, y - 8], [x + 2, y]], "#d0ad6a99", 1.1);
-        }
       } else {
         for (let i = 0; i < 16; i++) {
           const x = 12 + i * 21;
-          const y = 194 + random(i + 8) * 24;
-          path([[x - 3, y + 2], [x, y - 8], [x + 2, y]], "#d0ad6a99", 1.2);
+          const y = 180 + random(i + 8) * 84;
+          path([[x - 9, y + 2], [x, y - 2], [x + 8, y - 5]], "#d0ad6a99", 1.4);
+          if (phase === "incorporationStage") ellipse(x - 2, y - 1, 5, 1.8, "#798655", -.32);
         }
       }
+      ctx.restore();
     }
 
     const mound = ctx.createLinearGradient(0, h - 26, 0, h);
@@ -320,8 +343,9 @@ function makeFieldArt(canvas, closeupCanvas) {
     ctx.fillRect(0, 0, w, h);
     ctx = fieldContext;
   }
-  return function paint({ terrain: placeType, crop, progress, phase, growthPhase, wet }) {
-    landscape(placeType, wet);
+
+  function paintGround(placeType, wet, flooded, worked) {
+    paintLandscape(terrain[placeType], wet);
     for (let i = 0; i < 3; i++) {
       const x = 138 + i * 42 + random(i + 620) * 22;
       const y = 48 + i * 9 + random(i + 640) * 14;
@@ -338,18 +362,11 @@ function makeFieldArt(canvas, closeupCanvas) {
     polygon([a, b, c, d], "#5f7a50");
     polygon(rim(.025, .045, .977, .948), "#4d6a46");
 
-    const flooded = phase === "riceStage";
-    const worked = phase === "harvestStage" || phase === "incorporationStage" || phase === "prepStage" || phase === "delayedStage";
-    const fallow = crop === "fallow" && !flooded;
     const soil = ctx.createLinearGradient(0, 150, 70, 430);
     soil.addColorStop(0, flooded ? "#87a49a" : wet ? "#8a7154" : "#a38761");
     soil.addColorStop(1, flooded ? "#517d79" : wet ? "#554738" : "#73523e");
     polygon(rim(.046, .067, .953, .925), soil);
 
-    const rows = 13;
-    const cols = 16;
-    const rowValues = Array.from({ length: rows }, (_, row) => .09 + .78 * (row / (rows - 1)) ** 1.22);
-    const rowStep = row => row < rows - 1 ? rowValues[row + 1] - rowValues[row] : rowValues[row] - rowValues[row - 1];
     for (let row = 0; row < rows; row++) {
       const v = rowValues[row];
       const step = rowStep(row);
@@ -383,31 +400,6 @@ function makeFieldArt(canvas, closeupCanvas) {
       ellipse(x, y, 1.2 + random(i + 990) * 2.4, .7 + random(i + 991) * 1.1, "#e4cfa26b", -.2);
     }
 
-    const species = plants.species[crop];
-    const stage = plantStage(growthPhase);
-    const growth = flooded ? .64 : .26 + Math.min(1, progress * 1.24) * .74;
-    for (let row = 0; row < rows; row++) {
-      for (let col = cols - 1; col >= 0; col--) {
-        const seed = row * cols + col;
-        const v = rowValues[row] + rowStep(row) * .19 + (random(seed + 31) - .5) * .019;
-        const u = .079 + col * .056 + (random(seed + 7) - .5) * .026;
-        const [x, y] = place(u, v);
-        if (worked || fallow) {
-          if (random(seed + 9) < .68) {
-            const stubble = .8 + v * 4;
-            path([[x - stubble, y + .5], [x, y], [x + stubble * .33, y - stubble]], "#d0ad6aa3", 1);
-          }
-          if (crop === "potato" && phase === "harvestStage" && row >= 8 && random(seed + 120) > .56) {
-            tuber(x, y - .5, (1.6 + v * 2.25) * (.75 + random(seed + 38) * .5), seed);
-          }
-        } else if (species && (progress > .28 || random(seed + 3) > .22) && random(seed + 210) > .045) {
-          const scale = (.15 + v * .29) * growth * species.size * (.76 + random(seed + 60) * .47);
-          const lean = scale * 32;
-          ellipse(x + lean * .42, y, lean, lean * .25, flooded ? "#456a6446" : "#25312452", -.12);
-          plants.draw(ctx, crop, stage, x, y, scale, seed);
-        }
-      }
-    }
     for (let i = 0; i < 210; i++) {
       const edge = i % 4;
       const u = random(i + 32);
@@ -419,13 +411,64 @@ function makeFieldArt(canvas, closeupCanvas) {
       const scale = 2 + v * 5;
       path([[x - scale, y], [x, y - scale], [x + scale * .4, y]], i % 3 ? "#7c965a" : "#a9ae6c");
     }
+  }
+
+  function drawGround(placeType, wet, flooded, worked) {
+    const key = `${placeType}:${wet}:${flooded}:${worked}`;
+    let layer = grounds.get(key);
+    if (!layer) {
+      layer = document.createElement("canvas");
+      layer.width = width;
+      layer.height = height;
+      ctx = layer.getContext("2d");
+      paintGround(placeType, wet, flooded, worked);
+      ctx = fieldContext;
+      if (grounds.size >= 8) grounds.delete(grounds.keys().next().value);
+      grounds.set(key, layer);
+    }
+    ctx.drawImage(layer, 0, 0);
+  }
+
+  return function paint({ terrain: placeType, crop, replay, day, phase, wet }) {
+    const flooded = phase === "riceStage";
+    const worked = phase === "harvestStage" || phase === "incorporationStage" || phase === "prepStage" || phase === "delayedStage";
+    const pose = appearance(crop, phase, replay, day);
+    const { growth, cleared } = pose;
+    const species = plants.species[crop];
+    drawGround(placeType, wet, flooded, worked);
+    for (const { x, y, depth, seed, size, planted } of spots) {
+      if (cleared > 0) {
+        ctx.globalAlpha = cleared;
+        if (random(seed + 9) < .68) {
+          const stubble = .8 + depth * 4;
+          path([[x - stubble, y + .5], [x, y], [x + stubble * .33, y - stubble]], "#d0ad6aa3", 1);
+          if (phase === "incorporationStage") ellipse(x, y, stubble * 1.5, stubble * .42, "#718154aa", -.22);
+        }
+        if (crop === "potato" && phase === "harvestStage" && seed >= cols * 8 && random(seed + 120) > .56) {
+          tuber(x, y - .5, (1.6 + depth * 2.25) * (.75 + random(seed + 38) * .5), seed);
+        }
+      }
+      if (species && planted && cleared < 1) {
+        ctx.globalAlpha = 1 - cleared;
+        const scale = size * growth * species.size * (1 - .3 * cleared);
+        const spread = scale * 32;
+        ellipse(x + spread * .42, y, spread, spread * .25, flooded ? "#456a6446" : "#25312452", -.12);
+        plants.draw(ctx, crop, pose, x, y, scale, seed);
+      }
+    }
+    ctx.globalAlpha = 1;
     if (wet) {
+      ctx.beginPath();
       for (let i = 0; i < 108; i++) {
         const x = random(i + 500) * width;
         const y = random(i + 800) * height;
-        path([[x, y], [x - 4, y + 13]], "#d9f1ed39", 1);
+        ctx.moveTo(x, y);
+        ctx.lineTo(x - 4, y + 13);
       }
+      ctx.strokeStyle = "#d9f1ed39";
+      ctx.lineWidth = 1;
+      ctx.stroke();
     }
-    paintCloseup(crop, phase, wet, growth, stage);
+    paintCloseup(crop, phase, wet, pose);
   };
 }

@@ -9,7 +9,9 @@ function mountField({ t, dateLabel, selectCrop, cropColor }) {
   const play = $("field-play");
   const dayMs = 86_400_000;
   let current;
-  let timer = 0;
+  let playbackFrame = 0;
+  let scrubFrame = 0;
+  let drawnDay = 0;
   let stageButtons = [];
   let cropButtons = [];
   const fieldSection = $("field");
@@ -17,49 +19,58 @@ function mountField({ t, dateLabel, selectCrop, cropColor }) {
   let paintToken = 0;
 
   function labelPlayback() {
-    play.textContent = timer ? t("pause") : t("play");
+    play.textContent = playbackFrame ? t("pause") : t("play");
   }
 
   function stop() {
-    clearInterval(timer);
-    timer = 0;
+    cancelAnimationFrame(playbackFrame);
+    cancelAnimationFrame(scrubFrame);
+    playbackFrame = 0;
+    scrubFrame = 0;
     labelPlayback();
   }
 
   function stageAt(day) {
     const { replay } = current;
     const stage = replay.stages.findLast(entry => entry.day <= day);
-    if (replay.delayed && day >= replay.rice && day < replay.operation) return { ...stage, key: "occupiedStage", growthPhase: stage.key };
-    if (day > replay.operation && day < replay.days) return { ...stage, key: "prepStage" };
-    return stage;
+    if (replay.delayed && day >= replay.rice && day < replay.operation) return "occupiedStage";
+    if (day > replay.operation && day < replay.days) return "prepStage";
+    return stage.key;
   }
 
-  function draw() {
+  function visualStageKey(crop, key) {
+    return crop === "vetch" && key === "incorporationStage" ? "vetchIncorporationStage" : key;
+  }
+
+  function draw(visualDay = timeline.valueAsNumber, updateLabels = true) {
     if (!current) return;
-    const day = timeline.valueAsNumber;
+    drawnDay = visualDay;
+    const day = Math.floor(visualDay);
     const { site, result, replay } = current;
-    const { key, growthPhase = key } = stageAt(day);
+    const key = stageAt(day);
     const date = new Date(Date.parse(replay.start) + dayMs * day).toISOString().slice(0, 10);
     const [rain, minimum] = weather[site.id][date] ?? [];
     const activeCrop = key === "riceStage" ? "rice" : result.id;
-    const visibleCrop = key === "prepStage" || key === "delayedStage" ? "" : t(activeCrop);
-    const progress = replay.operation > 0 ? Math.min(1, day / replay.operation) : 0;
-    const status = visibleCrop ? `${visibleCrop} · ${t(key)}` : t(key);
-    const dateText = dateLabel(date);
-    $("field-stage").textContent = status;
-    $("field-date").textContent = dateText;
-    $("field-date").dateTime = date;
-    $("closeup-caption").textContent = `${t(activeCrop)} · ${t(key)}`;
-    $("field-caption").textContent = t(`${key}Note`);
-    $("field-rain").textContent = Number.isFinite(rain) ? `${rain.toFixed(2)} mm` : "—";
-    $("field-temp").textContent = Number.isFinite(minimum) ? `${minimum.toFixed(1)} °C` : "—";
-    timeline.setAttribute("aria-valuetext", `${dateText} · ${status}`);
-    canvas.dataset.stage = key;
-    canvas.dataset.crop = activeCrop;
-    canvas.dataset.wet = String(rain >= 10);
-    const activeStage = replay.stages.findLastIndex(entry => entry.day <= day);
-    stageButtons.forEach((button, i) => button.setAttribute("aria-pressed", String(i === activeStage)));
-    const paintArgs = { terrain: site.terrain, crop: activeCrop, progress, phase: key, growthPhase, wet: rain >= 10 };
+    if (updateLabels) {
+      const displayStage = visualStageKey(activeCrop, key);
+      const showCrop = key !== "prepStage" && key !== "delayedStage";
+      const status = showCrop ? `${t(activeCrop)} · ${t(displayStage)}` : t(displayStage);
+      const dateText = dateLabel(date);
+      $("field-stage").textContent = status;
+      $("field-date").textContent = dateText;
+      $("field-date").dateTime = date;
+      $("closeup-caption").textContent = status;
+      $("field-caption").textContent = t(`${displayStage}Note`);
+      $("field-rain").textContent = Number.isFinite(rain) ? `${rain.toFixed(2)} mm` : "—";
+      $("field-temp").textContent = Number.isFinite(minimum) ? `${minimum.toFixed(1)} °C` : "—";
+      timeline.setAttribute("aria-valuetext", `${dateText} · ${status}`);
+      canvas.dataset.stage = key;
+      canvas.dataset.crop = activeCrop;
+      canvas.dataset.wet = String(rain >= 10);
+      const activeStage = replay.stages.findLastIndex(entry => entry.day <= day);
+      stageButtons.forEach((button, i) => button.setAttribute("aria-pressed", String(i === activeStage)));
+    }
+    const paintArgs = { terrain: site.terrain, crop: activeCrop, replay, day: visualDay, phase: key, wet: rain >= 10 };
     const token = ++paintToken;
     if (!initialPaintDone && fieldSection.getBoundingClientRect().top >= innerHeight) {
       initialPaintDone = true;
@@ -74,26 +85,44 @@ function mountField({ t, dateLabel, selectCrop, cropColor }) {
 
   timeline.addEventListener("input", () => {
     stop();
-    draw();
+    scrubFrame = requestAnimationFrame(() => {
+      scrubFrame = 0;
+      draw();
+    });
   });
   play.addEventListener("click", () => {
-    if (timer) {
+    if (playbackFrame) {
       stop();
       return;
     }
-    if (timeline.valueAsNumber === Number(timeline.max)) timeline.value = 0;
-    draw();
-    const step = Math.max(1, Math.round(Number(timeline.max) / 104));
-    timer = setInterval(() => {
-      timeline.value = Math.min(Number(timeline.max), timeline.valueAsNumber + step);
-      draw();
-      if (timeline.valueAsNumber === Number(timeline.max)) stop();
-    }, 105);
+    const lastDay = Number(timeline.max);
+    const requestedDay = scrubFrame ? timeline.valueAsNumber : drawnDay;
+    cancelAnimationFrame(scrubFrame);
+    scrubFrame = 0;
+    const firstDay = requestedDay >= lastDay ? 0 : requestedDay;
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const started = performance.now();
+    let painted = started;
+    timeline.value = Math.floor(firstDay);
+    draw(reducedMotion ? timeline.valueAsNumber : firstDay);
+    const tick = now => {
+      const day = Math.min(lastDay, firstDay + (now - started) * lastDay / 12_000);
+      const wholeDay = Math.floor(day);
+      const dateChanged = wholeDay !== timeline.valueAsNumber;
+      if (day === lastDay || now - painted >= 30 && (!reducedMotion || dateChanged)) {
+        timeline.value = wholeDay;
+        draw(reducedMotion ? wholeDay : day, dateChanged);
+        painted = now;
+      }
+      if (day === lastDay) stop();
+      else playbackFrame = requestAnimationFrame(tick);
+    };
+    playbackFrame = requestAnimationFrame(tick);
     labelPlayback();
   });
   document.addEventListener("visibilitychange", () => { if (document.hidden) stop(); });
   if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver(([entry]) => { if (!entry.isIntersecting && timer) stop(); });
+    const observer = new IntersectionObserver(([entry]) => { if (!entry.isIntersecting && playbackFrame) stop(); });
     observer.observe($("field"));
   }
 
@@ -159,7 +188,7 @@ function mountField({ t, dateLabel, selectCrop, cropColor }) {
       stageList.replaceChildren(...stageButtons);
     }
     replay.stages.forEach(({ key, date }, index) => {
-      stageButtons[index].children[0].textContent = t(key);
+      stageButtons[index].children[0].textContent = t(visualStageKey(result.id, key));
       stageButtons[index].children[1].textContent = dateLabel(date);
     });
     stageList.setAttribute("aria-label", t("stageList"));
