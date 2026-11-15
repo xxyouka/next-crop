@@ -41,6 +41,36 @@ const farmSites = [
     note: ["UC Cooperative Extension evaluated rye and vetch in Sacramento Valley rice fields. Confirm field access and winter flooding locally.", "加州大学合作推广项目在河谷稻田试验了黑麦和苕子。冬季淹水及进田条件需在当地确认。"],
     source: "https://ucanr.edu/blog/uc-rice-blog/article/winter-cover-crop-variety-evaluation",
   },
+  {
+    id: "punjab", name: ["Punjab", "旁遮普"], area: ["Punjab, India", "印度 · 旁遮普"],
+    lat: 30.90, lon: 75.85, terrain: "plain", priorities: { income: "wheat", cover: "mustard" },
+    system: ["Rice · wheat · rice", "水稻 · 小麦 · 水稻"],
+    previous: ["Rice harvest", "水稻收割"], next: ["Next rice transplant", "下一季水稻插秧"],
+    harvestStart: [10, 1], harvestDefault: 15, harvestMax: 45, riceStart: [6, 5], riceDefault: 12, riceMax: 30,
+    crops: [{ id: "wheat", offset: 3, duration: 165, buffer: 14 }, { id: "mustard", offset: 2, duration: 120, buffer: 14 }],
+    note: ["PAU / ICAR extension guidance places rice transplant around June and wheat sowing after rice in late October–November; exact dates vary by district and variety.", "旁遮普农业大学/ICAR 的推广资料将水稻插秧安排在 6 月前后，小麦在稻收后的 10 月下旬至 11 月播种；具体日期随地区与品种变化。"],
+    source: "https://www.pau.edu/",
+  },
+  {
+    id: "nile", name: ["Nile Delta", "尼罗河三角洲"], area: ["Kafr el-Sheikh, Egypt", "埃及 · 谢赫村"],
+    lat: 31.11, lon: 30.94, terrain: "delta", priorities: { income: "wheat", cover: "berseem" },
+    system: ["Rice · berseem · rice", "水稻 · 埃及三叶草 · 水稻"],
+    previous: ["Rice harvest", "水稻收割"], next: ["Next rice transplant", "下一季水稻插秧"],
+    harvestStart: [9, 15], harvestDefault: 20, harvestMax: 35, riceStart: [5, 10], riceDefault: 20, riceMax: 30,
+    crops: [{ id: "berseem", offset: 3, duration: 210, buffer: 21 }, { id: "wheat", offset: 3, duration: 160, buffer: 21 }],
+    note: ["FAO / ARC guidance describes rice–berseem rotations in the Nile Delta. Berseem is cut several times; the model treats the last cut as the operation date.", "FAO/ARC 资料描述了尼罗河三角洲的水稻—埃及三叶草轮作。三叶草可多次刈割；模型把最后一次刈割当作作业日。"],
+    source: "https://www.fao.org/",
+  },
+  {
+    id: "jianghan", name: ["Jianghan Plain", "江汉平原"], area: ["Hubei, China", "中国 · 湖北"],
+    lat: 30.36, lon: 113.45, terrain: "plain", priorities: { income: "rapeseed", cover: "vetch" },
+    system: ["Rice · rapeseed · rice", "水稻 · 油菜 · 水稻"],
+    previous: ["Late rice harvest", "晚稻收割"], next: ["Next rice transplant", "下一季水稻插秧"],
+    harvestStart: [10, 1], harvestDefault: 10, harvestMax: 30, riceStart: [5, 5], riceDefault: 15, riceMax: 25,
+    crops: [{ id: "rapeseed", offset: 2, duration: 190, buffer: 14 }, { id: "vetch", offset: -5, end: [3, 18], cutoff: [11, 20], buffer: 10 }],
+    note: ["Hubei extension materials describe rice–rapeseed rotations. Rapeseed can be direct-sown after rice or relayed before harvest; this model uses a post-rice window.", "湖北推广资料描述了水稻—油菜轮作。油菜可在稻收后直播，也可在稻收前套播；本模型采用稻收后的窗口。"],
+    source: "http://nyt.hubei.gov.cn/",
+  },
 ];
 
 if (typeof module !== "undefined") module.exports = farmSites;

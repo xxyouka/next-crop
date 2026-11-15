@@ -9,6 +9,9 @@ function makePlantArt() {
     mung: { habit: "mung", size: 1.04, leaves: ["#253f2c", "#4c7744", "#83a854", "#b1c780"] },
     mustard: { habit: "mustard", size: 1.34, leaves: ["#30462e", "#597847", "#8ba766", "#b8c78a"] },
     rye: { habit: "rye", size: 1.4, leaves: ["#2d4631", "#5e7b46", "#8eaa65", "#b9c685"] },
+    wheat: { habit: "rye", size: 1.46, leaves: ["#3d4a24", "#6f7f39", "#a3ad55", "#ced28a"] },
+    berseem: { habit: "vetch", size: .98, leaves: ["#2b4a31", "#4f7744", "#82a666", "#b5c99a"], flowers: ["#d8d8b0", "#f2edc2", "#fffbe2"] },
+    rapeseed: { habit: "mustard", size: 1.42, leaves: ["#30462e", "#597847", "#8ba766", "#b8c78a"] },
     rice: { habit: "rice", size: 1.45, leaves: ["#315839", "#5a8844", "#9bb953", "#c6d37d"] },
   };
   const sprites = new Map();
@@ -292,7 +295,7 @@ function makePlantArt() {
     }
   }
 
-  const drawings = { potato, vetch, mung, mustard, maize: grass, rye: grass, rice: grass };
+  const drawings = { potato, vetch, mung, mustard, maize: grass, rye: grass, wheat: grass, berseem: vetch, rapeseed: mustard, rice: grass };
 
   function sprite(id, stage, variation) {
     const key = `${id}:${stage}:${variation}`;

@@ -54,7 +54,7 @@ Use the URL returned by Wrangler. Do not deploy the whole repository: `.git` and
 ## Verify before pasting the link
 
 - Open the URL in a private/incognito window with no login.
-- Choose all four regions; the globe, field replay, planner and three-season check work.
+- Choose all seven regions; the globe, field replay, planner and three-season check work.
 - Open **Project brief** and both PDF links.
 - Try the wet-harvest demo: 39.34 mm, then 0.59 mm in 2024/25.
 - Check the page at a phone width; no horizontal overflow.

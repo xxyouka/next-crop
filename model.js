@@ -54,13 +54,13 @@ const NextCrop = (() => {
     const rice = delta(Date.parse(dates.rice), start);
     const delayed = result.slack < 0;
     const last = delayed ? Math.max(rice, operation + 1) : rice;
-    const cover = ["vetch", "rye", "hairy"].includes(result.id);
+    const cover = ["vetch", "rye", "hairy", "berseem"].includes(result.id);
     const isMilkVetch = result.id === "vetch";
     const floweringDay = isMilkVetch
       ? delta(dateAt(new Date(start).getUTCFullYear() + 1, 3, 1), start)
       : Math.round(operation * 0.51);
     const matureDay = isMilkVetch ? operation - 6 : Math.round(operation * 0.79);
-    const floweringStage = result.id === "rye" ? "headingStage"
+    const floweringStage = result.id === "rye" || result.id === "wheat" ? "headingStage"
       : result.id === "maize" ? "tasselStage" : "flowerStage";
     const phases = result.id === "fallow" ? [
       ["fallowStage", 0], ["prepStage", operation], ["riceStage", rice],

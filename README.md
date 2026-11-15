@@ -10,12 +10,12 @@ Explore rice rotations in **Kaiping, Nueva Ecija, Rajshahi and the Sacramento Va
 
 Between rice harvest and the next transplant, a farmer has one narrow window. A winter crop can add income or protect the soil, but only if its calendar and the weather at its operation date do not put the next rice season at risk.
 
-Next Crop turns that decision into a field-level check across four rice landscapes. It combines local crop calendars with NASA POWER daily rainfall across three historical seasons and reports calendar fit, field-condition flags and the three-day rain around the operation. The field replay shows what the crop looks like on the selected date; the three-season check separates a lucky year from a robust rotation. A field-shift search then proposes the nearest rice-date window that clears both checks in all three seasons.
+Next Crop turns that decision into a field-level check across seven rice landscapes. It combines local crop calendars with NASA POWER daily rainfall across three historical seasons and reports calendar fit, field-condition flags and the three-day rain around the operation. The field replay shows what the crop looks like on the selected date; the three-season check separates a lucky year from a robust rotation. A field-shift search then proposes the nearest rice-date window that clears both checks in all three seasons.
 
-- **4** rice regions · **7** winter crops · **3** NASA POWER seasons · **3,760** daily weather records.
+- **7** rice regions · **10** winter crops · **3** NASA POWER seasons · **6,580** daily weather records.
 - Designed for a short judge demo and for local extension conversations; every recommendation carries its assumptions.
 - The **Project brief** button in the hero opens the same summary, data notes and demo inside the app.
-- Submission assets: [29-second demo video](docs/Next-Crop-Demo.mp4) · [7-slide demo deck](docs/Next-Crop-Demo-Deck.pdf) · [one-page judge brief](docs/Next-Crop-Judge-Brief.pdf) · [submission copy and checklist](SUBMISSION.md) · [public deployment guide](docs/DEPLOY.md).
+- Submission assets: [29.5-second demo video](docs/Next-Crop-Demo.mp4) · [7-slide demo deck](docs/Next-Crop-Demo-Deck.pdf) · [one-page judge brief](docs/Next-Crop-Judge-Brief.pdf) · [submission copy and checklist](SUBMISSION.md) · [public deployment guide](docs/DEPLOY.md).
 - The demo deck is within the Space Apps 7-slide limit. The current submission guide closes on **15 November at 23:59 in the Team Owner's local time**; see [SUBMISSION.md](SUBMISSION.md).
 
 ## 30-second judge demo
@@ -30,7 +30,7 @@ Next Crop turns that decision into a field-level check across four rice landscap
 
 | Layer | What it contributes |
 | --- | --- |
-| [NASA POWER Daily](https://power.larc.nasa.gov/docs/services/api/temporal/daily/) | Corrected daily precipitation and minimum temperature in local solar time, 2021/22, 2023/24 and 2024/25. Four sites × 940 days = 3,760 daily records, split across the three seasons. |
+| [NASA POWER Daily](https://power.larc.nasa.gov/docs/services/api/temporal/daily/) | Corrected daily precipitation and minimum temperature in local solar time, 2021/22, 2023/24 and 2024/25. Seven sites × 940 days = 6,580 daily records, split across the three seasons. |
 | [NASA Blue Marble](https://science.nasa.gov/earth/earth-observatory/the-blue-marble-true-color-global-imagery-at-1km-resolution/) | The global texture used by the offline globe. |
 | [Copernicus Sentinel-2A](https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_49QFE_20250103_0_L2A) | A Kaiping context image in Evidence. This is Copernicus data, not NASA data, and is credited as such. |
 
@@ -63,5 +63,5 @@ Crop calendars, growth stages, crop durations, preparation buffers and the 30 mm
 ## Validation
 
 - `node scripts/check-model.cjs` covers the rotation rules, the 39.34 → 0.59 mm wet-harvest comparison, full 940-day coverage for every site and season, and field-replay stage order.
-- The interface has been checked at 320, 390 and 1440 px in English and Chinese, across all four regions, with no console errors or horizontal page overflow.
+- The interface has been checked at 320, 390 and 1440 px in English and Chinese, across all seven regions, with no console errors or horizontal page overflow.
 - The app works from `file://` with the bundled weather, globe texture and field illustrations; the external source links are the only network dependency.

@@ -33,13 +33,13 @@ Team name on the submission page: **Dui Dui Dui**. The deck uses the names above
 
 ## High-level summary (50–200 words)
 
-Next Crop is a field-level rotation planner for the weeks between rice seasons. A farmer must decide whether a winter crop can fit before the next transplant, but rainfall varies sharply from year to year. Next Crop combines local crop calendars with NASA POWER daily rainfall across four rice landscapes and three historical seasons. It checks calendar fit, preparation buffers, the three-day rainfall around each operation, and field conditions supplied by the user. A crop replay shows the field from seedlings to harvest; a three-season matrix separates a lucky year from a robust rotation; a field-shift search finds the nearest rice-date window that clears both checks in all three seasons. In Kaiping, the same winter-potato operation records 39.34 mm in 2023/24 and 0.59 mm in 2024/25. The project is a static, bilingual, offline-ready web prototype for extension workers and local discussions, and it clearly labels its illustrative assumptions.
+Next Crop is a field-level rotation planner for the weeks between rice seasons. A farmer must decide whether a winter crop can fit before the next transplant, but rainfall varies sharply from year to year. Next Crop combines local crop calendars with NASA POWER daily rainfall across seven rice landscapes and three historical seasons. It checks calendar fit, preparation buffers, the three-day rainfall around each operation, and field conditions supplied by the user. A crop replay shows the field from seedlings to harvest; a three-season matrix separates a lucky year from a robust rotation; a field-shift search finds the nearest rice-date window that clears both checks in all three seasons. In Kaiping, the same winter-potato operation records 39.34 mm in 2023/24 and 0.59 mm in 2024/25. The project is a static, bilingual, offline-ready web prototype for extension workers and local discussions, and it clearly labels its illustrative assumptions.
 
 ## Detailed project description
 
 Next Crop is an interactive decision-support prototype for rice-based rotations. It addresses the Field Shift challenge by making a field-scale decision visible: after rice harvest, can a winter crop fit before the next rice season, and does the weather at its operation date cooperate?
 
-What it does: the user chooses one of four rice landscapes (Kaiping, Nueva Ecija, Rajshahi, Sacramento Valley), replays crop growth from seedlings to harvest, and compares winter rotations against a winter-fallow baseline. The planner reports calendar fit and preparation time, field-condition flags for drainage and soil texture, and the three-day rainfall around the operation. The three-season check repeats the same plan across 2021/22, 2023/24 and 2024/25, so one wet operation day is visible as a risk rather than hidden by a single season. Find a safer window searches nearby harvest and transplant dates and offers the nearest window that clears the calendar and the three-day rain in all three seasons.
+What it does: the user chooses one of seven rice landscapes (Kaiping, Nueva Ecija, Rajshahi, Sacramento Valley, Punjab, Nile Delta, Jianghan Plain), replays crop growth from seedlings to harvest, and compares winter rotations against a winter-fallow baseline. The planner reports calendar fit and preparation time, field-condition flags for drainage and soil texture, and the three-day rainfall around the operation. The three-season check repeats the same plan across 2021/22, 2023/24 and 2024/25, so one wet operation day is visible as a risk rather than hidden by a single season. Find a safer window searches nearby harvest and transplant dates and offers the nearest window that clears the calendar and the three-day rain in all three seasons.
 
 How it works: bundled NASA POWER Daily corrected precipitation and minimum temperature (local solar time) provide 940 days per site across three seasons. The model uses a three-day rain window, an illustrative 30 mm review threshold, local crop calendars and fixed crop durations and stages. It is deliberately transparent about what is illustrative.
 
@@ -53,14 +53,14 @@ Factors considered: regional rainfall variability, the rice preparation buffer, 
 
 ## Project demonstration
 
-**Preferred — 29-second demo video (ready to paste):**  
+**Preferred — 29.5-second demo video (ready to paste):**
 https://xxyouka.github.io/next-crop/docs/Next-Crop-Demo.mp4
 
-- 28.9 seconds, 1280×720, English voiceover + burned-in English captions; public, no login.
-- Shows Kaiping, the 39.34 mm wet window, Find a safer window, the 22.89 mm one-day-earlier result, and the four-region scope.
+- 29.5 seconds, 1440×900, English voiceover + burned-in English captions; public, no login.
+- Shows Kaiping, the 39.34 mm wet window, Find a safer window, the 22.89 mm one-day-earlier result, and the seven-region scope.
 - If the form rejects a direct MP4 URL, upload the same file to YouTube as a public or unlisted video and paste that URL.
 
-**Alternative — 7-slide deck:**  
+**Alternative — 7-slide deck:**
 https://xxyouka.github.io/next-crop/docs/Next-Crop-Demo-Deck.pdf
 
 - 7 slides, English, public, no login; within the slide limit.

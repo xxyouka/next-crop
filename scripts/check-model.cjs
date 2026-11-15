@@ -43,7 +43,7 @@ assert.equal(followUp.rain, 0.59);
 console.log("Bundled NASA POWER examples passed");
 
 const { sites, fieldReplay } = require("../model.js");
-assert.deepEqual(sites.map(site => site.id), ["kaiping", "luzon", "rajshahi", "sacramento"]);
+assert.deepEqual(sites.map(site => site.id), ["kaiping", "luzon", "rajshahi", "sacramento", "punjab", "nile", "jianghan"]);
 for (const site of sites) {
   const input = { ...base, harvest: site.harvestDefault, transplant: site.riceDefault, site };
   assert.equal(Object.keys(regionalWeather[site.id]).length, 940);

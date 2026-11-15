@@ -207,13 +207,13 @@
     <div class="top">
       <div class="intro">
         <h1>What grows after rice?</h1>
-        <p class="lede">A field-level rotation check for four rice landscapes, built with NASA POWER daily rainfall.</p>
+        <p class="lede">A field-level rotation check for seven rice landscapes, built with NASA POWER daily rainfall.</p>
         <p class="problem"><strong>The decision.</strong> Between rice harvest and the next transplant, a winter crop has one narrow window. A late harvest, a wet operation day or an unknown field can turn a good rotation into a missed rice season.</p>
         <div class="stats">
-          <div class="stat"><strong>4</strong><span>rice regions</span></div>
-          <div class="stat"><strong>7</strong><span>winter crops</span></div>
+          <div class="stat"><strong>7</strong><span>rice regions</span></div>
+          <div class="stat"><strong>10</strong><span>winter crops</span></div>
           <div class="stat"><strong>3</strong><span>NASA POWER seasons</span></div>
-          <div class="stat"><strong>3,760</strong><span>daily weather records</span></div>
+          <div class="stat"><strong>6,580</strong><span>daily weather records</span></div>
         </div>
         <p class="team-line">Team Dui Dui Dui · Guan Xiao · Lin Yi · Cai Yang · Ye Fenghong</p>
       </div>
@@ -226,11 +226,11 @@
     <div class="lower">
       <section>
         <h2>What we built</h2>
-        <p>An interactive four-region explorer: pick a landscape, replay the crop, compare winter rotations and test the same plan across three NASA POWER seasons. Each status separates calendar fit, field conditions and operation-day rain. A field-shift search finds the nearest rice-date window that clears both checks in all three seasons.</p>
+        <p>An interactive seven-region explorer: pick a landscape, replay the crop, compare winter rotations and test the same plan across three NASA POWER seasons. Each status separates calendar fit, field conditions and operation-day rain. A field-shift search finds the nearest rice-date window that clears both checks in all three seasons.</p>
       </section>
       <section>
         <h2>NASA data</h2>
-        <p>NASA POWER Daily: corrected precipitation and minimum temperature, local solar time, 2021/22, 2023/24 and 2024/25 — 4 sites × 940 days = 3,760 records. NASA Blue Marble supplies the globe texture. A Copernicus Sentinel-2A image provides local context (not NASA data).</p>
+        <p>NASA POWER Daily: corrected precipitation and minimum temperature, local solar time, 2021/22, 2023/24 and 2024/25 — 7 sites × 940 days = 6,580 records. NASA Blue Marble supplies the globe texture. A Copernicus Sentinel-2A image provides local context (not NASA data).</p>
       </section>
       <section>
         <h2>Try it in 30 seconds</h2>
@@ -246,7 +246,7 @@
 
     <section class="insight">
       <p>&ldquo;The same March operation is <strong>39.34 mm</strong> in 2023/24 and <strong>0.59 mm</strong> in 2024/25. One season is a story; three seasons are a decision.&rdquo;</p>
-      <span>NASA POWER · three seasons · four regions</span>
+      <span>NASA POWER · three seasons · seven regions</span>
     </section>
 
     <div class="bottom">
@@ -256,7 +256,7 @@
       </section>
       <section>
         <h2>Validation</h2>
-        <p><code>node scripts/check-model.cjs</code> covers rotation rules, the 39.34 → 0.59 mm wet-harvest comparison, 940-day coverage for every site and season, and stage order. The interface was checked at 320, 390 and 1440 px in English and Chinese, across all four sites, with no console errors or horizontal page overflow. The app runs from <code>file://</code> with its bundled data.</p>
+        <p><code>node scripts/check-model.cjs</code> covers rotation rules, the 39.34 → 0.59 mm wet-harvest comparison, 940-day coverage for every site and season, and stage order. The interface was checked at 320, 390 and 1440 px in English and Chinese, across all seven sites, with no console errors or horizontal page overflow. The app runs from <code>file://</code> with its bundled data.</p>
       </section>
     </div>
 
