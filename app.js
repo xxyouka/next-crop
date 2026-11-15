@@ -49,9 +49,12 @@ const copy = {
   recommendation: ["Recommended", "推荐"],
   plannerSection: ["Field planner", "田间规划"], evidenceSection: ["Evidence", "依据"],
   shiftTitle: ["Find a safer window", "换一个更稳的农时窗口"],
-  shiftNote: ["Search nearby rice dates for a window that clears the crop calendar and the three-day rain in all three seasons. Field conditions stay as you set them.", "在附近的收割/插秧日期中，寻找一个三个历史季节都能通过农时与三日降雨的窗口。田况保持不变。"],
-  findShift: ["Find a safer window", "寻找更稳窗口"], applyShift: ["Apply this window", "应用这个窗口"],
+  shiftNote: ["Search nearby rice dates across three historical seasons. The calendar and three-day rain checks use an illustrative 30 mm threshold for rainfall.", "在附近的水稻收割与插秧日期中，寻找三个历史季节都能通过农时和三日降雨检查的方案。示例降雨阈值为 30 毫米。"],
+  findShift: ["Search dates", "搜索日期"], applyShift: ["Apply this window", "应用这个窗口"],
   shiftNow: ["Current plan", "当前方案"], shiftSafer: ["Suggested plan", "建议方案"],
+  shiftOriginal: ["Original plan", "原方案"], shiftActive: ["Applied plan", "已应用方案"],
+  shiftMetric: ["Rain on the crop operation day and the two days before", "作业当天和前两天的累计降雨"],
+  shiftReplay: ["Replay operation", "回看作业日"],
   shiftNone: ["No rice-date window within the sliders clears the calendar for the selected crop.", "在当前滑杆范围内，没有能让所选作物通过农时检查的窗口。"],
   shiftAlready: ["The current window already clears the calendar and three-day rain in all three seasons.", "当前窗口在三个历史季节中都已通过农时与三日降雨检查。"],
   shiftApplied: ["Applied. Calendar and rain clear all three seasons at this window.", "已应用。这个窗口在三个历史季节中均通过农时与降雨检查。"],
@@ -105,6 +108,7 @@ const copy = {
   briefDemo5: ["Select Find a safer window. Moving late rice harvest one day earlier lowers three-day rain at the potato harvest to 22.89 mm. All three seasons pass the calendar and rain checks.", "点“寻找更稳窗口”。晚稻收割提前一天，马铃薯采收日的三日降雨降到 22.89 毫米。三个历史季节均通过农时和降雨检查。"],
   briefStart: ["Run the wet-harvest demo", "运行雨后采收演示"],
   briefDeck: ["7-slide demo (PDF)", "7 页演示（PDF）"],
+  briefVideo: ["Demo video", "演示视频"],
   briefPdf: ["One-page brief (PDF)", "一页简介（PDF）"],
   briefClose: ["Close", "关闭"],
   sourceWeather: ["NASA POWER", "NASA POWER"],
@@ -319,7 +323,8 @@ function animateScrollTo(target, { focus = false, onDone, duration: durationOver
   }
   activeScrollBehavior = root.style.scrollBehavior;
   root.style.scrollBehavior = "auto";
-  const duration = durationOverride ?? Math.min(900, Math.max(420, Math.abs(distance) * .5));
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const duration = durationOverride ?? (reduceMotion ? 1 : Math.min(900, Math.max(420, Math.abs(distance) * .5)));
   const started = performance.now();
   const step = now => {
     const t = Math.min(1, (now - started) / duration);
@@ -682,8 +687,8 @@ function scenarioFromURL() {
   const crop = params.get("crop");
   const cropIds = ["fallow", ...point.crops.map(entry => entry.id)];
   const season = Number(params.get("season"));
-  const harvest = Number(params.get("harvest"));
-  const transplant = Number(params.get("transplant"));
+  const harvest = Number(params.get("harvest") || point.harvestDefault);
+  const transplant = Number(params.get("transplant") || point.riceDefault);
   const drainage = params.get("drainage");
   const soil = params.get("soil");
   const priority = params.get("priority");
@@ -766,6 +771,8 @@ async function copyScenario() {
 function clearShift() {
   shiftSuggestion = null;
   $("apply-shift").hidden = true;
+  $("replay-shift").hidden = true;
+  $("shift-seasons").hidden = true;
   $("shift-compare").hidden = true;
   $("shift-status").textContent = "";
   $("shift-status").dataset.state = "";
@@ -835,6 +842,8 @@ function findSaferWindow() {
   const currentDates = NextCrop.calendar(year, currentHarvest, currentTransplant, site);
   const dates = NextCrop.calendar(year, suggestion.harvest, suggestion.transplant, site);
   $("shift-context").textContent = `${local(site.name)} · ${t(cropId)} · ${seasonLabel(year)}`;
+  $("shift-now-plan").textContent = t("shiftNow");
+  $("shift-new-plan").textContent = t("shiftSafer");
   for (const [key, row] of [
     ["now", rowsFor(currentHarvest, currentTransplant)[seasonIndex]],
     ["new", rowsFor(suggestion.harvest, suggestion.transplant)[seasonIndex]],
@@ -845,6 +854,7 @@ function findSaferWindow() {
   const harvestChange = describeRiceDate(site.previous, currentDates.harvest, dates.harvest, suggestion.harvest - currentHarvest);
   const riceChange = describeRiceDate(site.next, currentDates.rice, dates.rice, suggestion.transplant - currentTransplant);
   $("shift-compare").hidden = false;
+  $("shift-seasons").hidden = false;
   shiftSuggestion = suggestion;
   $("apply-shift").hidden = false;
   const outcome = suggestion.wet === 0 ? either(
@@ -863,8 +873,13 @@ function applyShift() {
   withMotionTransition(() => {
     if (suggestion !== shiftSuggestion) return;
     const { harvest, transplant, wet } = suggestion;
-    if (document.activeElement === $("apply-shift")) $("find-shift").focus({ preventScroll: true });
-    clearShift();
+    const focusReplay = document.activeElement === $("apply-shift");
+    shiftSuggestion = null;
+    $("apply-shift").hidden = true;
+    $("replay-shift").hidden = false;
+    $("shift-now-plan").textContent = t("shiftOriginal");
+    $("shift-new-plan").textContent = t("shiftActive");
+    if (focusReplay) $("replay-shift").focus({ preventScroll: true });
     $("harvest").value = harvest;
     $("transplant").value = transplant;
     render();
@@ -910,13 +925,14 @@ $("wet-demo").addEventListener("click", runWetDemo);
 $("atlas-demo").addEventListener("click", () => {
   runWetDemo();
   findSaferWindow();
-  animateScrollTo($("shift-title"), {
-    focus: true,
-    duration: matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : undefined,
-  });
+  animateScrollTo($("shift-title"), { focus: true });
 });
 $("find-shift").addEventListener("click", findSaferWindow);
 $("apply-shift").addEventListener("click", applyShift);
+$("replay-shift").addEventListener("click", () => {
+  field.jumpToOperation();
+  animateScrollTo($("field-title"), { focus: true });
+});
 copyButton.addEventListener("click", copyScenario);
 $("brief-open").addEventListener("click", openBrief);
 $("brief-close").addEventListener("click", closeBrief);

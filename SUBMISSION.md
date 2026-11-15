@@ -18,7 +18,7 @@ In Kaiping, the same winter-potato plan encounters 39.34 mm of rain over three d
 
 **Recommended: [7-slide English PDF](https://xxyouka.github.io/next-crop/docs/Next-Crop-Demo-Deck.pdf).** Paste this one URL into the Demo field. It includes the team, the challenge, and the before-and-after Kaiping example.
 
-**Alternative:** [29.519-second video with English captions](https://xxyouka.github.io/next-crop/docs/Next-Crop-Demo.mp4). If choosing the video, confirm how the narration was produced. For SI-generated audio, the official guide requires disclosure in both the description and the file metadata.
+**Alternative:** [29-second video with English captions](https://xxyouka.github.io/next-crop/docs/Next-Crop-Demo.mp4). The narration is synthesized using macOS Text to Speech (Daniel). That attribution appears on screen and in the MP4 metadata. If choosing the video, include the narration attribution in the project description.
 
 ## Link to Final Project
 
@@ -38,7 +38,7 @@ https://xxyouka.github.io/next-crop/
 
 ## Use of Super Intelligence (SI)
 
-The team defined the project concept, selected the challenge, datasets and model assumptions, and reviewed the result. OpenAI Codex and DeepSeek Harness assisted with application code, procedural Canvas illustration code, automated checks, and editing of the project text and slides. The Canvas illustrations are rendered by code. The globe uses NASA Blue Marble imagery, and the Kaiping context image uses credited Copernicus Sentinel-2A data. Weather values come from NASA POWER.
+The team defined the project concept, selected the challenge, datasets and model assumptions, and reviewed the result. OpenAI Codex and DeepSeek Harness assisted with application code, procedural Canvas illustration code, automated checks, and editing of the project text and slides. The optional demo video uses synthetic English narration from macOS Text to Speech (Daniel). The Canvas illustrations are rendered by code. The globe uses NASA Blue Marble imagery, and the Kaiping context image uses credited Copernicus Sentinel-2A data. Weather values come from NASA POWER.
 
 ## NASA Data
 

@@ -15,13 +15,14 @@ Next Crop turns that decision into a field-level check across seven rice landsca
 - **7** rice regions · **10** winter crops · **3** NASA POWER seasons · **6,580** daily weather records.
 - Designed for a short judge demo and for local extension conversations; every recommendation carries its assumptions.
 - The **Project brief** button in the hero opens the same summary, data notes and demo inside the app.
-- Submission assets: [7-slide demo deck](docs/Next-Crop-Demo-Deck.pdf) · [one-page judge brief](docs/Next-Crop-Judge-Brief.pdf) · [29.5-second video](docs/Next-Crop-Demo.mp4) · [submission copy and checklist](SUBMISSION.md).
+- Submission assets: [7-slide demo deck](docs/Next-Crop-Demo-Deck.pdf) · [one-page judge brief](docs/Next-Crop-Judge-Brief.pdf) · [29-second video](docs/Next-Crop-Demo.mp4) · [submission copy and checklist](SUBMISSION.md).
 - Space Apps closes submissions at **23:59 on 15 November in the Local Event time zone**. Universal Event teams use the Team Owner's local time. [Official submission guide](https://www.spaceappschallenge.org/resources/project-submission-guide/#project-submission-start-end-times)
 
 ## 30-second judge demo
 
 1. From the landing section, select **Try the Kaiping rain demo**. The comparison shows **39.34 → 22.89 mm** for winter potato in 2023/24. Moving late rice harvest from 12 to 11 November moves the potato harvest from 11 to 10 March. All three seasons pass the calendar and rain checks.
-2. In the **three-season check**, select winter potato in **2024/25** to see **0.59 mm** for the original plan. Return to **2023/24**, find the suggested window again and apply it to see the new operation date in the field replay.
+2. Select **Apply this window**. The result keeps both the original and applied plans in view. Use **Replay operation** to see 10 March or open the **Three-season check** to inspect the three historical results.
+3. Run the demo again to reset the original dates. In the three-season check, select winter potato in **2024/25** to see **0.59 mm** for the original plan.
 
 ## NASA data at a glance
 
@@ -50,7 +51,7 @@ Double-click `index.html` or run `python3 -m http.server 8766 --bind 127.0.0.1` 
 - Regional references include the [Kaiping municipal report](https://www.kaiping.gov.cn/kpszfw/xwdt/bmdt/content/post_3261533.html), [PhilRice research highlights](https://www.philrice.gov.ph/wp-content/uploads/2020/07/ASPPD-Highlights-2019.pdf), a [Bangladesh Agricultural University mustard trial](https://ageconsearch.umn.edu/record/211170), the [UC Cooperative Extension rice-field cover crop trial](https://ucanr.edu/blog/uc-rice-blog/article/winter-cover-crop-variety-evaluation), the [Punjab Agricultural University winter-crop guide](https://pau.edu/content/ccil/pf/pp_rabi.pdf), the [FAO AQUASTAT Egypt crop profile](https://www.fao.org/fileadmin/user_upload/aquastat/pdf_files/EGY_egypt_cp.pdf) and the [Hubei rice–rapeseed direct-seeding guide](https://hbnysy.hubei.gov.cn/bmdt/ztzl/nykjcs/njnykjcs/njfw_nj/202410/t20241014_5368583.shtml). Calendar offsets, growth stages, preparation buffers and the 30 mm rain threshold are illustrative. Check locally before using them for field decisions.
 - The [Kaiping Sentinel-2A image](https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_49QFE_20250103_0_L2A) is included under Evidence. Crop and resampling are reproduced by `scripts/fetch-image.py` with Rasterio and Pillow. Contains modified Copernicus Sentinel data 2025.
 - Plant illustrations use morphology described by [Flora of China for Chinese milk vetch](https://www.worldfloraonline.org/taxon/wfo-0000185133), [KPU Plant Database for potato](https://dplantdatabase.kpu.ca/Plant/sotu), [NSW Flora Online for mung bean](https://plantnet.rbgsyd.nsw.gov.au/cgi-bin/NSWfl.pl?lvl=sp&name=Vigna~radiata&page=nswfl), [NC State Extension for mustard](https://plants.ces.ncsu.edu/plants/brassica-juncea/), [University of Minnesota for maize](https://ipmworld.umn.edu/maize-insect-pests-maize-growth-development).
-- OpenAI Codex and DeepSeek Harness assisted with implementation, procedural illustration code, model checks and editing. NASA POWER supplies the weather records. Python, Node.js, Git and Microsoft Edge were used for data preparation, version history and verification.
+- OpenAI Codex and DeepSeek Harness assisted with implementation, procedural illustration code, model checks and editing. NASA POWER supplies the weather records. The demo video uses synthetic English narration from macOS Text to Speech (Daniel), with that attribution on screen and in the MP4 metadata.
 - Typefaces: Instrument Sans and Instrument Serif, self-hosted under the SIL Open Font License 1.1. License texts are in `assets/fonts/`.
 
 ## What is illustrative

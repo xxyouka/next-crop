@@ -23,7 +23,7 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/instrument-sans.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/instrument-serif.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=20261115h">
+  <link rel="stylesheet" href="styles.css?v=20261115i">
   <script defer src="assets/weather.js?v=20261115g"></script>
   <script defer src="assets/earth.js?v=20261115g"></script>
   <script defer src="sites.js?v=20261115h"></script>
@@ -32,7 +32,7 @@
   <script defer src="plant-art.js?v=20261115g"></script>
   <script defer src="field-art.js?v=20261115g"></script>
   <script defer src="field.js?v=20261115g"></script>
-  <script defer src="app.js?v=20261115h"></script>
+  <script defer src="app.js?v=20261115i"></script>
 </head>
 <body>
   <a class="skip" href="#atlas" data-t="skip">Skip to the regions</a>
@@ -140,6 +140,34 @@
         </div>
         <p id="copy-status" class="visually-hidden" role="status" aria-live="polite"></p>
       </div>
+      <section class="field-shift" aria-labelledby="shift-title">
+        <div class="shift-intro">
+          <h3 id="shift-title" data-t="shiftTitle" tabindex="-1">Find a safer window</h3>
+          <p data-t="shiftNote">Search nearby rice dates across three historical seasons. The calendar and three-day rain checks use an illustrative 30 mm threshold for rainfall.</p>
+        </div>
+        <div id="shift-compare" class="shift-compare" hidden>
+          <p id="shift-context" class="shift-context"></p>
+          <p class="shift-metric" data-t="shiftMetric">Rain on the crop operation day and the two days before</p>
+          <div>
+            <span id="shift-now-plan">Current plan</span>
+            <strong id="shift-now-rain"></strong>
+            <small id="shift-now-date"></small>
+          </div>
+          <span class="shift-arrow" aria-hidden="true">→</span>
+          <div class="shift-next">
+            <span id="shift-new-plan">Suggested plan</span>
+            <strong id="shift-new-rain"></strong>
+            <small id="shift-new-date"></small>
+          </div>
+        </div>
+        <p id="shift-status" class="shift-status" role="status"></p>
+        <div class="shift-actions">
+          <button class="quiet" type="button" id="find-shift" data-t="findShift">Search dates</button>
+          <button class="quiet shift-apply" type="button" id="apply-shift" data-t="applyShift" hidden>Apply this window</button>
+          <button class="quiet" type="button" id="replay-shift" data-t="shiftReplay" hidden>Replay operation</button>
+          <a class="quiet shift-link" href="#season-check-title" id="shift-seasons" data-t="seasonCheck" hidden>Three-season check</a>
+        </div>
+      </section>
       <div class="planner-grid">
         <div class="settings-column">
           <form id="field-settings" class="settings">
@@ -166,29 +194,6 @@
             </dl>
             <p data-t="guideNote">Unknown drainage or soil adds a review flag. Set both to refine the result.</p>
           </aside>
-          <aside class="field-shift" aria-labelledby="shift-title">
-            <h3 id="shift-title" data-t="shiftTitle" tabindex="-1">Find a safer window</h3>
-            <p data-t="shiftNote">Search nearby rice dates for a window that clears the crop calendar and the three-day rain in all three seasons. Field conditions stay as you set them.</p>
-            <div class="shift-actions">
-              <button class="quiet" type="button" id="find-shift" data-t="findShift">Find a safer window</button>
-              <button class="quiet" type="button" id="apply-shift" data-t="applyShift" hidden>Apply this window</button>
-            </div>
-            <div id="shift-compare" class="shift-compare" hidden>
-              <p id="shift-context" class="shift-context"></p>
-              <div>
-                <span data-t="shiftNow">Current plan</span>
-                <strong id="shift-now-rain"></strong>
-                <small id="shift-now-date"></small>
-              </div>
-              <span class="shift-arrow" aria-hidden="true">→</span>
-              <div class="shift-next">
-                <span data-t="shiftSafer">Suggested plan</span>
-                <strong id="shift-new-rain"></strong>
-                <small id="shift-new-date"></small>
-              </div>
-            </div>
-            <p id="shift-status" class="shift-status" role="status" aria-live="polite"></p>
-          </aside>
         </div>
 
         <div class="results">
@@ -209,7 +214,7 @@
           </div>
           <p class="table-note" data-t="rainNote">Rain includes the operation day and the two days before it. Choose a strategy to see its evidence.</p>
           <section class="season-check">
-            <div class="detail-head"><h3 id="season-check-title" data-t="seasonCheck">Three-season check</h3><span class="section-context" data-t="seasonCheckContext">Calendar and rain only</span></div>
+            <div class="detail-head"><h3 id="season-check-title" data-t="seasonCheck" tabindex="-1">Three-season check</h3><span class="section-context" data-t="seasonCheckContext">Calendar and rain only</span></div>
             <div class="table-scroll season-scroll" tabindex="0" role="region" aria-labelledby="season-check-title">
               <table class="season-table">
                 <caption class="visually-hidden" data-t="seasonCaption">Same plan in each historical season</caption>
@@ -281,6 +286,7 @@
       <div class="brief-actions">
         <button type="button" class="primary" id="brief-demo-start" data-t="briefStart">Run the wet-harvest demo</button>
         <a class="quiet" href="docs/Next-Crop-Demo-Deck.pdf" target="_blank" rel="noopener" data-t="briefDeck">7-slide demo (PDF)</a>
+        <a class="quiet" href="docs/Next-Crop-Demo.mp4" target="_blank" rel="noopener" data-t="briefVideo">Demo video</a>
         <a class="quiet" href="docs/Next-Crop-Judge-Brief.pdf" target="_blank" rel="noopener" data-t="briefPdf">One-page brief (PDF)</a>
         <button type="button" class="quiet" id="brief-close-2" data-t="briefClose">Close</button>
       </div>
