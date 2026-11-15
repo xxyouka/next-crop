@@ -1,8 +1,22 @@
 # Next Crop · submission pack
 
-Deadline on the current Project Submission Guide: **Sunday 15 November 2026, 23:59 in the Team Owner's local time**. The project page must be submitted with the **Submit for Judging** button; saving is not submitting. Do not rely on the earlier 16 November 07:59 note — the guide attached to this page is authoritative.
+**Deadline: Sunday 15 November 2026, 23:59 in the Team Owner's local time.** The project page must be submitted with the **Submit for Judging** button; saving is not submitting. Do not rely on the earlier 16 November 07:59 note.
 
-Public links are live and verified: the project site and the 7-slide demo deck. The local preview (`127.0.0.1:8766`) is not the submission link. See [DEPLOY.md](docs/DEPLOY.md) for redeployment.
+**Status check, 15 Nov 14:30:** the public team page currently shows only the team name “对对对” and no project content. Log in, create/open the Project, paste the fields below, and click **Submit for Judging**. The public team page alone is not a submitted project.
+
+Public links are live and verified. The local preview (`127.0.0.1:8766`) is not the submission link. See [DEPLOY.md](docs/DEPLOY.md) for redeployment.
+
+## Do this now, in order
+
+1. Log in at the Space Apps site and open **Find a Team → 对对对 → Project**.
+2. If there is no project yet, create it. Set **Project Name = Next Crop**.
+3. Paste the **Summary** and **Detailed description** below. Keep the form in English.
+4. Set **Project Demonstration** to the 7-slide deck URL below.
+5. Set **Project Link** to the live app URL below.
+6. Fill **NASA Data**, **Space Agency Partner & Other Data**, and **Use of SI** from the sections below.
+7. Confirm all four team members are on the team and confirmed for the same Local Event.
+8. Click **Submit for Judging** before 23:59 Team Owner time. Saving a draft is not enough.
+9. Open the public project link in a private window and confirm it shows the project.
 
 ## Project name
 
@@ -40,8 +54,10 @@ Factors considered: regional rainfall variability, the rice preparation buffer, 
 ## Project demonstration
 
 - **Public demo (ready to paste):** https://xxyouka.github.io/next-crop/docs/Next-Crop-Demo-Deck.pdf — **7 slides, English**, public, no login.
+- **One-page brief:** https://xxyouka.github.io/next-crop/docs/Next-Crop-Judge-Brief.pdf
+- **Project cover image (1200×630):** https://xxyouka.github.io/next-crop/docs/og.png
 - The deck is within the 7-slide limit. A 30-second English-subtitled video is an alternative.
-- Before submitting, add the final member names to slides 1 and 7 if they are not already on the submission page. The deck currently uses the team name “Team Dui Dui Dui”.
+- Slide 1 already lists **Guan Xiao · Lin Yi · Cai Yang · Ye Fenghong**; slide 7 closes with the team name **Team Dui Dui Dui**. The one-page brief also carries the names.
 - Test the link in a private browser with no login.
 
 ## Project link
