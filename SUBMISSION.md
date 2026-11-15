@@ -2,7 +2,7 @@
 
 **Deadline: Sunday 15 November 2026, 23:59 in the Team Owner's local time.** The project page must be submitted with the **Submit for Judging** button; saving is not submitting. Do not rely on the earlier 16 November 07:59 note.
 
-**Status check, 15 Nov 14:30:** the public team page currently shows only the team name “对对对” and no project content. Log in, create/open the Project, paste the fields below, and click **Submit for Judging**. The public team page alone is not a submitted project.
+**Status check, 15 Nov 15:30:** the public team page currently shows only the team name “对对对” and no project content. Log in, create/open the Project, paste the fields below, and click **Submit for Judging**. The public team page alone is not a submitted project.
 
 Public links are live and verified. The local preview (`127.0.0.1:8766`) is not the submission link. See [DEPLOY.md](docs/DEPLOY.md) for redeployment.
 
@@ -95,6 +95,10 @@ https://xxyouka.github.io/next-crop/docs/Next-Crop-Demo-Deck.pdf
 ## Use of Super Intelligence (SI)
 
 AI tools assisted with implementation, illustration code, tests and documentation (Codex / DeepSeek Harness); the team chose the challenge, data, model, visual direction and final decisions, and reviewed the output. The field and crop illustrations are procedural Canvas drawings produced by code, not generative image-model outputs. The globe and Sentinel-2 imagery are real agency imagery, credited above. The project brief and demo deck were drafted and edited with AI assistance and reviewed by the team. No NASA logos, flags or mission identifiers are used.
+
+## Optional expert review
+
+A 10-minute review protocol and exact questions are in [docs/VALIDATION.md](docs/VALIDATION.md). It is optional; if completed, add 2–3 sentences under **expert review / desk review**, never “field-tested”.
 
 ## Final checklist
 
