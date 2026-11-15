@@ -91,7 +91,7 @@ img { display: block; width: 100%; height: auto; }
 .shell { width: min(calc(100% - clamp(2rem, 4vw, 5rem)), 128rem); margin-inline: auto; }
 .skip, .visually-hidden { position: absolute; inline-size: 1px; block-size: 1px; clip-path: inset(50%); overflow: hidden; white-space: nowrap; }
 .skip:focus { inset: .5rem auto auto .5rem; z-index: 5; inline-size: auto; block-size: auto; clip-path: none; background: white; padding: .6rem; }
-.top { position: sticky; top: 0; z-index: 4; border-bottom: 1px solid var(--line); background: rgb(243 243 233 / 92%); backdrop-filter: blur(12px); }
+.top { position: sticky; top: 0; z-index: 4; border-bottom: 1px solid var(--line); background: rgb(243 243 233 / .97); backdrop-filter: blur(12px); }
 .scroll-progress { position: absolute; inset: auto 0 -1px; block-size: 2px; background: var(--pine); opacity: .75; transform: scaleX(var(--progress, 0)); transform-origin: left center; pointer-events: none; }
 .top-inner, nav, .brand { display: flex; align-items: center; }
 .top-inner { min-height: 4.5rem; justify-content: space-between; gap: .75rem; }
@@ -433,7 +433,7 @@ body.dialog-open { overflow: hidden; }
 .globe-figure figcaption { color: #c6d7c5; margin-inline: auto; max-width: 34rem; font: 500 .7rem/1.4 var(--mono); }
 .globe-figure figcaption a:hover { color: #e4f3aa; }
 
-.field { padding-top: clamp(2.15rem, 4.5vw, 4rem); }
+.field { padding-top: clamp(2.15rem, 4.5vw, 4rem); padding-bottom: clamp(2rem, 4vw, 3.5rem); }
 .field-heading { align-items: end; }
 .field-heading .eyebrow { color: #527042; margin-bottom: .27rem; }
 .section-index, .field-eyebrow { display: flex; align-items: center; gap: .48rem; }

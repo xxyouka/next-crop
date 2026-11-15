@@ -12,6 +12,9 @@ function mountField({ t, dateLabel, selectCrop, cropColor }) {
   let timer = 0;
   let stageButtons = [];
   let cropButtons = [];
+  const fieldSection = $("field");
+  let initialPaintDone = false;
+  let paintToken = 0;
 
   function labelPlayback() {
     play.textContent = timer ? t("pause") : t("play");
@@ -56,7 +59,17 @@ function mountField({ t, dateLabel, selectCrop, cropColor }) {
     canvas.dataset.wet = String(rain >= 10);
     const activeStage = replay.stages.findLastIndex(entry => entry.day <= day);
     stageButtons.forEach((button, i) => button.setAttribute("aria-pressed", String(i === activeStage)));
-    paint({ terrain: site.terrain, crop: activeCrop, progress, phase: key, growthPhase, wet: rain >= 10 });
+    const paintArgs = { terrain: site.terrain, crop: activeCrop, progress, phase: key, growthPhase, wet: rain >= 10 };
+    const token = ++paintToken;
+    if (!initialPaintDone && fieldSection.getBoundingClientRect().top >= innerHeight) {
+      initialPaintDone = true;
+      const commit = () => { if (token === paintToken) paint(paintArgs); };
+      if ("requestIdleCallback" in window) requestIdleCallback(commit, { timeout: 600 });
+      else setTimeout(commit, 0);
+      return;
+    }
+    initialPaintDone = true;
+    paint(paintArgs);
   }
 
   timeline.addEventListener("input", () => {

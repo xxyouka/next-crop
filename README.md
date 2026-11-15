@@ -15,7 +15,7 @@ Next Crop turns that decision into a field-level check across four rice landscap
 - **4** rice regions · **7** winter crops · **3** NASA POWER seasons · **3,760** daily weather records.
 - Designed for a short judge demo and for local extension conversations; every recommendation carries its assumptions.
 - The **Project brief** button in the hero opens the same summary, data notes and demo inside the app.
-- Submission assets: [7-slide demo deck](docs/Next-Crop-Demo-Deck.pdf) · [one-page judge brief](docs/Next-Crop-Judge-Brief.pdf) · [submission copy and checklist](SUBMISSION.md) · [public deployment guide](docs/DEPLOY.md).
+- Submission assets: [29-second demo video](docs/Next-Crop-Demo.mp4) · [7-slide demo deck](docs/Next-Crop-Demo-Deck.pdf) · [one-page judge brief](docs/Next-Crop-Judge-Brief.pdf) · [submission copy and checklist](SUBMISSION.md) · [public deployment guide](docs/DEPLOY.md).
 - The demo deck is within the Space Apps 7-slide limit. The current submission guide closes on **15 November at 23:59 in the Team Owner's local time**; see [SUBMISSION.md](SUBMISSION.md).
 
 ## 30-second judge demo

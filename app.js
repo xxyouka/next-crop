@@ -187,7 +187,7 @@ const pins = NextCrop.sites.map(point => {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "globe-pin";
-  button.addEventListener("click", () => enterSite(point));
+  button.addEventListener("click", (event) => enterSite(point, event.detail === 0));
   $("globe-pins").append(button);
   return { button, site: point };
 });
@@ -207,7 +207,7 @@ const places = NextCrop.sites.map(point => {
   arrow.textContent = "↘";
   labels.append(title, area, system);
   button.append(labels, arrow);
-  button.addEventListener("click", () => enterSite(point));
+  button.addEventListener("click", (event) => enterSite(point, event.detail === 0));
   $("site-list").append(button);
   return { button, title, area, system, site: point };
 });
@@ -329,7 +329,7 @@ function markArrived(target) {
   arrivalTimer = setTimeout(() => target.classList.remove("arrived"), 650);
 }
 
-function enterSite(point) {
+function enterSite(point, focusHeading = false) {
   const changed = site !== point;
   const field = $("field");
   const apply = () => {
@@ -341,7 +341,7 @@ function enterSite(point) {
       siteChangeTimer = setTimeout(() => field.classList.remove("site-change"), 700);
     }
     globe.focus(point);
-    $("field-title").focus({ preventScroll: true });
+    if (focusHeading) $("field-title").focus({ preventScroll: true });
     markArrived(field);
   };
   if (changed) animateScrollTo(field, { duration: 720, onDone: apply });
@@ -910,14 +910,14 @@ $("brief-close").addEventListener("click", closeBrief);
 $("brief-close-2").addEventListener("click", closeBrief);
 brief.addEventListener("click", event => { if (event.target === brief) closeBrief(); });
 brief.addEventListener("close", () => document.body.classList.remove("dialog-open"));
-$("brief-demo-start").addEventListener("click", () => {
+$("brief-demo-start").addEventListener("click", event => {
   closeBrief();
   if (site.id !== "kaiping") {
     loadSite(NextCrop.sites[0]);
     globe.focus(NextCrop.sites[0]);
   }
   runWetDemo();
-  $("field-title").focus({ preventScroll: true });
+  if (event.detail === 0) $("field-title").focus({ preventScroll: true });
   animateScrollTo($("field"), { onDone: () => markArrived($("field")) });
 });
 let renderFrame = 0;
@@ -1039,7 +1039,7 @@ document.addEventListener("click", event => {
   event.preventDefault();
   if (navLinksWrap?.contains(link)) setNavOpen(false);
   if (location.hash !== link.hash) history.pushState(null, "", link.hash);
-  animateScrollTo(target, { focus: true, onDone: () => markArrived(target) });
+  animateScrollTo(target, { focus: event.detail === 0, onDone: () => markArrived(target) });
 });
 addEventListener("wheel", cancelAnimatedScroll, { passive: true });
 addEventListener("touchstart", cancelAnimatedScroll, { passive: true });
